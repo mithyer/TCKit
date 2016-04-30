@@ -128,6 +128,11 @@ NS_INLINE NSValue *mappingNSValueWithString(NSString *value, __unsafe_unretained
             ret = [NSValue valueWithUIOffset:UIOffsetFromString(value)];
             break;
             
+        case kTCEncodingTypeNSRange:
+            // ""
+            ret = [NSValue valueWithRange:NSRangeFromString(value)];
+            break;
+            
         default:
             break;
     }
