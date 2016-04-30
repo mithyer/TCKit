@@ -34,6 +34,7 @@
  CGAffineTransform <- "{a, b, c, d, tx, ty}"
  UIEdgeInsets <- "{top, left, bottom, right}"
  UIOffset <- "{horizontal, vertical}"
+ NSRange <- "{location, length}"
  
  UIColor <- {r:0~1, g:0~1, b:0~1, a:0~1}, {rgb:0x322834}, {rgba:0x12345678}, {argb:0x12345678}
  

@@ -129,7 +129,7 @@ NS_INLINE NSValue *mappingNSValueWithString(NSString *value, __unsafe_unretained
             break;
             
         case kTCEncodingTypeNSRange:
-            // ""
+            // "{location, length}"
             ret = [NSValue valueWithRange:NSRangeFromString(value)];
             break;
             
