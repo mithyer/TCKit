@@ -155,7 +155,7 @@
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
-        if (NULL == meta->_getter) {
+        if (NULL == meta->_getter || meta->_getter == _cmd || meta->_getter == @selector(hash)) {
             continue;
         }
         
