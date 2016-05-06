@@ -321,6 +321,37 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
                 break;
             }
                 
+            case kTCEncodingTypeUIColor: {
+                if ([value isKindOfClass:meta->_typeClass]) {
+                    ret = value;
+                } else if ([value isKindOfClass:NSString.class]) { // "0xff65ce00" or "#0xff65ce00"
+                    NSString *str = ((NSString *)value).lowercaseString;
+                    if ([str hasPrefix:@"#"]) {
+                        str = [str substringFromIndex:1];
+                    }
+                    
+                    if ([str hasPrefix:@"0x"]) {
+                        str = [str substringFromIndex:2];
+                    }
+                    
+                    NSUInteger len = str.length;
+                    if (len == 6) {
+                        ret = [UIColor colorWithRGBHexString:(NSString *)value];
+                        
+                    } else if (len == 8) {
+                        ret = [UIColor colorWithARGBHexString:(NSString *)value];
+                    }
+                } else if ([value isKindOfClass:NSNumber.class]) {
+                    uint32_t hex = ((NSNumber *)value).unsignedIntValue;
+                    if (hex < 0x01000000) { // RGB or clear
+                        ret = [UIColor colorWithRGBHex:hex];
+                    } else { // ARGB
+                        ret = [UIColor colorWithARGBHex:hex];
+                    }
+                }
+                break;
+            }
+                
             default:
                 ret = value;
                 break;

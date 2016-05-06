@@ -154,6 +154,8 @@ NS_INLINE TCEncodingType typeForNSType(Class typeClass)
         return kTCEncodingTypeNSNull;
     } else if ([typeClass isSubclassOfClass:NSAttributedString.class]) {
         return kTCEncodingTypeNSAttributedString;
+    } else if ([typeClass isSubclassOfClass:UIColor.class]) {
+        return kTCEncodingTypeUIColor;
     }
     
     return kTCEncodingTypeUnknown;

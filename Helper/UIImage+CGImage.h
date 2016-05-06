@@ -18,6 +18,24 @@ typedef struct TCImageInfo {
 } TCImageInfo;
 
 
+CG_INLINE CGRect tcCGRectByNormalizedRect(CGRect normalRect, CGSize dimenesion) {
+    return CGRectMake(normalRect.origin.x * dimenesion.width,
+                      normalRect.origin.y * dimenesion.height,
+                      normalRect.size.width * dimenesion.width,
+                      normalRect.size.height * dimenesion.height);
+}
+
+CG_INLINE CGRect tcCGRectNormalize(CGRect normalRect, CGSize dimenesion) {
+    if (dimenesion.width <= 0 || dimenesion.height <= 0) {
+        return CGRectZero;
+    }
+    
+    return CGRectMake(normalRect.origin.x / dimenesion.width,
+                      normalRect.origin.y / dimenesion.height,
+                      normalRect.size.width / dimenesion.width,
+                      normalRect.size.height / dimenesion.height);
+}
+
 @interface UIImage (CGImage)
 
 

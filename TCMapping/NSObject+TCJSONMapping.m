@@ -113,9 +113,13 @@ static id mappingToJSONObject(NSObject *obj)
     } else if ([obj isKindOfClass:NSData.class]) { // -> Base64 string
         return [(NSData *)obj base64EncodedStringWithOptions:kNilOptions];
         
-    } else if ([obj isKindOfClass:UIColor.class]) { // -> dic
+    } else if ([obj isKindOfClass:UIColor.class]) { // -> string
         UIColor *color = (UIColor *)obj;
-        return @{@"r": @(color.red), @"g": @(color.green), @"b": @(color.blue), @"a": @(color.alpha)};
+        NSString *str = color.argbHexStringValue;
+        if (nil == str) {
+            return nil;
+        }
+        return [@"#0x" stringByAppendingString:str];
         
     } else if ([obj isKindOfClass:NSAttributedString.class]) { // -> string
         return ((NSAttributedString *)obj).string;

@@ -36,7 +36,9 @@
  UIOffset <- "{horizontal, vertical}"
  NSRange <- "{location, length}"
  
- UIColor <- {r:0~1, g:0~1, b:0~1, a:0~1}, {rgb:0x322834}, {rgba:0x12345678}, {argb:0x12345678}
+ UIColor <- {r:0~1, g:0~1, b:0~1, a:0~1}, {rgb:0x123456}, {rgba:0x12345678}, {argb:0x12345678}
+ UIColor RGB <- "#0x123456" or "#123456" or "0x123456" or 0x123456
+ UIColor ARGB <- "#0x12345678" or "#123456" or "0x12345678" or 0x12345678
  
  */
 
