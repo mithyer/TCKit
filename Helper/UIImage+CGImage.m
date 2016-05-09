@@ -48,6 +48,11 @@ static CGBitmapInfo const kTCSystemDefaultOrder = kCGBitmapByteOrderDefault | kC
 
 + (CGImageRef)initCGImageWithContentOfFile:(NSString *)path
 {
+    NSParameterAssert(path);
+    if (nil == path) {
+        return NULL;
+    }
+    
     NSURL *url = [NSURL fileURLWithPath:path];
     CGImageSourceRef imageSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
     if (NULL == imageSourceRef) {

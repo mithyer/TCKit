@@ -21,7 +21,7 @@
 
 
 #define PropertySTR(name)   NSStringFromSelector(@selector(name))
-#define _URL(name) [NSURL URLWithString:name]
+#define _URL(name) (nil == (name) ? nil : [NSURL URLWithString:(name)])
 
 
 #pragma mark - onExit
