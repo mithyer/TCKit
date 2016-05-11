@@ -41,7 +41,7 @@ extern NSString *const kTCApplicationDidReceiveDiskSpaceWarning;
  @param migrationBlock A block object to be executed when the application version matches the string 'version'. This parameter can't be nil.
  
  */
-+ (void)migrateToVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(nullable NSString *)domain block:(dispatch_block_t)migrationBlock;
++ (void)migrateToVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(nullable NSString *)domain block:(nullable dispatch_block_t)migrationBlock;
 
 
 /**
@@ -59,7 +59,7 @@ extern NSString *const kTCApplicationDidReceiveDiskSpaceWarning;
  @param updateBlock A block object to be executed when the application version changes. This parameter can't be nil.
  
  */
-+ (void)applicationUpdateBlock:(dispatch_block_t)updateBlock type:(TCMigrationVersionType)type domain:(nullable NSString *)domain;
++ (void)applicationUpdateBlock:(nullable dispatch_block_t)updateBlock type:(TCMigrationVersionType)type domain:(nullable NSString *)domain;
 + (void)updateResetDomain:(nullable NSString *)domain type:(TCMigrationVersionType)type;
 + (BOOL)updatedVersion:(TCMigrationVersionType)type domain:(nullable NSString *)domain;
 

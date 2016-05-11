@@ -76,9 +76,8 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 + (void)migrateToVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(NSString *)domain block:(dispatch_block_t)block
 {
     NSParameterAssert(version);
-    NSParameterAssert(block);
     
-    if (nil == version || nil == block) {
+    if (nil == version) {
         return;
     }
     
@@ -89,7 +88,9 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
     // version > lastMigrationVersion && version <= appVersion
     if ([version compare:[self lastMigrationVersion:type domain:domain] options:NSNumericSearch] == NSOrderedDescending &&
         [version compare:[self appVersion:type] options:NSNumericSearch] != NSOrderedDescending) {
-        block();
+        if (nil != block) {
+            block();
+        }
         [self setLastMigrationVersion:version type:type domain:domain];
     }
 }
@@ -120,19 +121,15 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (void)applicationUpdateBlock:(dispatch_block_t)block type:(TCMigrationVersionType)type domain:(NSString *)domain
 {
-    NSParameterAssert(block);
-    
-    if (nil == block) {
-        return;
-    }
-    
     if (nil == domain) {
         domain = @"default";
     }
     
     NSString *version = [self appVersion:type];
     if (![[self lastUpdateVersionForType:type domain:domain] isEqualToString:version]) {
-        block();
+        if (nil != block) {
+            block();
+        }
         [self setLastUpdateVersion:version type:type domain:domain];
     }
 }
