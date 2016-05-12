@@ -12,6 +12,7 @@
 
 #import <CoreGraphics/CGGeometry.h>
 #import <UIKit/UIGeometry.h>
+#import <UIKit/UIColor.h>
 
 
 @protocol TCMappingIgnore
