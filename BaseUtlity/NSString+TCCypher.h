@@ -11,8 +11,8 @@
 @interface NSString (TCCypher)
 
 // for AES
-- (instancetype)AES256EncryptWithKey:(NSString *)key;
-- (instancetype)AES256DecryptWithKey:(NSString *)key;
+- (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv;
+- (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv;
 
 // for MD5
 - (instancetype)MD5_32;

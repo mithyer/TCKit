@@ -20,15 +20,15 @@
 
 #pragma mark - AES
 
-- (instancetype)AES256EncryptWithKey:(NSString *)key
+- (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv
 {
-    NSData *data = [[self dataUsingEncoding:NSUTF8StringEncoding] AES256EncryptWithKey:key];
+    NSData *data = [[self dataUsingEncoding:NSUTF8StringEncoding] AES256EncryptWithKey:key iv:iv];
     return [data base64EncodedStringWithOptions:kNilOptions];
 }
 
-- (instancetype)AES256DecryptWithKey:(NSString *)key
+- (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv
 {
-    NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:kNilOptions] AES256DecryptWithKey:key];
+    NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:kNilOptions] AES256DecryptWithKey:key iv:iv];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
