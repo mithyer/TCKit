@@ -12,7 +12,7 @@
 
 + (UIViewController *)keyWindowTopController
 {
-    return [[UIApplication sharedApplication].keyWindow topMostViewController];
+    return [[UIApplication sharedApplication].delegate.window topMostViewController];
 }
 
 
