@@ -515,7 +515,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
 
 + (nullable instancetype)valueWitUnsafeStringValue:(NSString *)str customStructType:(const char *)type
 {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:kNilOptions];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
     return nil != data ? [self valueWitUnsafeData:data customStructType:type] : nil;
 }
 

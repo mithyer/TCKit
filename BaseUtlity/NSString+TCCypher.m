@@ -28,7 +28,7 @@
 
 - (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv
 {
-    NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:kNilOptions] AES256DecryptWithKey:key iv:iv];
+    NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] AES256DecryptWithKey:key iv:iv];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 

@@ -280,7 +280,7 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
             case kTCEncodingTypeNSData: { // NSData <- Base64 NSString
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
-                        ret = [[klass alloc] initWithBase64EncodedString:value options:kNilOptions];
+                        ret = [[klass alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
                     }
                 } else if ([value isKindOfClass:NSData.class]) {
                     if ([value isKindOfClass:klass]) {
