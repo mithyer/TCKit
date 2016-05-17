@@ -310,7 +310,7 @@
     SecKeyRef key = self.publicKey;
     NSParameterAssert(key);
     if (NULL == key) {
-        return nil;
+        return NO;
     }
     
     uint8_t *hashBytes = malloc(CC_SHA256_DIGEST_LENGTH);
