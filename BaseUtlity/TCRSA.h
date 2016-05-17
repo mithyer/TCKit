@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 // reference: git@github.com:PanXianyue/XYCryption.git
+// http://www.jianshu.com/p/a1bad1e2be55
 
 /**
  @brief	RSA with system keychain
