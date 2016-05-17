@@ -166,6 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isNSTypeForClass:(Class)klass;
 + (TCEncodingType)typeForNSClass:(Class)klass;
 + (instancetype)metaForNSClass:(Class)klass;
++ (BOOL)isBlock:(id)obj;
 
 @end
 

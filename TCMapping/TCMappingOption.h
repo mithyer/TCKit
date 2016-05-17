@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef Class (^TCTypeMappingBlock)(id value);
+
 @interface TCMappingOption : NSObject
 
 #pragma mark - TCMapping
@@ -18,7 +20,7 @@
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameMapping;
 
 /**
- @brief	format: @{@"propertyName": @"object'class name or Class, or yyyy-MM-dd...(-> NSDate)"}
+ @brief	format: @{@"propertyName": @"object'class name or Class or `TCTypeMappingBlock`, or yyyy-MM-dd...(-> NSDate)"}
  */
 @property (nonatomic, strong) NSDictionary<NSString *, Class> *typeMapping;
 

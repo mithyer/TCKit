@@ -52,14 +52,19 @@ static NSNumberFormatter *tc_mapping_number_fmter(void)
 
 #pragma mark -
 
-NS_INLINE Class classForType(id type)
+NS_INLINE Class classForType(id type, id value)
 {
-    if (nil != type) {
-        if (class_isMetaClass(object_getClass(type))) {
-            return type;
-        } else if ([type isKindOfClass:NSString.class]) {
-            return NSClassFromString(type);
-        }
+    if (nil == type) {
+        return Nil;
+    }
+    
+    if (class_isMetaClass(object_getClass(type))) {
+        return type;
+    } else if ([type isKindOfClass:NSString.class]) {
+        return NSClassFromString(type);
+    } else if ([TCMappingMeta isBlock:type]) {
+        TCTypeMappingBlock block = type;
+        return block(value);
     }
     
     return Nil;
@@ -391,16 +396,25 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                                    Class curClass);
 
 
-static NSArray *mappingArray(NSArray *value, Class klass, id<TCMappingPersistentContext> context, NSString *property, TCMappingOption *option)
+static NSArray *mappingArray(NSArray *value, Class arryKlass, id<TCMappingPersistentContext> context, NSString *property, TCMappingOption *option, TCTypeMappingBlock typeBlock)
 {
-    NSMutableArray *arry = [NSMutableArray array];
-    
+    NSMutableArray *arry = NSMutableArray.array;
     TCMappingMeta *meta = nil;
     for (NSDictionary *dic in value) {
+        Class klass = arryKlass;
+        if (nil != typeBlock) {
+            klass = typeBlock(dic);
+        }
+        
+        if (Nil == klass) {
+            continue;
+        }
+        
         if ([dic isKindOfClass:klass]) {
             [arry addObject:dic];
             
         } else if ([dic isKindOfClass:NSDictionary.class]) {
+            
             id obj = tc_mappingWithDictionary(dic, nil, context, nil, klass);
             if (nil != obj) {
                 [arry addObject:obj];
@@ -648,16 +662,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             __unsafe_unretained NSDictionary *valueDic = (NSDictionary *)value;
             
             if (valueDic.count > 0) {
-                __unsafe_unretained Class klass = meta->_typeClass;
-                if (Nil == klass) {
-                    klass = classForType(typeDic[property]);
-                }
-                
-                if (Nil == klass) {
-                    value = nil;
-                    
-                } else if (type == kTCEncodingTypeNSDictionary) {
-                    __unsafe_unretained Class dicItemClass = classForType(typeDic[property]);
+                if (type == kTCEncodingTypeNSDictionary) {
+                    __unsafe_unretained Class dicItemClass = classForType(typeDic[property], value);
                     if (Nil != dicItemClass) {
                         NSMutableDictionary *tmpDic = NSMutableDictionary.dictionary;
                         for (id dicKey in valueDic) {
@@ -667,17 +673,24 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                             }
                         }
                         
-                        value = tmpDic.count > 0 ? [klass dictionaryWithDictionary:tmpDic] : nil;
+                        value = tmpDic.count > 0 ? [meta->_typeClass dictionaryWithDictionary:tmpDic] : nil;
                         
-                    } else if (valueDic.class != klass) {
-                        value = [klass dictionaryWithDictionary:valueDic];
+                    } else if (valueDic.class != meta->_typeClass) {
+                        value = [meta->_typeClass dictionaryWithDictionary:valueDic];
                     }
                     
-                } else if ([klass isSubclassOfClass:UIColor.class]) {
-                    value = valueForUIColor((NSDictionary *)value, klass);
-                    
                 } else {
-                    value = tc_mappingWithDictionary(valueDic, nil, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
+                    __unsafe_unretained Class klass = meta->_typeClass;
+                    if (Nil == klass) {
+                        klass = classForType(typeDic[property], value);
+                    }
+                    
+                    if ([klass isSubclassOfClass:UIColor.class]) {
+                        value = valueForUIColor((NSDictionary *)value, klass);
+                        
+                    } else {
+                        value = tc_mappingWithDictionary(valueDic, nil, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
+                    }
                 }
                 
             } else {
@@ -690,10 +703,20 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             if (valueArry.count > 0) {
                 if (Nil == meta->_typeClass || (type != kTCEncodingTypeNSArray && type != kTCEncodingTypeNSSet)) {
                     value = nil;
+                    
                 } else {
-                    __unsafe_unretained Class arryItemType = classForType(typeDic[property]);
-                    if (Nil != arryItemType) {
-                        value = mappingArray(valueArry, arryItemType, context, property, option);
+                    TCTypeMappingBlock typeBlock = nil;
+                    __unsafe_unretained Class arryItemType = Nil;
+                    
+                    id properyType = typeDic[property];
+                    if (nil != properyType) {
+                        if (![TCMappingMeta isBlock:properyType]) {
+                            arryItemType = classForType(properyType, nil);
+                        }
+                    }
+                    
+                    if (Nil != arryItemType || nil != typeBlock) {
+                        value = mappingArray(valueArry, arryItemType, context, property, option, typeBlock);
                     }
                     
                     if (nil != value) {
