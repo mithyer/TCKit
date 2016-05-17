@@ -116,9 +116,9 @@
 }
 
 
-/*
+/**
  encrypt with public key, decrypt with private key
- **/
+ */
 
 - (NSData *)encryptData:(NSData *)plainData
 {
@@ -253,9 +253,9 @@
 }
 
 
-/*
+/**
  sign with private key, verify with public key
- **/
+ */
 
 - (NSData *)signSHA256Data:(NSData *)plainData
 {
