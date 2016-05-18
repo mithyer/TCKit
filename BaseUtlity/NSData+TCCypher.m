@@ -67,7 +67,7 @@
     
     size_t numBytesCrypted = 0;
     CCCryptorStatus cryptStatus = CCCrypt(operation,
-                                          kCCAlgorithmAES128,
+                                          kCCAlgorithmAES,
                                           kCCOptionPKCS7Padding,
                                           keyPtr,
                                           kCCBlockSizeAES128,

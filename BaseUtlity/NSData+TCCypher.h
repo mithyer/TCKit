@@ -11,10 +11,10 @@
 @interface NSData (TCCypher)
 
 // for AES
-- (instancetype)AES128EncryptWithKey:(NSString *)key iv:(NSString *)iv;
-- (instancetype)AES128DecryptWithKey:(NSString *)key iv:(NSString *)iv;
+- (instancetype)AES128EncryptWithKey:(NSString *)key_16 iv:(NSString *)iv_16;
+- (instancetype)AES128DecryptWithKey:(NSString *)key_16 iv:(NSString *)iv_16;
 
-- (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv;
-- (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv;
+- (instancetype)AES256EncryptWithKey:(NSString *)key_32 iv:(NSString *)iv_16;
+- (instancetype)AES256DecryptWithKey:(NSString *)key_32 iv:(NSString *)iv_16;
 
 @end
