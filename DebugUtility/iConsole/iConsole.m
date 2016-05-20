@@ -43,9 +43,10 @@
 #endif
 
 
-//#if ICONSOLE_USE_GOOGLE_STACK_TRACE
-//#import "GTMStackTrace.h"
-//#endif
+#ifdef NSLog
+#undef NSLog
+#endif
+
 
 
 #define EDITFIELD_HEIGHT 28
@@ -580,7 +581,7 @@ static void exceptionHandler(NSException *exception)
 + (void)log:(NSString *)format arguments:(va_list)argList
 {
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
-    printf("%s", message.UTF8String);
+    NSLog(@"%@", message);
     
     if ([self sharedConsole].enabled) {
         if ([NSThread isMainThread]) {
