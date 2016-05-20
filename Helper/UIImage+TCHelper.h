@@ -10,7 +10,9 @@
 
 @interface UIImage (TCHelper)
 
+// main bundle
 + (instancetype)imageWithContentsOfName:(NSString *)name;
++ (instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *)bundle;
 
 - (instancetype)fitToScreenScale;
 
