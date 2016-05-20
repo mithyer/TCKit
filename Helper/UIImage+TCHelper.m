@@ -12,8 +12,14 @@
 
 + (instancetype)imageWithContentsOfName:(NSString *)name
 {
-    return [self imageWithContentsOfFile:[[NSBundle bundleForClass:self] pathForResource:name ofType:nil]];
+    return [self imageWithContentsOfName:name inBundle:nil];
 }
+
++ (instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *)bundle
+{
+    return [self imageWithContentsOfFile:[(bundle ?: [NSBundle mainBundle]) pathForResource:name ofType:nil]];
+}
+
 
 - (instancetype)fitToScreenScale
 {
