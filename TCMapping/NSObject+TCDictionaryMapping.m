@@ -64,6 +64,7 @@
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
+                NULL == meta->_setter ||
                 nameDic[key] == (id)kCFNull) {
                 continue;
             }

@@ -119,7 +119,7 @@ static id mappingToJSONObject(NSObject *obj)
         if (nil == str) {
             return nil;
         }
-        return [@"#0x" stringByAppendingString:str];
+        return [@"#" stringByAppendingString:str];
         
     } else if ([obj isKindOfClass:NSAttributedString.class]) { // -> string
         return ((NSAttributedString *)obj).string;
@@ -139,6 +139,7 @@ static id mappingToJSONObject(NSObject *obj)
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
+                NULL == meta->_setter ||
                 tc_ignoreJSONMappingForInfo(meta->_info) ||
                 nameDic[key] == (id)kCFNull ||
                 tc_typeForInfo(meta->_info) == kTCEncodingTypeBlock) {

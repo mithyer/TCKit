@@ -15,7 +15,7 @@
 /**
  @brief	
  
- UIColor -> "0x1234FEA8" ARGB
+ UIColor -> "#1234FEA8" ARGB
  NSData -> base64 string
  NSDate -> "yyyy-MM-dd'T'HH:mm:ssZ"
  NSURL -> string
