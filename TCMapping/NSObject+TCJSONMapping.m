@@ -139,7 +139,6 @@ static id mappingToJSONObject(NSObject *obj)
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
-                NULL == meta->_setter ||
                 tc_ignoreJSONMappingForInfo(meta->_info) ||
                 nameDic[key] == (id)kCFNull ||
                 tc_typeForInfo(meta->_info) == kTCEncodingTypeBlock) {

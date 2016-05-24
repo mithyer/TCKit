@@ -183,8 +183,13 @@ NS_INLINE TCEncodingIgnore ignoreForProtocols(NSString *ignoreProtocol)
     return ignore;
 }
 
-static TCMappingMeta *metaForProperty(objc_property_t property, Class klass)
+static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSArray<NSString *> *ignoreProps)
 {
+    NSString *propertyName = @(property_getName(property));
+    if (nil == propertyName || [ignoreProps containsObject:propertyName]) {
+        return nil;
+    }
+    
     unsigned int attrCount = 0;
     objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount);
     
@@ -274,11 +279,6 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass)
         return nil;
     }
     
-    NSString *propertyName = @(property_getName(property));
-    if (nil == propertyName) {
-        return nil;
-    }
-    
     TCMappingMeta *meta = [[TCMappingMeta alloc] init];
     meta->_propertyName = propertyName;
     meta->_typeName = typeName;
@@ -315,12 +315,19 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     
     static NSRecursiveLock *s_recursiveLock;
     static NSMutableDictionary<NSString *, NSMutableDictionary *> *s_propertyByClass;
+    static NSArray<NSString *> *s_sysProps;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         s_propertyByClass = [NSMutableDictionary dictionary];
         s_recursiveLock = [[NSRecursiveLock alloc] init];
         s_recursiveLock.name = @"recursiveLock.TCMappingMeta.TCKit";
+        
+        s_sysProps = @[
+                       NSStringFromSelector(@selector(description)),
+                       NSStringFromSelector(@selector(debugDescription)),
+                       NSStringFromSelector(@selector(hash)),
+                       NSStringFromSelector(@selector(superclass))];
     });
     
     
@@ -338,7 +345,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     objc_property_t *properties = class_copyPropertyList(klass, &num);
     
     for (unsigned int i = 0; i < num; ++i) {
-        TCMappingMeta *meta = metaForProperty(properties[i], klass);
+        TCMappingMeta *meta = metaForProperty(properties[i], klass, s_sysProps);
         if (nil != meta) {
             propertyNames[meta->_propertyName] = meta;
         }
