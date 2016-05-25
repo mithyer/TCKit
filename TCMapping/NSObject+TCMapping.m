@@ -712,6 +712,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     if (nil != properyType) {
                         if (![TCMappingMeta isBlock:properyType]) {
                             arryItemType = classForType(properyType, nil);
+                        } else {
+                            typeBlock = properyType;
                         }
                     }
                     
