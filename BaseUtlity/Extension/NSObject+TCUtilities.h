@@ -10,6 +10,7 @@
 
 @property (nonatomic, strong) id tcUserInfo;
 
+// TODO: tc_swizzle:class block:block
 + (void)tc_swizzle:(SEL)aSelector;
 
 

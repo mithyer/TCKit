@@ -87,7 +87,6 @@
             }
             
             class_replaceMethod(self, bSelector, imp, type);
-            imp_removeBlock(imp);
         }
     } else {
         method_exchangeImplementations(m1, m2);
