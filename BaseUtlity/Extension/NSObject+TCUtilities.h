@@ -6,12 +6,22 @@
 
 #import <Foundation/Foundation.h>
 
+typedef struct _TCSwizzleInput {
+    __unsafe_unretained Class klass;
+    SEL srcSel;
+    SEL dstSel;
+    BOOL isClassMethod;
+    
+} TCSwizzleInput;
+
+extern BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err);
+
+
 @interface NSObject (TCUtilities)
 
 @property (nonatomic, strong) id tcUserInfo;
 
-// TODO: tc_swizzle:class block:block
-+ (void)tc_swizzle:(SEL)aSelector;
++ (BOOL)tc_swizzle:(SEL)aSelector;
 
 
 // Selector Utilities

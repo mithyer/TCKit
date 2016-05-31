@@ -16,6 +16,55 @@
 #endif
 
 
+BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err)
+{
+    NSCParameterAssert(input.klass);
+    NSCParameterAssert(input.srcSel);
+    
+    if (Nil == input.klass || NULL == input.srcSel) {
+        return NO;
+    }
+    
+    Method (*getMethod)(Class cls, SEL name) = input.isClassMethod ? class_getClassMethod : class_getInstanceMethod;
+    
+    Method m1 = getMethod(input.klass, input.srcSel);
+    if (NULL == m1) {
+        if (NULL != err) {
+            NSError *error = [NSError errorWithDomain:@"swizzle.TCKit" code:-2 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"no original method: %@, swizzle is unnecessary!", NSStringFromSelector(input.srcSel)]}];
+            *err = error;
+        }
+        return NO;
+    }
+    
+    if (NULL != origIMP) {
+        *origIMP = method_getImplementation(m1);
+    }
+    
+    if (NULL == input.dstSel) {
+        input.dstSel = NSSelectorFromString([NSString stringWithFormat:@"tc_%@", NSStringFromSelector(input.srcSel)]);
+    }
+    
+    
+    Method m2 = getMethod(input.klass, input.dstSel);
+    
+    if (nil != block) {
+        class_replaceMethod(input.klass, input.dstSel, imp_implementationWithBlock(block), method_getTypeEncoding(m1));
+        if (NULL == m2) {
+            m2 = getMethod(input.klass, input.dstSel);
+        }
+    }
+    
+    if (class_addMethod(input.klass, input.srcSel, method_getImplementation(m2), method_getTypeEncoding(m2))) {
+        class_replaceMethod(input.klass, input.dstSel, method_getImplementation(m1), method_getTypeEncoding(m1));
+        
+    } else {
+        method_exchangeImplementations(m1, m2);
+    }
+    
+    return YES;
+}
+
+
 @implementation NSObject (TCUtilities)
 
 @dynamic tcUserInfo;
@@ -32,65 +81,10 @@
 }
 
 
-+ (void)tc_swizzle:(SEL)aSelector
++ (BOOL)tc_swizzle:(SEL)aSelector
 {
-    SEL bSelector = NSSelectorFromString([NSString stringWithFormat:@"tc_%@", NSStringFromSelector(aSelector)]);
-    Method m1 = class_getInstanceMethod(self, aSelector);
-    Method m2 = NULL;
-    if (NULL == m1) {
-        m1 = class_getClassMethod(self, aSelector);
-        m2 = class_getClassMethod(self, bSelector);
-    } else {
-        m2 = class_getInstanceMethod(self, bSelector);
-    }
-
-    const char *type = method_getTypeEncoding(m2);
-    if (class_addMethod(self, aSelector, method_getImplementation(m2), method_getTypeEncoding(m2))) {
-        if (NULL != m1) {
-            class_replaceMethod(self, bSelector, method_getImplementation(m1), method_getTypeEncoding(m1));
-        } else { // original method not exist, then add one
-            char *rtType = method_copyReturnType(m2);
-            NSString *returnType = nil;
-            char value = @encode(void)[0];
-            if (NULL != rtType) {
-                value = rtType[0];
-                returnType = @(rtType);
-                free(rtType), rtType = NULL;
-            }
-            
-            IMP imp = NULL;
-            
-            if (value == @encode(void)[0]) {
-                imp = imp_implementationWithBlock(^{});
-            } else if (value == @encode(id)[0]) {
-                imp = imp_implementationWithBlock(^{return nil;});
-            } else if (value == @encode(Class)[0]) {
-                imp = imp_implementationWithBlock(^{return Nil;});
-            } else if (value == @encode(SEL)[0] || value == @encode(void *)[0] || value == @encode(int[1])[0]) {
-                imp = imp_implementationWithBlock(^{return NULL;});
-            } else if ([returnType isEqualToString:@(@encode(CGPoint))]) {
-                imp = imp_implementationWithBlock(^{return CGPointZero;});
-            } else if ([returnType isEqualToString:@(@encode(CGSize))]) {
-                imp = imp_implementationWithBlock(^{return CGSizeZero;});
-            } else if ([returnType isEqualToString:@(@encode(CGRect))]) {
-                imp = imp_implementationWithBlock(^{return CGRectZero;});
-            } else if ([returnType isEqualToString:@(@encode(CGAffineTransform))]) {
-                imp = imp_implementationWithBlock(^{return CGAffineTransformIdentity;});
-            } else if ([returnType isEqualToString:@(@encode(UIEdgeInsets))]) {
-                imp = imp_implementationWithBlock(^{return UIEdgeInsetsZero;});
-            } else if ([returnType isEqualToString:@(@encode(NSRange))]) {
-                imp = imp_implementationWithBlock(^{return NSMakeRange(NSNotFound, 0);});
-            } else if (value == @encode(CGPoint)[0] || value == '(') { // FIXME: 0
-                imp = imp_implementationWithBlock(^{return 0;});
-            } else {
-                imp = imp_implementationWithBlock(^{return 0;});
-            }
-            
-            class_replaceMethod(self, bSelector, imp, type);
-        }
-    } else {
-        method_exchangeImplementations(m1, m2);
-    }
+    TCSwizzleInput input = {.klass = self, .srcSel = aSelector, .isClassMethod = NULL == class_getInstanceMethod(self, aSelector)};
+    return tcSwizzleMethod(input, nil, NULL, NULL);
 }
 
 
