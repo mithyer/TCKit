@@ -36,6 +36,16 @@ CG_INLINE CGRect tcCGRectNormalize(CGRect normalRect, CGSize dimenesion) {
                       normalRect.size.height / dimenesion.height);
 }
 
+// code: http://stackoverflow.com/questions/10720569/is-there-a-way-to-calculate-the-cgaffinetransform-needed-to-transform-a-view-fro
+CG_INLINE CGAffineTransform tcTransformFrom(CGRect sourceRect, CGRect finalRect) {
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformTranslate(transform, -(CGRectGetMidX(sourceRect)-CGRectGetMidX(finalRect)), -(CGRectGetMidY(sourceRect)-CGRectGetMidY(finalRect)));
+    transform = CGAffineTransformScale(transform, finalRect.size.width/sourceRect.size.width, finalRect.size.height/sourceRect.size.height);
+    
+    return transform;
+}
+
+
 @interface UIImage (CGImage)
 
 
