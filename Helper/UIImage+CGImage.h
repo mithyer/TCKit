@@ -19,10 +19,8 @@ typedef struct TCImageInfo {
 
 
 CG_INLINE CGRect tcCGRectByNormalizedRect(CGRect normalRect, CGSize dimenesion) {
-    return CGRectMake(normalRect.origin.x * dimenesion.width,
-                      normalRect.origin.y * dimenesion.height,
-                      normalRect.size.width * dimenesion.width,
-                      normalRect.size.height * dimenesion.height);
+    CGAffineTransform trans = CGAffineTransformMakeScale(dimenesion.width, dimenesion.height);
+    return CGRectApplyAffineTransform(normalRect, trans);
 }
 
 CG_INLINE CGRect tcCGRectNormalize(CGRect normalRect, CGSize dimenesion) {
@@ -30,19 +28,17 @@ CG_INLINE CGRect tcCGRectNormalize(CGRect normalRect, CGSize dimenesion) {
         return CGRectZero;
     }
     
-    return CGRectMake(normalRect.origin.x / dimenesion.width,
-                      normalRect.origin.y / dimenesion.height,
-                      normalRect.size.width / dimenesion.width,
-                      normalRect.size.height / dimenesion.height);
+    CGAffineTransform trans = CGAffineTransformMakeScale(1/dimenesion.width, 1/dimenesion.height);
+    return CGRectApplyAffineTransform(normalRect, trans);
 }
 
 // code: http://stackoverflow.com/questions/10720569/is-there-a-way-to-calculate-the-cgaffinetransform-needed-to-transform-a-view-fro
-CG_INLINE CGAffineTransform tcTransformFrom(CGRect sourceRect, CGRect finalRect) {
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformTranslate(transform, -(CGRectGetMidX(sourceRect)-CGRectGetMidX(finalRect)), -(CGRectGetMidY(sourceRect)-CGRectGetMidY(finalRect)));
-    transform = CGAffineTransformScale(transform, finalRect.size.width/sourceRect.size.width, finalRect.size.height/sourceRect.size.height);
+CG_INLINE CGAffineTransform tcTransformFrom(CGRect fromRect, CGRect toRect) {
+    CGAffineTransform trans1 = CGAffineTransformMakeTranslation(-fromRect.origin.x, -fromRect.origin.y);
+    CGAffineTransform scale = CGAffineTransformMakeScale(toRect.size.width/fromRect.size.width, toRect.size.height/fromRect.size.height);
+    CGAffineTransform trans2 = CGAffineTransformMakeTranslation(toRect.origin.x, toRect.origin.y);
     
-    return transform;
+    return CGAffineTransformConcat(CGAffineTransformConcat(trans1, scale), trans2);
 }
 
 
