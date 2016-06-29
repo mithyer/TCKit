@@ -83,8 +83,4 @@ typedef NS_ENUM(NSInteger, TCPullRefreshState) {
 - (BOOL)reloadViewDataSource:(TCLoadDataType)loadType;
 - (BOOL)loadMoreViewDataSource:(TCLoadDataType)loadType;
 
-@required
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
-
 @end
