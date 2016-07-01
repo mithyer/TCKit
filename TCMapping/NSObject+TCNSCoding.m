@@ -166,7 +166,7 @@
             obj = [self valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:YES];
         }
         
-        value ^= [obj hash];
+        value ^= key.hash ^ [obj hash];
     }
     
     if (0 == value) {
