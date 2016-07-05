@@ -49,10 +49,10 @@
 + (NSMutableArray *)tc_mappingWithArray:(NSArray *)arry context:(id<TCMappingPersistentContext>)context;
 
 + (instancetype)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic;
++ (instancetype)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption *)option;
 + (instancetype)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic context:(id<TCMappingPersistentContext>)context;
 
 - (void)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic;
-
 - (void)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption *)option;
 
 

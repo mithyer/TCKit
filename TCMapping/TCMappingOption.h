@@ -10,7 +10,7 @@
 
 typedef Class (^TCTypeMappingBlock)(id value);
 
-@interface TCMappingOption : NSObject
+@interface TCMappingOption : NSObject <NSCopying>
 
 #pragma mark - TCMapping
 
@@ -39,6 +39,8 @@ typedef Class (^TCTypeMappingBlock)(id value);
 @property (nonatomic, copy) NSTimeInterval (^secondSince1970)(SEL property, NSTimeInterval timestamp, BOOL *ignoreReturn);
 
 @property (nonatomic, copy) BOOL (^mappingValidate)(id obj);
+
+@property (nonatomic, assign) BOOL ignoreTypeConsistency;
 
 
 + (instancetype)optionWithNameMapping:(NSDictionary<NSString *, NSString *> *)nameMapping;

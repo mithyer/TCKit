@@ -200,7 +200,9 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
         
         switch (type) {
             case kTCEncodingTypeNSString: { // NSString <- non NSString
-                NSCAssert([value isKindOfClass:NSString.class], @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                if (!option.ignoreTypeConsistency) {
+                    NSCAssert([value isKindOfClass:NSString.class], @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                }
                 if (![value isKindOfClass:NSString.class]) {
                     ret = [klass stringWithFormat:@"%@", value];
                 } else {
@@ -227,7 +229,9 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
                         ret = value;
                     }
                 } else {
-                    NSCAssert(false, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    if (!option.ignoreTypeConsistency) {
+                        NSCAssert(false, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    }
                     if ([value isKindOfClass:NSString.class] && ((NSString *)value).length > 0) {
                         if (type == kTCEncodingTypeNSNumber) {
                             ret = [tc_mapping_number_fmter() numberFromString:(NSString *)value];
@@ -495,6 +499,11 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     return tc_mappingWithDictionary(dic, nil, nil, nil, self);
 }
 
++ (instancetype)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption *)option
+{
+    return tc_mappingWithDictionary(dic, option, nil, nil, self);
+}
+
 + (instancetype)tc_mappingWithDictionary:(NSDictionary *)dic context:(id<TCMappingPersistentContext>)context
 {
     return tc_mappingWithDictionary(dic, nil, context, nil, self);
@@ -627,6 +636,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             tmpDic = [curClass tc_mappingOption].nameMapping;
         }
         nameDic = nameMappingDicFor(tmpDic, metaDic.allKeys);
+    } else {
+        nameDic = nameMappingDicFor(nameDic, metaDic.allKeys);
     }
     
     NSObject *obj = target;
