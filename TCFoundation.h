@@ -26,4 +26,26 @@
 #import "NSObject+TCJSONMapping.h"
 #import "NSString+TCCypher.h"
 
+
+
+#define TC_AUTO_COPY_CODING_EQUEAL_HASH \
+- (NSUInteger)hash {return self.tc_hash;} \
+- (BOOL)isEqual:(id)object {return [self tc_isEqual:object];} \
+- (void)encodeWithCoder:(NSCoder *)aCoder {[self tc_encodeWithCoder:aCoder];} \
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {return [self tc_initWithCoder:aDecoder];} \
+- (instancetype)copyWithZone:(NSZone *)zone {return self.tc_copy;}
+
+
+#define TC_AUTO_COPY_CODING_HASH \
+- (NSUInteger)hash {return self.tc_hash;} \
+- (void)encodeWithCoder:(NSCoder *)aCoder {[self tc_encodeWithCoder:aCoder];} \
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {return [self tc_initWithCoder:aDecoder];} \
+- (instancetype)copyWithZone:(NSZone *)zone {return self.tc_copy;}
+
+#define TC_AUTO_COPY_CODING \
+- (void)encodeWithCoder:(NSCoder *)aCoder {[self tc_encodeWithCoder:aCoder];} \
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {return [self tc_initWithCoder:aDecoder];} \
+- (instancetype)copyWithZone:(NSZone *)zone {return self.tc_copy;}
+
+
 #endif /* TCFoundation_h */
