@@ -1,0 +1,28 @@
+//
+//  TCWKWebView.h
+//  TCKit
+//
+//  Created by jia on 16/2/26.
+//  Copyright © 2016年 dake. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@protocol TCWKWebView <NSObject>
+
+@required
+@property (nonatomic, strong, readonly) NSURLRequest *request;
+@property (nonatomic, assign) BOOL scalesPageToFit;
+//@property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
+@property (nonatomic, strong, readonly) UIScrollView *scrollView;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic, strong) UIView *webHeaderView;
+
+- (void)loadRequest:(NSURLRequest *)request;
+- (BOOL)canGoBack;
+- (void)goBack;
+
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id result, NSError *error))completionHandler;
+- (void)clearCookies;
+
+@end
