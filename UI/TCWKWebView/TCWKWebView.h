@@ -11,12 +11,13 @@
 @protocol TCWKWebView <NSObject>
 
 @required
-@property (nonatomic, strong, readonly) NSURLRequest *request;
+@property (nonatomic, strong, readonly) NSURLRequest *originalRequest;
 @property (nonatomic, assign) BOOL scalesPageToFit;
 //@property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, strong) UIView *webHeaderView;
+@property (nonatomic, assign) BOOL reloadOriRequestEnterForeground;
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (BOOL)canGoBack;

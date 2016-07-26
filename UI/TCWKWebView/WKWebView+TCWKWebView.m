@@ -15,16 +15,15 @@
 //@dynamic dataDetectorTypes;
 @dynamic delegate;
 @dynamic webHeaderView;
+@dynamic originalRequest;
+@dynamic reloadOriRequestEnterForeground;
 
 
 + (void)load
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self tc_swizzle:@selector(loadRequest:)];
-        [self tc_swizzle:@selector(initWithFrame:configuration:)];
-        [self tc_swizzle:NSSelectorFromString(@"dealloc")];
-    });
+    [self tc_swizzle:@selector(loadRequest:)];
+    [self tc_swizzle:@selector(initWithFrame:configuration:)];
+    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
 }
 
 - (void)tc_dealloc
@@ -101,21 +100,57 @@
     objc_setAssociatedObject(self, @selector(scalesPageToFit), @(scalesPageToFit), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSURLRequest *)request
+- (NSURLRequest *)originalRequest
 {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setRequest:(NSURLRequest *)request
+- (void)setOriginalRequest:(NSURLRequest *)request
 {
-    objc_setAssociatedObject(self, @selector(request), request, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(originalRequest), request, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)tc_loadRequest:(NSURLRequest *)request
+- (nullable WKNavigation *)tc_loadRequest:(NSURLRequest *)request
 {
-    self.request = request;
-    [self tc_loadRequest:request];
+    self.originalRequest = request;
+    return [self tc_loadRequest:request];
 }
+
+- (id)enterForgrdObsvr
+{
+    return [self bk_associatedValueForKey:_cmd];
+}
+
+- (void)setEnterForgrdObsvr:(id)obsvr
+{
+    id oldObsvr = self.enterForgrdObsvr;
+    if (nil != oldObsvr) {
+        [[NSNotificationCenter defaultCenter] removeObserver:oldObsvr];
+    }
+    
+    [self bk_weaklyAssociateValue:obsvr withKey:@selector(enterForgrdObsvr)];
+}
+
+- (BOOL)reloadOriRequestEnterForeground
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setReloadOriRequestEnterForeground:(BOOL)reload
+{
+    if (reload) {
+        if (nil == self.enterForgrdObsvr) {
+            __weak typeof(self) wSelf = self;
+            self.enterForgrdObsvr = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+                [wSelf loadRequest:wSelf.originalRequest];
+            }];
+        }
+    } else {
+        self.enterForgrdObsvr = nil;
+    }
+    objc_setAssociatedObject(self, @selector(reloadOriRequestEnterForeground), @(reload), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 
 /*
 - (void)setDataDetectorTypes:(NSUInteger)dataDetectorTypes
@@ -135,7 +170,7 @@
         WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
         [dateStore fetchDataRecordsOfTypes:WKWebsiteDataStore.allWebsiteDataTypes completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
             for (WKWebsiteDataRecord *record in records) {
-                NSRange range = [record.displayName rangeOfString:self.request.URL.host];
+                NSRange range = [record.displayName rangeOfString:self.originalRequest.URL.host];
                 if (range.location != NSNotFound) {
                     [dateStore removeDataOfTypes:record.dataTypes
                                   forDataRecords:@[record]
