@@ -12,13 +12,10 @@
 
 + (void)load
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self tc_swizzle:@selector(navigationBar:shouldPopItem:)];
-        [self tc_swizzle:@selector(popViewControllerAnimated:)];
-        [self tc_swizzle:@selector(popToViewController:animated:)];
-        [self tc_swizzle:@selector(popToRootViewControllerAnimated:)];
-    });
+    [self tc_swizzle:@selector(navigationBar:shouldPopItem:)];
+    [self tc_swizzle:@selector(popViewControllerAnimated:)];
+    [self tc_swizzle:@selector(popToViewController:animated:)];
+    [self tc_swizzle:@selector(popToRootViewControllerAnimated:)];
 }
 
 

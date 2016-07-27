@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, TCTextVerticalAlignment) {
-    TCTextVerticalAlignmentDefault = 0,
-    TCTextVerticalAlignmentTop,
-    TCTextVerticalAlignmentMiddle,
-    TCTextVerticalAlignmentBottom,
+    kTCTextVerticalAlignmentDefault = 0,
+    kTCTextVerticalAlignmentTop,
+    kTCTextVerticalAlignmentMiddle,
+    kTCTextVerticalAlignmentBottom,
 };
 
 @interface UILabel (TCHelper)

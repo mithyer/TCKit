@@ -76,11 +76,8 @@ static char const kHeaderClassKey;
 
 + (void)load
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self tc_swizzle:@selector(delegate)];
-        [self tc_swizzle:@selector(setDelegate:)];
-    });
+    [self tc_swizzle:@selector(delegate)];
+    [self tc_swizzle:@selector(setDelegate:)];
 }
 
 

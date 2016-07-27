@@ -18,6 +18,7 @@
 
 @interface _TCButtonExtra : NSObject
 
+
 @property (nonatomic, assign) UIEdgeInsets alignmentRectInsets;
 @property (nonatomic, assign) CGFloat paddingBetweenTitleAndImage;
 @property (nonatomic, strong) NSMutableDictionary *innerBackgroundColorDic;
@@ -26,9 +27,57 @@
 @property (nonatomic, assign) TCButtonLayoutStyle layoutStyle;
 @property (nonatomic, assign) BOOL isFrameObserved;
 
+- (void)addFrameObserver;
+- (void)addStateObserver;
+
 @end
 
 @implementation _TCButtonExtra
+
+
+- (void)dealloc
+{
+    [self removeFrameObserver];
+    
+    if (nil != self.innerBackgroundColorDic || nil != self.borderColorDic) {
+        [self removeStateObserver];
+    }
+}
+
+
+- (void)addFrameObserver
+{
+    if (_isFrameObserved) {
+        return;
+    }
+    _isFrameObserved = YES;
+    [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)removeFrameObserver
+{
+    if (!_isFrameObserved) {
+        return;
+    }
+    [self removeObserver:self forKeyPath:@"bounds" context:NULL];
+    [self removeObserver:self forKeyPath:@"frame" context:NULL];
+}
+
+- (void)addStateObserver
+{
+    [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
+    [self addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)removeStateObserver
+{
+    [self removeObserver:self forKeyPath:@"highlighted" context:NULL];
+    [self removeObserver:self forKeyPath:@"selected" context:NULL];
+    [self removeObserver:self forKeyPath:@"enabled" context:NULL];
+}
+
 
 #pragma mark - KVO
 
@@ -64,33 +113,20 @@ static char const kBtnExtraKey;
 @dynamic alignmentRectInsets;
 @dynamic paddingBetweenTitleAndImage;
 
+
 - (void)tc_dealloc
 {
-    _TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
-    if (nil != observer) {
-        if (observer.isFrameObserved) {
-            [self removeFrameObserver:observer];
-        }
-        
-        if (nil != observer.innerBackgroundColorDic || nil != observer.borderColorDic) {
-            [self removeStateObserver:observer];
-        }
-        objc_setAssociatedObject(self, &kBtnExtraKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    
+    objc_setAssociatedObject(self, &kBtnExtraKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self tc_dealloc];
 }
 
 + (void)load
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // ARC forbids us to use a selector on dealloc, so we must trick it with NSSelectorFromString()
-        [self tc_swizzle:NSSelectorFromString(@"dealloc")];
-        [self tc_swizzle:@selector(setImage:forState:)];
-        [self tc_swizzle:@selector(setTitle:forState:)];
-        [self tc_swizzle:@selector(setAttributedTitle:forState:)];
-    });
+    // ARC forbids us to use a selector on dealloc, so we must trick it with NSSelectorFromString()
+    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
+    [self tc_swizzle:@selector(setImage:forState:)];
+    [self tc_swizzle:@selector(setTitle:forState:)];
+    [self tc_swizzle:@selector(setAttributedTitle:forState:)];
 }
 
 - (_TCButtonExtra *)btnExtra
@@ -209,18 +245,6 @@ static char const kBtnExtraKey;
 
 #pragma mark - layoutStyle
 
-- (void)addFrameObserver:(id)observer
-{
-    [self addObserver:observer forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:observer forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
-}
-
-- (void)removeFrameObserver:(id)observer
-{
-    [self removeObserver:observer forKeyPath:@"bounds" context:NULL];
-    [self removeObserver:observer forKeyPath:@"frame" context:NULL];
-}
-
 - (TCButtonLayoutStyle)layoutStyle
 {
     return self.btnExtra.layoutStyle;
@@ -240,14 +264,10 @@ static char const kBtnExtraKey;
     }
     
     if (layoutStyle != kTCButtonLayoutStyleDefault) {
-        if (!btnExtra.isFrameObserved) {
-            [self addFrameObserver:btnExtra];
-            btnExtra.isFrameObserved = YES;
-        }
+            [btnExtra addFrameObserver];
     } else {
         if (btnExtra.isFrameObserved) {
-            [self removeFrameObserver:btnExtra];
-            btnExtra.isFrameObserved = NO;
+            [btnExtra removeFrameObserver];
             [self resetImageAndTitleEdges];
         }
     }
@@ -300,6 +320,8 @@ static char const kBtnExtraKey;
 
 - (void)noFrameKVOPerform:(dispatch_block_t)block
 {
+    NSParameterAssert(block);
+    
     if (nil == block) {
         return;
     }
@@ -307,15 +329,13 @@ static char const kBtnExtraKey;
     _TCButtonExtra *btnExtra = self.btnExtra;
     BOOL observed = btnExtra.isFrameObserved;
     if (observed) {
-        [self removeFrameObserver:btnExtra];
-        btnExtra.isFrameObserved = NO;
+        [btnExtra removeFrameObserver];
     }
     
     block();
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (observed && !btnExtra.isFrameObserved) {
-            [self addFrameObserver:btnExtra];
-            btnExtra.isFrameObserved = YES;
+        if (observed) {
+            [btnExtra addFrameObserver];
         }
     });
 }
@@ -441,27 +461,13 @@ static char const kBtnExtraKey;
 
 #pragma mark - backgroundColor
 
-- (void)addStateObserver:(id)observer
-{
-    [self addObserver:observer forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:observer forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:observer forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
-}
-
-- (void)removeStateObserver:(id)observer
-{
-    [self removeObserver:observer forKeyPath:@"highlighted" context:NULL];
-    [self removeObserver:observer forKeyPath:@"selected" context:NULL];
-    [self removeObserver:observer forKeyPath:@"enabled" context:NULL];
-}
-
 - (NSMutableDictionary *)innerBackgroundColorDic
 {
     _TCButtonExtra *btnExtra = self.btnExtra;
     if (nil == btnExtra.innerBackgroundColorDic) {
         btnExtra.innerBackgroundColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.borderColorDic) {
-            [self addStateObserver:btnExtra];
+            [btnExtra addStateObserver];
         }
     }
     
@@ -474,7 +480,7 @@ static char const kBtnExtraKey;
     if (nil == btnExtra.borderColorDic) {
         btnExtra.borderColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.innerBackgroundColorDic) {
-            [self addStateObserver:btnExtra];
+            [btnExtra addStateObserver];
         }
     }
     
