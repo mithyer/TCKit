@@ -7,29 +7,14 @@
 //
 
 #import "UIWebView+TCWKWebView.h"
-#import <objc/runtime.h>
+#import "UIView+TCWKWebView.h"
 
 @implementation UIWebView (TCWKWebView)
-
-@dynamic webHeaderView;
-@dynamic originalRequest;
-@dynamic reloadOriRequestEnterForeground;
 
 
 + (void)load
 {
     [self tc_swizzle:@selector(loadRequest:)];
-    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
-}
-
-- (void)tc_dealloc
-{
-    self.enterForgrdObsvr = nil;
-}
-
-- (void)setDelegateViews:(id<UIWebViewDelegate>)delegateView
-{
-    self.delegate = delegateView;
 }
 
 - (void)clearCookies
@@ -51,56 +36,11 @@
     }
 }
 
-- (NSURLRequest *)originalRequest
-{
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setOriginalRequest:(NSURLRequest *)request
-{
-    objc_setAssociatedObject(self, @selector(originalRequest), request, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
 
 - (void)tc_loadRequest:(NSURLRequest *)request
 {
     self.originalRequest = request;
     [self tc_loadRequest:request];
-}
-
-
-- (id)enterForgrdObsvr
-{
-    return [self bk_associatedValueForKey:_cmd];
-}
-
-- (void)setEnterForgrdObsvr:(id)obsvr
-{
-    id oldObsvr = self.enterForgrdObsvr;
-    if (nil != oldObsvr) {
-        [[NSNotificationCenter defaultCenter] removeObserver:oldObsvr];
-    }
-    
-    [self bk_weaklyAssociateValue:obsvr withKey:@selector(enterForgrdObsvr)];
-}
-
-- (BOOL)reloadOriRequestEnterForeground
-{
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setReloadOriRequestEnterForeground:(BOOL)reload
-{
-    if (reload) {
-        if (nil == self.enterForgrdObsvr) {
-            __weak typeof(self) wSelf = self;
-            self.enterForgrdObsvr = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-                [wSelf loadRequest:wSelf.originalRequest];
-            }];
-        }
-    } else {
-        self.enterForgrdObsvr = nil;
-    }
-    objc_setAssociatedObject(self, @selector(reloadOriRequestEnterForeground), @(reload), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 

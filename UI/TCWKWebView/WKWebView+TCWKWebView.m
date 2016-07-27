@@ -8,41 +8,77 @@
 
 #import "WKWebView+TCWKWebView.h"
 #import <objc/runtime.h>
+#import "UIView+TCWKWebView.h"
+
+
+@interface _WKWebViewExtra : NSObject
+{
+    @public
+    NSArray<__kindof UIView *> *_kvoSubviews;
+}
+
+@property (nonatomic, weak) UIView *headerView;
+
+@end
+
+
+@implementation _WKWebViewExtra
+
+- (void)dealloc
+{
+    self.kvoSubviews = nil;
+}
+
+- (void)setKvoSubviews:(NSArray<__kindof UIView *> *)kvoSubviews
+{
+    if (_kvoSubviews == kvoSubviews) {
+        return;
+    }
+    
+    for (UIView *subView in _kvoSubviews) {
+        [subView removeObserver:self forKeyPath:PropertySTR(frame)];
+    }
+    
+    _kvoSubviews = kvoSubviews;
+    for (UIView *subView in _kvoSubviews) {
+        [subView addObserver:self forKeyPath:PropertySTR(frame) options:NSKeyValueObservingOptionNew context:NULL];
+    }
+}
+
+- (void)setWebView:(WKWebView *)webView
+{
+    self.kvoSubviews = webView.scrollView.subviews.copy;
+}
+
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSString*, id> *)change context:(nullable void *)context
+{
+    if ([_kvoSubviews containsObject:object] && [keyPath isEqualToString:PropertySTR(frame)]) { // bug fix for iOS9
+        NSValue *value = change[NSKeyValueChangeNewKey];
+        if ([value isKindOfClass:NSValue.class]) {
+            CGRect frame = value.CGRectValue;
+            CGFloat head = CGRectGetHeight(_headerView.frame);
+            if (CGRectGetMinY(frame) < head) {
+                frame.origin.y = head;
+                ((UIView *)object).frame = frame;
+            }
+        }
+    }
+}
+
+
+@end
+
 
 @implementation WKWebView (TCWKWebView)
 
-@dynamic scalesPageToFit;
 //@dynamic dataDetectorTypes;
-@dynamic delegate;
-@dynamic webHeaderView;
-@dynamic originalRequest;
-@dynamic reloadOriRequestEnterForeground;
-
 
 + (void)load
 {
     [self tc_swizzle:@selector(loadRequest:)];
-    [self tc_swizzle:@selector(initWithFrame:configuration:)];
-    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
-}
-
-- (void)tc_dealloc
-{
-    for (UIView *subView in self.kvoSubviews) {
-        [subView removeObserver:self forKeyPath:PropertySTR(frame)];
-    }
-}
-
-- (instancetype)tc_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration
-{
-    [self tc_initWithFrame:frame configuration:configuration];
-    if (self) {
-        self.kvoSubviews = self.scrollView.subviews.copy;
-        for (UIView *subView in self.kvoSubviews) {
-            [subView addObserver:self forKeyPath:PropertySTR(frame) options:NSKeyValueObservingOptionNew context:NULL];
-        }
-    }
-    return self;
 }
 
 - (id<WKNavigationDelegate, WKUIDelegate>)delegate
@@ -100,57 +136,11 @@
     objc_setAssociatedObject(self, @selector(scalesPageToFit), @(scalesPageToFit), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSURLRequest *)originalRequest
-{
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)setOriginalRequest:(NSURLRequest *)request
-{
-    objc_setAssociatedObject(self, @selector(originalRequest), request, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (nullable WKNavigation *)tc_loadRequest:(NSURLRequest *)request
 {
     self.originalRequest = request;
     return [self tc_loadRequest:request];
 }
-
-- (id)enterForgrdObsvr
-{
-    return [self bk_associatedValueForKey:_cmd];
-}
-
-- (void)setEnterForgrdObsvr:(id)obsvr
-{
-    id oldObsvr = self.enterForgrdObsvr;
-    if (nil != oldObsvr) {
-        [[NSNotificationCenter defaultCenter] removeObserver:oldObsvr];
-    }
-    
-    [self bk_weaklyAssociateValue:obsvr withKey:@selector(enterForgrdObsvr)];
-}
-
-- (BOOL)reloadOriRequestEnterForeground
-{
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
-}
-
-- (void)setReloadOriRequestEnterForeground:(BOOL)reload
-{
-    if (reload) {
-        if (nil == self.enterForgrdObsvr) {
-            __weak typeof(self) wSelf = self;
-            self.enterForgrdObsvr = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-                [wSelf loadRequest:wSelf.originalRequest];
-            }];
-        }
-    } else {
-        self.enterForgrdObsvr = nil;
-    }
-    objc_setAssociatedObject(self, @selector(reloadOriRequestEnterForeground), @(reload), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 
 /*
 - (void)setDataDetectorTypes:(NSUInteger)dataDetectorTypes
@@ -189,42 +179,58 @@
 }
 
 
+#pragma mark -
 
-- (NSArray<__kindof UIView *> *)kvoSubviews
+- (_WKWebViewExtra *)obsvrExtra
 {
-    return [self bk_associatedValueForKey:_cmd];
+    return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setKvoSubviews:(NSArray<__kindof UIView *> *)kvoSubviews
+- (void)setObsvrExtra:(_WKWebViewExtra *)obsvrExtra
 {
-    [self bk_associateValue:kvoSubviews withKey:@selector(kvoSubviews)];
+    objc_setAssociatedObject(self, @selector(obsvrExtra), obsvrExtra, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIView *)webHeaderView
 {
-    return [self bk_associatedValueForKey:_cmd];
+    return self.obsvrExtra.headerView;
 }
 
 - (void)setWebHeaderView:(UIView *)webHeaderView
 {
-    BOOL needResetTopInsets = NO;
+    NSArray *kvoSubviews = nil;
+    _WKWebViewExtra *extra = self.obsvrExtra;
+    
+    if (nil != extra) {
+        kvoSubviews = extra->_kvoSubviews;
+    }
+    
+    if (nil == webHeaderView) {
+        self.obsvrExtra = nil;
+    } else if (nil == extra) {
+        extra = [[_WKWebViewExtra alloc] init];
+        extra.webView = self;
+        self.obsvrExtra = extra;
+        
+        kvoSubviews = extra->_kvoSubviews;
+    }
+
+    BOOL needUpdate = NO;
     UIScrollView *scrollView = self.scrollView;
     
     UIView *headerView = self.webHeaderView;
     if (nil == headerView) {
         if (nil != webHeaderView) {
-            needResetTopInsets = YES;
+            needUpdate = YES;
             headerView = webHeaderView;
         }
     } else {
-        needResetTopInsets = YES;
+        needUpdate = YES;
         
         if (headerView != webHeaderView) {
-            needResetTopInsets = YES;
+            needUpdate = YES;
             [headerView removeFromSuperview];
             headerView = webHeaderView;
-        } else if (nil == webHeaderView) {
-            [self bk_weaklyAssociateValue:nil withKey:@selector(webHeaderView)];
         }
     }
     
@@ -237,38 +243,20 @@
         if (headerView.superview == nil) {
             [scrollView addSubview:headerView];
             headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-            [self bk_weaklyAssociateValue:headerView withKey:@selector(webHeaderView)];
+            extra.headerView = headerView;
         }
         
         NSParameterAssert(headerView.superview == scrollView);
     }
     
-    if (needResetTopInsets) {
+    if (needUpdate && nil != kvoSubviews) {
         CGFloat h = CGRectGetMaxY(frame);
-        for (UIView *subView in self.kvoSubviews) {
+        for (UIView *subView in kvoSubviews) {
             // bug fix for iOS8
             CGRect rect = subView.frame;
             if (CGRectGetMinY(rect) < h) {
                 rect.origin.y = h;
                 subView.frame = rect;
-            }
-        }
-    }
-}
-
-
-#pragma mark - KVO
-
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSString*, id> *)change context:(nullable void *)context
-{
-    if ([self.kvoSubviews containsObject:object] && [keyPath isEqualToString:PropertySTR(frame)]) { // bug fix for iOS9
-        NSValue *value = change[NSKeyValueChangeNewKey];
-        if ([value isKindOfClass:NSValue.class]) {
-            CGRect frame = value.CGRectValue;
-            CGFloat head = CGRectGetHeight(self.webHeaderView.frame);
-            if (CGRectGetMinY(frame) < head) {
-                frame.origin.y = head;
-                ((UIView *)object).frame = frame;
             }
         }
     }

@@ -901,9 +901,11 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 - (void)bk_weaklyAssociateValue:(__autoreleasing id)value withKey:(const void *)key
 {
+    NSParameterAssert(key);
+    
     _BKWeakAssociatedObject *assoc = objc_getAssociatedObject(self, key);
-    if (!assoc) {
-        assoc = [_BKWeakAssociatedObject new];
+    if (nil == assoc && nil != value) {
+        assoc = [[_BKWeakAssociatedObject alloc] init];
         [self bk_associateValue:assoc withKey:key];
     }
     assoc.value = value;
@@ -912,7 +914,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 - (id)bk_associatedValueForKey:(const void *)key
 {
     id value = objc_getAssociatedObject(self, key);
-    if (value && [value isKindOfClass:[_BKWeakAssociatedObject class]]) {
+    if (nil != value && [value isKindOfClass:_BKWeakAssociatedObject.class]) {
         return [(_BKWeakAssociatedObject *)value value];
     }
     return value;
@@ -922,6 +924,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 {
     objc_removeAssociatedObjects(self);
 }
+
 
 #pragma mark - Class Methods
 
@@ -947,9 +950,11 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 + (void)bk_weaklyAssociateValue:(__autoreleasing id)value withKey:(const void *)key
 {
+    NSParameterAssert(key);
+    
     _BKWeakAssociatedObject *assoc = objc_getAssociatedObject(self, key);
-    if (!assoc) {
-        assoc = [_BKWeakAssociatedObject new];
+    if (nil == assoc && nil != value) {
+        assoc = [[_BKWeakAssociatedObject alloc] init];
         [self bk_associateValue:assoc withKey:key];
     }
     assoc.value = value;
@@ -958,7 +963,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 + (id)bk_associatedValueForKey:(const void *)key
 {
     id value = objc_getAssociatedObject(self, key);
-    if (value && [value isKindOfClass:[_BKWeakAssociatedObject class]]) {
+    if (nil != value && [value isKindOfClass:_BKWeakAssociatedObject.class]) {
         return [(_BKWeakAssociatedObject *)value value];
     }
     return value;

@@ -16,7 +16,7 @@
 
 @end
 
-@interface TCButtonExtra : NSObject
+@interface _TCButtonExtra : NSObject
 
 @property (nonatomic, assign) UIEdgeInsets alignmentRectInsets;
 @property (nonatomic, assign) CGFloat paddingBetweenTitleAndImage;
@@ -28,7 +28,7 @@
 
 @end
 
-@implementation TCButtonExtra
+@implementation _TCButtonExtra
 
 #pragma mark - KVO
 
@@ -66,7 +66,7 @@ static char const kBtnExtraKey;
 
 - (void)tc_dealloc
 {
-    TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
+    _TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
     if (nil != observer) {
         if (observer.isFrameObserved) {
             [self removeFrameObserver:observer];
@@ -93,12 +93,12 @@ static char const kBtnExtraKey;
     });
 }
 
-- (TCButtonExtra *)btnExtra
+- (_TCButtonExtra *)btnExtra
 {
-    TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
+    _TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
     
     if (nil == observer) {
-        observer = [[TCButtonExtra alloc] init];
+        observer = [[_TCButtonExtra alloc] init];
         observer.target = self;
         objc_setAssociatedObject(self, &kBtnExtraKey, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
@@ -228,7 +228,7 @@ static char const kBtnExtraKey;
 
 - (void)setLayoutStyle:(TCButtonLayoutStyle)layoutStyle
 {
-    TCButtonExtra *btnExtra = self.btnExtra;
+    _TCButtonExtra *btnExtra = self.btnExtra;
     if (btnExtra.layoutStyle == layoutStyle) {
         return;
     }
@@ -304,7 +304,7 @@ static char const kBtnExtraKey;
         return;
     }
     
-    TCButtonExtra *btnExtra = self.btnExtra;
+    _TCButtonExtra *btnExtra = self.btnExtra;
     BOOL observed = btnExtra.isFrameObserved;
     if (observed) {
         [self removeFrameObserver:btnExtra];
@@ -457,7 +457,7 @@ static char const kBtnExtraKey;
 
 - (NSMutableDictionary *)innerBackgroundColorDic
 {
-    TCButtonExtra *btnExtra = self.btnExtra;
+    _TCButtonExtra *btnExtra = self.btnExtra;
     if (nil == btnExtra.innerBackgroundColorDic) {
         btnExtra.innerBackgroundColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.borderColorDic) {
@@ -470,7 +470,7 @@ static char const kBtnExtraKey;
 
 - (NSMutableDictionary *)borderColorDic
 {
-    TCButtonExtra *btnExtra = self.btnExtra;
+    _TCButtonExtra *btnExtra = self.btnExtra;
     if (nil == btnExtra.borderColorDic) {
         btnExtra.borderColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.innerBackgroundColorDic) {
