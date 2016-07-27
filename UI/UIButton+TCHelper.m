@@ -38,10 +38,7 @@
 - (void)dealloc
 {
     [self removeFrameObserver];
-    
-    if (nil != self.innerBackgroundColorDic || nil != self.borderColorDic) {
-        [self removeStateObserver];
-    }
+    [self removeStateObserver];
 }
 
 
@@ -51,8 +48,8 @@
         return;
     }
     _isFrameObserved = YES;
-    [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+    [_target addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+    [_target addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)removeFrameObserver
@@ -60,22 +57,28 @@
     if (!_isFrameObserved) {
         return;
     }
-    [self removeObserver:self forKeyPath:@"bounds" context:NULL];
-    [self removeObserver:self forKeyPath:@"frame" context:NULL];
+    [_target removeObserver:self forKeyPath:@"bounds" context:NULL];
+    [_target removeObserver:self forKeyPath:@"frame" context:NULL];
+    _isFrameObserved = NO;
 }
 
 - (void)addStateObserver
 {
-    [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
-    [self addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
+    if (nil != _innerBackgroundColorDic || nil != _borderColorDic) {
+        return;
+    }
+    [_target addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
+    [_target addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
+    [_target addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)removeStateObserver
 {
-    [self removeObserver:self forKeyPath:@"highlighted" context:NULL];
-    [self removeObserver:self forKeyPath:@"selected" context:NULL];
-    [self removeObserver:self forKeyPath:@"enabled" context:NULL];
+    if (nil != _innerBackgroundColorDic || nil != _borderColorDic) {
+        [_target removeObserver:self forKeyPath:@"highlighted" context:NULL];
+        [_target removeObserver:self forKeyPath:@"selected" context:NULL];
+        [_target removeObserver:self forKeyPath:@"enabled" context:NULL];
+    }
 }
 
 
@@ -83,18 +86,18 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (object == self.target || object == self.target.imageView) {
+    if (object == _target) {
         if ([keyPath isEqualToString:@"highlighted"] || [keyPath isEqualToString:@"selected"] || [keyPath isEqualToString:@"enabled"]) {
             NSNumber *state = @(_target.state);
-            self.target.backgroundColor = self.innerBackgroundColorDic[state];
-            self.target.layer.borderColor = [(UIColor *)self.borderColorDic[state] CGColor];
+            _target.backgroundColor = _innerBackgroundColorDic[state];
+            _target.layer.borderColor = [(UIColor *)_borderColorDic[state] CGColor];
             
         } else if ([keyPath isEqualToString:@"bounds"] || [keyPath isEqualToString:@"frame"]) {
             CGRect oldFrame = [(NSValue *)change[NSKeyValueChangeOldKey] CGRectValue];
             CGRect newFrame = [(NSValue *)change[NSKeyValueChangeNewKey] CGRectValue];
             
             if (!CGSizeEqualToSize(oldFrame.size, newFrame.size)) {
-                [self.target updateLayoutStyle];
+                [_target updateLayoutStyle];
             }
         }
     }
