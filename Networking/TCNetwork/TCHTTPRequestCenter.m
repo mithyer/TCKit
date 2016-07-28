@@ -24,7 +24,7 @@
     NSLock *_poolLock;
     
     NSString *_cachePathForResponse;
-    Class _responseValidorClass;
+    __unsafe_unretained Class _responseValidorClass;
     
     NSURLSessionConfiguration *_sessionConfiguration;
     
@@ -389,7 +389,7 @@
     NSParameterAssert(url);
     
     NSDictionary *param = request.parameters;
-    if (!request.shouldIgnoreParamFilter && [self.urlFilter respondsToSelector:@selector(filteredParamForParam:)]) {
+    if (!request.ignoreParamFilter && [self.urlFilter respondsToSelector:@selector(filteredParamForParam:)]) {
         param = [self.urlFilter filteredParamForParam:param];
     }
     

@@ -42,7 +42,8 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequest : NSObject <TCHTTPRequest, 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval; // default: 30s
 @property (nonatomic, assign) TCHTTPMethod method;
 @property (nonatomic, assign) BOOL overrideIfImpact; // default: YES, NO: abandon current request, if a same one existed
-@property (nonatomic, assign) BOOL shouldIgnoreParamFilter;
+@property (nonatomic, assign) BOOL ignoreParamFilter;
+//@property (nonatomic, assign) BOOL shouldIgnore
 
 
 - (instancetype)initWithMethod:(TCHTTPMethod)method;

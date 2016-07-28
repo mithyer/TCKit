@@ -14,10 +14,16 @@
 
 @property (nonatomic, strong) id data;
 @property (nonatomic, assign) BOOL success;
+@property (nonatomic, copy) NSString *successMsg;
 @property (nonatomic, strong) NSError *error;
 
-- (void)reset;
+@property (nonatomic, strong) NSDictionary<NSString *, NSArray<NSNumber *> *> *errorFilter;
 
+
++ (NSDictionary<NSString *, NSArray<NSNumber *> *> *)errorFilter;
+
+- (void)reset;
+- (NSString *)promptToShow:(BOOL *)success;
 
 @optional
 

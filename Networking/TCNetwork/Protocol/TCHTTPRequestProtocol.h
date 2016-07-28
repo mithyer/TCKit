@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 @property (nonatomic, assign) TCHTTPMethod method;
 
 @property (nonatomic, assign) BOOL overrideIfImpact; // default: YES, NO: abandon current request, if a same one existed
-@property (nonatomic, assign) BOOL shouldIgnoreParamFilter;
+@property (nonatomic, assign) BOOL ignoreParamFilter;
 
 
 
