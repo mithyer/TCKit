@@ -17,22 +17,32 @@
 @end
 
 @interface _TCButtonExtra : NSObject
+{
+    @public
+    __unsafe_unretained UIButton *_target; // !!!: no weak, may cause rm kvo failed.
+}
 
 
 @property (nonatomic, assign) UIEdgeInsets alignmentRectInsets;
 @property (nonatomic, assign) CGFloat paddingBetweenTitleAndImage;
 @property (nonatomic, strong) NSMutableDictionary *innerBackgroundColorDic;
 @property (nonatomic, strong) NSMutableDictionary *borderColorDic;
-@property (nonatomic, weak) UIButton *target;
 @property (nonatomic, assign) TCButtonLayoutStyle layoutStyle;
 @property (nonatomic, assign) BOOL isFrameObserved;
 
 - (void)addFrameObserver;
+- (void)removeFrameObserver;
+
 - (void)addStateObserver;
+- (void)removeStateObserver;
 
 @end
 
 @implementation _TCButtonExtra
+{
+    @private
+    BOOL _isStateObserved;
+}
 
 
 - (void)dealloc
@@ -57,16 +67,18 @@
     if (!_isFrameObserved) {
         return;
     }
-    [_target removeObserver:self forKeyPath:@"bounds" context:NULL];
-    [_target removeObserver:self forKeyPath:@"frame" context:NULL];
+    [_target removeObserver:self forKeyPath:@"bounds"];
+    [_target removeObserver:self forKeyPath:@"frame"];
     _isFrameObserved = NO;
 }
 
 - (void)addStateObserver
 {
-    if (nil != _innerBackgroundColorDic || nil != _borderColorDic) {
+    if (_isStateObserved) {
         return;
     }
+    
+    _isStateObserved = YES;
     [_target addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
     [_target addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
     [_target addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
@@ -74,11 +86,13 @@
 
 - (void)removeStateObserver
 {
-    if (nil != _innerBackgroundColorDic || nil != _borderColorDic) {
-        [_target removeObserver:self forKeyPath:@"highlighted" context:NULL];
-        [_target removeObserver:self forKeyPath:@"selected" context:NULL];
-        [_target removeObserver:self forKeyPath:@"enabled" context:NULL];
+    if (!_isStateObserved) {
+        return;
     }
+    [_target removeObserver:self forKeyPath:@"highlighted"];
+    [_target removeObserver:self forKeyPath:@"selected"];
+    [_target removeObserver:self forKeyPath:@"enabled"];
+    _isStateObserved = NO;
 }
 
 
@@ -138,7 +152,7 @@ static char const kBtnExtraKey;
     
     if (nil == observer) {
         observer = [[_TCButtonExtra alloc] init];
-        observer.target = self;
+        observer->_target = self;
         objc_setAssociatedObject(self, &kBtnExtraKey, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
