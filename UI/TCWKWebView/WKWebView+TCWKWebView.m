@@ -47,7 +47,13 @@
 
 - (void)setWebView:(WKWebView *)webView
 {
-    self.kvoSubviews = webView.scrollView.subviews.copy;
+    NSMutableArray *arry = NSMutableArray.array;
+    for (UIView *subView in webView.scrollView.subviews) {
+        if ([subView isKindOfClass:NSClassFromString(@"WKContentView")] || CGSizeEqualToSize(subView.frame.size, CGSizeZero)) {
+            [arry addObject:subView];
+        }
+    }
+    self.kvoSubviews = arry.copy;
 }
 
 
