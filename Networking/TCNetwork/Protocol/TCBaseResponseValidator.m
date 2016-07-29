@@ -39,6 +39,11 @@
     self.error = nil;
 }
 
+- (NSString *)promptToShow
+{
+    return [self promptToShow:NULL];
+}
+
 - (NSString *)promptToShow:(BOOL *)success
 {
     if (NULL != success) {

@@ -24,6 +24,7 @@
 
 - (void)reset;
 - (NSString *)promptToShow:(BOOL *)success;
+- (NSString *)promptToShow;
 
 @optional
 
