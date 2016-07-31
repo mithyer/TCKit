@@ -20,7 +20,7 @@
 {
 @private
     AFHTTPSessionManager *_requestManager;
-    NSMutableDictionary *_requestPool;
+    NSMutableDictionary<NSNumber *, NSMutableDictionary<id<NSCoding>, id<TCHTTPRequest>> *> *_requestPool;
     NSLock *_poolLock;
     
     NSString *_cachePathForResponse;
@@ -536,41 +536,39 @@
 
 - (void)removeRequest:(id<TCHTTPRequest>)mRequest forObserver:(__unsafe_unretained id)observer forIdentifier:(id<NSCopying>)identifier
 {
-    NSNumber *key = @((NSUInteger)(__bridge void *)(observer));
+    NSNumber *key = @((int)(__bridge void *)(observer));
     
     [_poolLock lock];
     NSMutableDictionary *dic = _requestPool[key];
-    [_poolLock unlock];
+    
     
     if (nil == dic) {
+        [_poolLock unlock];
         return;
     }
     
-    @synchronized(dic) {
+    if (nil != identifier) {
+        id<TCHTTPRequest> request = dic[identifier];
+        if (nil != mRequest && request != mRequest) {
+            [_poolLock unlock];
+            return;
+        }
         
-        if (nil != identifier) {
-            id<TCHTTPRequest> request = dic[identifier];
-            if (nil != mRequest && request != mRequest) {
-                return;
+        if (nil != request) {
+            [dic removeObjectForKey:identifier];
+            if (dic.count < 1) {
+                [_requestPool removeObjectForKey:key];
             }
             
-            if (nil != request) {
-                [dic removeObjectForKey:identifier];
-                if (dic.count < 1) {
-                    [_poolLock lock];
-                    [_requestPool removeObjectForKey:key];
-                    [_poolLock unlock];
-                }
-                
-                [request cancel];
-            }
-        } else {
-            [_poolLock lock];
-            [_requestPool removeObjectForKey:key];
-            [_poolLock unlock];
-            [dic.allValues makeObjectsPerformSelector:@selector(cancel)];
+            [request cancel];
         }
+    } else {
+        [_requestPool removeObjectForKey:key];
+        
+        [dic.allValues makeObjectsPerformSelector:@selector(cancel)];
     }
+    
+    [_poolLock unlock];
 }
 
 - (void)removeRequestObserver:(__unsafe_unretained id)observer forIdentifier:(id<NSCopying>)identifier
@@ -581,6 +579,22 @@
 - (void)removeRequestObserver:(__unsafe_unretained id)observer
 {
     [self removeRequestObserver:observer forIdentifier:nil];
+}
+
+- (void)removeAllRequests
+{
+    [_poolLock lock];
+    NSMutableArray *arry = NSMutableArray.array;
+    for (id key in _requestPool) {
+        NSArray *requests = _requestPool[key].allValues;
+        if (nil != requests) {
+            [arry addObjectsFromArray:requests];
+        }
+        
+        [arry makeObjectsPerformSelector:@selector(cancel)];
+    }
+    _requestPool = NSMutableDictionary.dictionary;
+    [_poolLock unlock];
 }
 
 - (void)removeAllCachedResponses

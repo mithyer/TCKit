@@ -70,7 +70,7 @@
             if (filter.count > 0) {
                 if ([filter.allKeys containsObject:err.domain] &&
                     (filter[err.domain].count < 1 || [filter[err.domain] containsObject:@(err.code)]) &&
-                    err.localizedDescription.length) {
+                    err.localizedDescription.length > 0) {
                     
                     return err.localizedDescription;
                 }
