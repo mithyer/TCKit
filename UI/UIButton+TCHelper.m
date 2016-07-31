@@ -19,9 +19,8 @@
 @interface _TCButtonExtra : NSObject
 {
     @public
-    __unsafe_unretained UIButton *_target; // !!!: no weak, may cause rm kvo failed.
+    __weak UIButton *_target;
 }
-
 
 @property (nonatomic, assign) UIEdgeInsets alignmentRectInsets;
 @property (nonatomic, assign) CGFloat paddingBetweenTitleAndImage;
@@ -30,11 +29,11 @@
 @property (nonatomic, assign) TCButtonLayoutStyle layoutStyle;
 @property (nonatomic, assign) BOOL isFrameObserved;
 
-- (void)addFrameObserver;
-- (void)removeFrameObserver;
+- (void)addFrameObserver:(UIButton *)target;
+- (void)removeFrameObserver:(UIButton *)target;
 
-- (void)addStateObserver;
-- (void)removeStateObserver;
+- (void)addStateObserver:(UIButton *)target;
+- (void)removeStateObserver:(UIButton *)target;
 
 @end
 
@@ -45,53 +44,46 @@
 }
 
 
-- (void)dealloc
-{
-    [self removeFrameObserver];
-    [self removeStateObserver];
-}
-
-
-- (void)addFrameObserver
+- (void)addFrameObserver:(UIButton *)target
 {
     if (_isFrameObserved) {
         return;
     }
     _isFrameObserved = YES;
-    [_target addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
-    [_target addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+    [target addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+    [target addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
 }
 
-- (void)removeFrameObserver
+- (void)removeFrameObserver:(UIButton *)target
 {
     if (!_isFrameObserved) {
         return;
     }
-    [_target removeObserver:self forKeyPath:@"bounds"];
-    [_target removeObserver:self forKeyPath:@"frame"];
+    [target removeObserver:self forKeyPath:@"bounds"];
+    [target removeObserver:self forKeyPath:@"frame"];
     _isFrameObserved = NO;
 }
 
-- (void)addStateObserver
+- (void)addStateObserver:(UIButton *)target
 {
     if (_isStateObserved) {
         return;
     }
     
     _isStateObserved = YES;
-    [_target addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
-    [_target addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
-    [_target addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
+    [target addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:NULL];
+    [target addObserver:self forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
+    [target addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
-- (void)removeStateObserver
+- (void)removeStateObserver:(UIButton *)target
 {
     if (!_isStateObserved) {
         return;
     }
-    [_target removeObserver:self forKeyPath:@"highlighted"];
-    [_target removeObserver:self forKeyPath:@"selected"];
-    [_target removeObserver:self forKeyPath:@"enabled"];
+    [target removeObserver:self forKeyPath:@"highlighted"];
+    [target removeObserver:self forKeyPath:@"selected"];
+    [target removeObserver:self forKeyPath:@"enabled"];
     _isStateObserved = NO;
 }
 
@@ -133,7 +125,13 @@ static char const kBtnExtraKey;
 
 - (void)tc_dealloc
 {
-    objc_setAssociatedObject(self, &kBtnExtraKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    _TCButtonExtra *observer = objc_getAssociatedObject(self, &kBtnExtraKey);
+    if (nil != observer) {
+        [observer removeFrameObserver:self];
+        [observer removeStateObserver:self];
+        objc_setAssociatedObject(self, &kBtnExtraKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
     [self tc_dealloc];
 }
 
@@ -281,10 +279,10 @@ static char const kBtnExtraKey;
     }
     
     if (layoutStyle != kTCButtonLayoutStyleDefault) {
-            [btnExtra addFrameObserver];
+        [btnExtra addFrameObserver:self];
     } else {
         if (btnExtra.isFrameObserved) {
-            [btnExtra removeFrameObserver];
+            [btnExtra removeFrameObserver:self];
             [self resetImageAndTitleEdges];
         }
     }
@@ -346,13 +344,13 @@ static char const kBtnExtraKey;
     _TCButtonExtra *btnExtra = self.btnExtra;
     BOOL observed = btnExtra.isFrameObserved;
     if (observed) {
-        [btnExtra removeFrameObserver];
+        [btnExtra removeFrameObserver:self];
     }
     
     block();
     dispatch_async(dispatch_get_main_queue(), ^{
         if (observed) {
-            [btnExtra addFrameObserver];
+            [btnExtra addFrameObserver:self];
         }
     });
 }
@@ -484,7 +482,7 @@ static char const kBtnExtraKey;
     if (nil == btnExtra.innerBackgroundColorDic) {
         btnExtra.innerBackgroundColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.borderColorDic) {
-            [btnExtra addStateObserver];
+            [btnExtra addStateObserver:self];
         }
     }
     
@@ -497,7 +495,7 @@ static char const kBtnExtraKey;
     if (nil == btnExtra.borderColorDic) {
         btnExtra.borderColorDic = [NSMutableDictionary dictionary];
         if (nil == btnExtra.innerBackgroundColorDic) {
-            [btnExtra addStateObserver];
+            [btnExtra addStateObserver:self];
         }
     }
     
