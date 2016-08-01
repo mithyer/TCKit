@@ -47,14 +47,16 @@
 {
     char keyPtr[keySize];
     bzero(keyPtr, sizeof(keyPtr));
-    [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
+    if (key.length > 0) {
+        memcpy(keyPtr, key.UTF8String, key.length <= keySize ? key.length : keySize);
+    }
     
     char tmpIvPtr[kCCBlockSizeAES128];
     bzero(tmpIvPtr, sizeof(tmpIvPtr));
     
     char *ivPtr = NULL;
     if (iv.length > 0) {
-        [iv getCString:tmpIvPtr maxLength:sizeof(tmpIvPtr) encoding:NSUTF8StringEncoding];
+        memcpy(tmpIvPtr, iv.UTF8String, iv.length <= kCCBlockSizeAES128 ? iv.length : kCCBlockSizeAES128);
         ivPtr = tmpIvPtr;
     }
     
