@@ -584,14 +584,11 @@
 - (void)removeAllRequests
 {
     [_poolLock lock];
-    NSMutableArray *arry = NSMutableArray.array;
     for (id key in _requestPool) {
         NSArray *requests = _requestPool[key].allValues;
         if (nil != requests) {
-            [arry addObjectsFromArray:requests];
+            [requests makeObjectsPerformSelector:@selector(cancel)];
         }
-        
-        [arry makeObjectsPerformSelector:@selector(cancel)];
     }
     _requestPool = NSMutableDictionary.dictionary;
     [_poolLock unlock];
