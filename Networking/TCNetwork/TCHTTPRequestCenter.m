@@ -21,7 +21,7 @@
 @private
     AFHTTPSessionManager *_requestManager;
     NSMutableDictionary<NSNumber *, NSMutableDictionary<id<NSCoding>, id<TCHTTPRequest>> *> *_requestPool;
-    NSLock *_poolLock;
+    NSRecursiveLock *_poolLock;
     
     NSString *_cachePathForResponse;
     __unsafe_unretained Class _responseValidorClass;
@@ -122,7 +122,7 @@
 {
     self = [super init];
     if (self) {
-        _poolLock = [[NSLock alloc] init];
+        _poolLock = [[NSRecursiveLock alloc] init];
         _poolLock.name = @"requestPoolLock.TCNetwork.TCKit";
         _requestPool = NSMutableDictionary.dictionary;
         
@@ -506,26 +506,25 @@
         dic = NSMutableDictionary.dictionary;
         _requestPool[key] = dic;
     }
-    [_poolLock unlock];
     
-    @synchronized(dic) {
+    NSString *identifier = request.identifier;
+    id<TCHTTPRequest> preRequest = dic[identifier];
+    if (request == preRequest) {
+        [_poolLock unlock];
+        return;
+    }
     
-        NSString *identifier = request.identifier;
-        id<TCHTTPRequest> preRequest = dic[identifier];
-        if (request == preRequest) {
+    if (nil != preRequest) {
+        if (!request.overrideIfImpact) {
+            [_poolLock unlock];
             return;
         }
-        
-        if (nil != preRequest) {
-            if (!request.overrideIfImpact) {
-                return;
-            }
-            [dic removeObjectForKey:identifier];
-            [preRequest cancel];
-        }
-        
-        dic[identifier] = request;
+        [dic removeObjectForKey:identifier];
+        [preRequest cancel]; // !!!: may call [_poolLock lock];
     }
+    
+    dic[identifier] = request;
+    [_poolLock unlock];
 }
 
 
@@ -564,7 +563,6 @@
         }
     } else {
         [_requestPool removeObjectForKey:key];
-        
         [dic.allValues makeObjectsPerformSelector:@selector(cancel)];
     }
     
@@ -590,7 +588,6 @@
             [requests makeObjectsPerformSelector:@selector(cancel)];
         }
     }
-    _requestPool = NSMutableDictionary.dictionary;
     [_poolLock unlock];
 }
 

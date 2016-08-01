@@ -322,8 +322,6 @@
         return NO;
     }
     
-    RLog(@"\n---------*---?????? : %zd", plainData.length);
-    
     OSStatus status = SecKeyRawVerify(key,
                                       kSecPaddingPKCS1SHA256,
                                       hashBytes,
@@ -334,7 +332,7 @@
     
     RLog(@"\n----------***---?????? : %d", status);
     //  if the signature is not verified because the underlying data has changed, then the status return is -9809.
-    return errSecSuccess == status;
+    return errSecSuccess == status || -9809 == status;
 }
 
 - (NSString *)signSHA256String:(NSString *)plainStr

@@ -40,6 +40,7 @@
     
     const char *value = self.UTF8String;
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
+    bzero(outputBuffer, sizeof(outputBuffer));
     CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];

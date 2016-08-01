@@ -45,35 +45,35 @@
 
 - (instancetype)AESOperation:(CCOperation)operation key:(NSString *)key iv:(NSString *)iv keySize:(int)keySize
 {
-    char keyPtr[keySize + 1];
+    char keyPtr[keySize];
     bzero(keyPtr, sizeof(keyPtr));
     [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
     
+    char tmpIvPtr[kCCBlockSizeAES128];
+    bzero(tmpIvPtr, sizeof(tmpIvPtr));
+    
     char *ivPtr = NULL;
     if (iv.length > 0) {
-        char tmpIvPtr[kCCBlockSizeAES128 + 1];
-        bzero(tmpIvPtr, sizeof(tmpIvPtr));
         [iv getCString:tmpIvPtr maxLength:sizeof(tmpIvPtr) encoding:NSUTF8StringEncoding];
         ivPtr = tmpIvPtr;
     }
     
-    NSUInteger dataLength = self.length;
-    size_t bufferSize = dataLength + kCCBlockSizeAES128;
+    size_t bufferSize = self.length + kCCBlockSizeAES128;
     void *buffer = malloc(bufferSize);
-    
     if (NULL == buffer) {
         return nil;
     }
+    bzero(buffer, bufferSize);
     
     size_t numBytesCrypted = 0;
     CCCryptorStatus cryptStatus = CCCrypt(operation,
                                           kCCAlgorithmAES,
                                           kCCOptionPKCS7Padding,
                                           keyPtr,
-                                          kCCBlockSizeAES128,
+                                          keySize,
                                           ivPtr,
                                           self.bytes,
-                                          dataLength,
+                                          self.length,
                                           buffer,
                                           bufferSize,
                                           &numBytesCrypted);
