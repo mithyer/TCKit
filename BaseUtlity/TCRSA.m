@@ -314,12 +314,15 @@
     }
     
     uint8_t *hashBytes = malloc(CC_SHA256_DIGEST_LENGTH);
+    memset(hashBytes, 0x0, CC_SHA256_DIGEST_LENGTH);
     if (NULL == hashBytes || !CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
         if (NULL != hashBytes) {
             free(hashBytes);
         }
         return NO;
     }
+    
+    RLog(@"\n---------*---?????? : %zd", plainData.length);
     
     OSStatus status = SecKeyRawVerify(key,
                                       kSecPaddingPKCS1SHA256,
@@ -329,6 +332,8 @@
                                       SecKeyGetBlockSize(key));
     free(hashBytes);
     
+    RLog(@"\n----------***---?????? : %d", status);
+    //  if the signature is not verified because the underlying data has changed, then the status return is -9809.
     return errSecSuccess == status;
 }
 
