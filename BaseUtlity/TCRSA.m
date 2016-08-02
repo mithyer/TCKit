@@ -196,7 +196,7 @@
         return nil;
     }
     
-    NSMutableData *decryptedData = [NSMutableData data];
+    NSMutableData *decryptedData = NSMutableData.data;
     NSUInteger len = cypherData.length;
     
     for (size_t i = 0; i < blockCount; i++) {
@@ -270,11 +270,9 @@
         return nil;
     }
     
-    uint8_t *hashBytes = malloc(CC_SHA256_DIGEST_LENGTH);
-    if (NULL == hashBytes || !CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
-        if (NULL != hashBytes) {
-            free(hashBytes);
-        }
+    uint8_t hashBytes[CC_SHA256_DIGEST_LENGTH];
+    bzero(hashBytes, CC_SHA256_DIGEST_LENGTH);
+    if (!CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
         return nil;
     }
     
@@ -283,7 +281,7 @@
     if (NULL == signedHashBytes) {
         return nil;
     }
-    memset(signedHashBytes, 0x0, signedHashBytesSize);
+    bzero(signedHashBytes, signedHashBytesSize);
     
     SecKeyRawSign(key,
                   kSecPaddingPKCS1SHA256,
@@ -291,8 +289,6 @@
                   CC_SHA256_DIGEST_LENGTH,
                   signedHashBytes,
                   &signedHashBytesSize);
-    
-    free(hashBytes);
     
     return [NSData dataWithBytesNoCopy:signedHashBytes
                                 length:(NSUInteger)signedHashBytesSize];
@@ -313,12 +309,9 @@
         return NO;
     }
     
-    uint8_t *hashBytes = malloc(CC_SHA256_DIGEST_LENGTH);
-    memset(hashBytes, 0x0, CC_SHA256_DIGEST_LENGTH);
-    if (NULL == hashBytes || !CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
-        if (NULL != hashBytes) {
-            free(hashBytes);
-        }
+    uint8_t hashBytes[CC_SHA256_DIGEST_LENGTH];
+    bzero(hashBytes, CC_SHA256_DIGEST_LENGTH);
+    if (!CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
         return NO;
     }
     
@@ -328,7 +321,6 @@
                                       CC_SHA256_DIGEST_LENGTH,
                                       signData.bytes,
                                       SecKeyGetBlockSize(key));
-    free(hashBytes);
     
     RLog(@"\n----------***---?????? : %d", status);
     //  if the signature is not verified because the underlying data has changed, then the status return is -9809.

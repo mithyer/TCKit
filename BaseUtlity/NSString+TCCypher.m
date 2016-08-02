@@ -73,6 +73,7 @@
     }
     
     unsigned char outputBuffer[CC_SHA1_DIGEST_LENGTH];
+    bzero(outputBuffer, sizeof(outputBuffer));
     CC_SHA1(byteArray, (CC_LONG)len, outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
