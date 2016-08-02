@@ -51,12 +51,13 @@
         memcpy(keyPtr, key.UTF8String, key.length <= keySize ? key.length : keySize);
     }
     
-    char tmpIvPtr[kCCBlockSizeAES128];
+    static size_t const kIvSize = kCCBlockSizeAES128;
+    char tmpIvPtr[kIvSize];
     bzero(tmpIvPtr, sizeof(tmpIvPtr));
     
     char *ivPtr = NULL;
     if (iv.length > 0) {
-        memcpy(tmpIvPtr, iv.UTF8String, iv.length <= kCCBlockSizeAES128 ? iv.length : kCCBlockSizeAES128);
+        memcpy(tmpIvPtr, iv.UTF8String, iv.length <= kIvSize ? iv.length : kIvSize);
         ivPtr = tmpIvPtr;
     }
     
