@@ -36,7 +36,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequest : NSObject <TCHTTPRequest, 
 @property (nonatomic, copy) NSString *baseUrl; // "http://eet/oo/"
 
 // Auto convert to query string, if requestMethod is GET
-@property (nonatomic, strong) NSDictionary *parameters;
+@property (nonatomic, strong) NSDictionary<NSString *, id> *parameters;
 
 // TODO: extract to options
 @property (nonatomic, assign) NSTimeInterval timeoutInterval; // default: 30s

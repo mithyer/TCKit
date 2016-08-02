@@ -24,6 +24,8 @@
 - (void)goBack;
 
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id result, NSError *error))completionHandler;
+
+// refer: http://www.jianshu.com/p/d2c478bbcca5?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
 - (void)clearCookies;
 
 @end
