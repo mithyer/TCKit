@@ -277,7 +277,8 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
             case kTCEncodingTypeNSURL: { // NSURL <- NSString
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
-                        ret = [klass URLWithString:value];
+                        ret = [klass URLWithString:[(NSString *)value stringByReplacingOccurrencesOfString:@"\x20" withString:@""]];
+                        NSCParameterAssert(ret);
                     }
                 } else if ([value isKindOfClass:NSURL.class]) {
                     ret = value;
