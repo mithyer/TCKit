@@ -20,7 +20,13 @@
 #endif
 
 
+#ifdef DEBUG
 #define PropertySTR(name)   NSStringFromSelector(@selector(name))
+#else
+#define PropertySTR(name)   (@#name)
+#endif // DEBUG
+
+
 #define _URL(name) (nil == (name) ? nil : [NSURL URLWithString:(name)])
 
 
