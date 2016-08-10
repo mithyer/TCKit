@@ -17,9 +17,24 @@
 
 + (instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *)bundle
 {
-    return [self imageWithContentsOfFile:[(bundle ?: [NSBundle mainBundle]) pathForResource:name ofType:nil]];
+    return [self imageWithContentsOfFile:[(bundle ?: NSBundle.mainBundle) pathForResource:name ofType:nil]];
 }
 
++ (instancetype)launchImage
+{
+    NSString *launchImage = nil;
+    NSArray *imagesDic = [NSBundle.mainBundle.infoDictionary valueForKey:@"UILaunchImages"];
+    for (NSDictionary *dic in imagesDic) {
+        CGSize imageSize = CGSizeFromString(dic[@"UILaunchImageSize"]);
+        
+        if (CGSizeEqualToSize(imageSize, UIScreen.mainScreen.bounds.size)) {
+            launchImage = dic[@"UILaunchImageName"];
+            break;
+        }
+    }
+    
+    return [UIImage imageNamed:launchImage];
+}
 
 - (instancetype)fitToScreenScale
 {

@@ -14,6 +14,10 @@
 + (instancetype)imageWithContentsOfName:(NSString *)name;
 + (instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *)bundle;
 
++ (instancetype)launchImage;
+
 - (instancetype)fitToScreenScale;
+
+
 
 @end
