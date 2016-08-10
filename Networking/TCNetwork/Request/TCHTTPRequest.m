@@ -18,14 +18,15 @@
 
 
 @implementation TCHTTPRequest
-{
-    @private
-    void *_observer;
-}
 
 @synthesize isForceStart; // compatible with cache api
 @synthesize cachePolicy; // compatible with cache api
 
+
+- (void)dealloc
+{
+    [self cancel];
+}
 
 - (instancetype)init
 {
@@ -75,15 +76,10 @@
     return nil != self.requestTask ? self.rawResponseObject : nil;
 }
 
-- (void)setObserver:(__unsafe_unretained id)observer
+- (id)observer
 {
-    _observer = (__bridge void *)(observer);
-}
-
-- (void *)observer
-{
-    if (NULL == _observer) {
-        self.observer = self.delegate ?: (id)self;
+    if (nil == _observer) {
+        _observer = self.delegate ?: (id)self;
     }
     
     return _observer;
