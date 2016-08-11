@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
+// TODO: define tc_systemUserAgent
+
 @protocol TCWKWebView <NSObject>
 
 @required
@@ -18,6 +21,8 @@
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, strong) UIView *webHeaderView;
 @property (nonatomic, assign) BOOL reloadOriRequestEnterForeground;
+
++ (NSString *)tc_systemUserAgent;
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (BOOL)canGoBack;

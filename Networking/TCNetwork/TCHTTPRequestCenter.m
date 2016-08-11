@@ -23,10 +23,10 @@
     NSMapTable<id, NSMapTable<id<NSCoding>, id<TCHTTPRequest>> *> *_requestPool;
     NSRecursiveLock *_poolLock;
     
-    NSString *_cachePathForResponse;
-    __unsafe_unretained Class _responseValidorClass;
+    NSString *_cachePathForResp;
+    __unsafe_unretained Class _respValidorClass;
     
-    NSURLSessionConfiguration *_sessionConfiguration;
+    NSURLSessionConfiguration *_sessionConfig;
     
     AFSecurityPolicy *_securityPolicy;
     NSCache *_memCache;
@@ -34,20 +34,20 @@
 
 + (instancetype)defaultCenter
 {
-    static NSMutableDictionary *centers = nil;
+    static NSMapTable<Class, __kindof TCHTTPRequestCenter *> *centers = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        centers = NSMutableDictionary.dictionary;
+        centers = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                                        valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality];
     });
     
     TCHTTPRequestCenter *obj = nil;
     @synchronized(centers) {
-        NSString *key = NSStringFromClass(self.class);
-        obj = centers[key];
+        obj = [centers objectForKey:self];
         if (nil == obj) {
             obj = [[self alloc] initWithBaseURL:nil sessionConfiguration:nil];
             if (nil != obj) {
-                centers[key] = obj;
+                [centers setObject:obj forKey:self];
             }
         }
     }
@@ -57,12 +57,12 @@
 
 - (Class)responseValidorClass
 {
-    return _responseValidorClass ?: TCBaseResponseValidator.class;
+    return _respValidorClass ?: TCBaseResponseValidator.class;
 }
 
 - (void)registerResponseValidatorClass:(Class)validatorClass
 {
-    _responseValidorClass = validatorClass;
+    _respValidorClass = validatorClass;
 }
 
 - (BOOL)networkReachable
@@ -88,16 +88,16 @@
 
 - (NSString *)cachePathForResponse
 {
-    if (nil == _cachePathForResponse) {
+    if (nil == _cachePathForResp) {
         NSString *path = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
-        _cachePathForResponse = [path stringByAppendingPathComponent:@"TCHTTPRequestCache"];
+        _cachePathForResp = [path stringByAppendingPathComponent:@"TCHTTPRequestCache"];
         NSString *domain = self.cacheDomainForResponse;
         if (domain.length > 0) {
-            _cachePathForResponse = [_cachePathForResponse stringByAppendingPathComponent:domain];
+            _cachePathForResp = [_cachePathForResp stringByAppendingPathComponent:domain];
         }
     }
     
-    return _cachePathForResponse;
+    return _cachePathForResp;
 }
 
 - (NSString *)cacheDomainForResponse
@@ -132,10 +132,10 @@
     return self;
 }
 
-- (NSString *)requestManagerIdentifier
+- (NSString *)requestManagerPrint
 {
     NSUInteger policyHash = self.innerSecurityPolicy.hash;
-    NSUInteger configurationHash = _sessionConfiguration.hash;
+    NSUInteger configurationHash = _sessionConfig.hash;
     
     
     NSUInteger contentTypeHash = 0;
@@ -156,45 +156,45 @@
         return nil;
     }
     
-    static NSMutableDictionary<NSString *, AFHTTPSessionManager *> *s_mngrPool;
+    static NSMapTable<NSString *, AFHTTPSessionManager *> *s_mngrPool = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_mngrPool = NSMutableDictionary.dictionary;
+        s_mngrPool = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality
+                                           valueOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality];
     });
     
-    AFHTTPSessionManager *requestManager = nil;
+    AFHTTPSessionManager *reqMngr = nil;
     @synchronized(s_mngrPool) {
-        requestManager = s_mngrPool[identifier];
-        if (nil == requestManager) {
-            requestManager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:_sessionConfiguration];
-            requestManager.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        reqMngr = [s_mngrPool objectForKey:identifier];
+        if (nil == reqMngr) {
+            reqMngr = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:_sessionConfig];
+            reqMngr.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
             AFSecurityPolicy *policy = self.innerSecurityPolicy;
             if (nil != policy) {
-                requestManager.securityPolicy = policy;
+                reqMngr.securityPolicy = policy;
             }
             
             if (nil != self.acceptableContentTypes) {
-                NSMutableSet *set = requestManager.responseSerializer.acceptableContentTypes.mutableCopy;
+                NSMutableSet *set = reqMngr.responseSerializer.acceptableContentTypes.mutableCopy;
                 [set unionSet:self.acceptableContentTypes];
-                requestManager.responseSerializer.acceptableContentTypes = set;
+                reqMngr.responseSerializer.acceptableContentTypes = set;
                 self.acceptableContentTypes = nil;
             }
             
-            [requestManager.reachabilityManager startMonitoring];
-            
-            s_mngrPool[identifier] = requestManager;
+            [reqMngr.reachabilityManager startMonitoring];
+            [s_mngrPool setObject:reqMngr forKey:identifier];
         }
     }
     
-    _sessionConfiguration = nil;
+    _sessionConfig = nil;
     
-    return requestManager;
+    return reqMngr;
 }
 
 - (AFHTTPSessionManager *)requestManager
 {
     if (nil == _requestManager) {
-        _requestManager = [self dequeueRequestManagerWithIdentifier:self.requestManagerIdentifier];
+        _requestManager = [self dequeueRequestManagerWithIdentifier:self.requestManagerPrint];
     }
     
     return _requestManager;
@@ -205,7 +205,7 @@
     self = [self init];
     if (self) {
         _baseURL = url;
-        _sessionConfiguration = configuration;
+        _sessionConfig = configuration;
     }
     return self;
 }

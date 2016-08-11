@@ -33,7 +33,7 @@
     NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
     
     // Explode based on inner glue
-    NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
+    NSMutableDictionary *returnDictionary = NSMutableDictionary.dictionary;
     for (NSInteger i = 0; i < firstExplode.count; ++i) {
         NSArray *secondExplode = [firstExplode[i] componentsSeparatedByString:innerGlue];
         if (secondExplode.count == 2) {

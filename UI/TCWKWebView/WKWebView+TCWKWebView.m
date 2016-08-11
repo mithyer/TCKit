@@ -85,6 +85,32 @@
 + (void)load
 {
     [self tc_swizzle:@selector(loadRequest:)];
+    
+    // trigger auto load
+    [self tc_systemUserAgent];
+}
+
++ (NSString *)tc_systemUserAgent
+{
+    static NSString *s_userAgent = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_block_t block = ^{
+            __block WKWebView *view = [[self alloc] init];
+            [view evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString * _Nullable result, NSError * _Nullable error) {
+                s_userAgent = result;
+                view = nil;
+            }];
+        };
+        
+        if (NSThread.isMainThread) {
+            block();
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), block);
+        }
+    });
+    
+    return s_userAgent;
 }
 
 - (id<WKNavigationDelegate, WKUIDelegate>)delegate

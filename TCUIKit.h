@@ -12,7 +12,6 @@
 #import "UIView+TCHelper.h"
 #import "UILabel+TCHelper.h"
 #import "UIButton+TCHelper.h"
-#import "UIWebView+TCHelper.h"
 #import "UIViewController+TCHelper.h"
 #import "UITextField+TCHelper.h"
 #import "TCAlertController.h"

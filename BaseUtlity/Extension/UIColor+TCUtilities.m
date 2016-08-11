@@ -9,18 +9,20 @@ NS_INLINE CGFloat cgfunitclamp(CGFloat f) {return cgfmax(0.0, cgfmin(1.0, f));}
 CGColorSpaceRef tcDeviceRGBSpace(void)
 {
     static CGColorSpaceRef rgbSpace = NULL;
-    if (rgbSpace == NULL) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         rgbSpace = CGColorSpaceCreateDeviceRGB();
-    }
+    });
     return rgbSpace;
 }
 
 CGColorSpaceRef tcDeviceGraySpace(void)
 {
     static CGColorSpaceRef graySpace = NULL;
-    if (graySpace == NULL) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         graySpace = CGColorSpaceCreateDeviceGray();
-    }
+    });
     return graySpace;
 }
 

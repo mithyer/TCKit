@@ -107,7 +107,7 @@
         return label;
     };
     
-    if (![NSThread isMainThread]) {
+    if (!NSThread.isMainThread) {
         __block UILabel *label = nil;
         dispatch_sync(dispatch_get_main_queue(), ^{
             label = block();

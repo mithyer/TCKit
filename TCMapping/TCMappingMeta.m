@@ -30,7 +30,7 @@
 
 static Class NSBlockClass(void)
 {
-    static Class cls;
+    static Class cls = Nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         void (^block)(void) = ^{};
@@ -313,13 +313,14 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         return nil;
     }
     
-    static NSRecursiveLock *s_recursiveLock;
-    static NSMutableDictionary<NSString *, NSMutableDictionary *> *s_propertyByClass;
-    static NSArray<NSString *> *s_sysProps;
+    static NSRecursiveLock *s_recursiveLock = nil;
+    static NSMapTable<Class, NSMutableDictionary<NSString *, TCMappingMeta *> *> *s_propertyByClass = nil;
+    static NSArray<NSString *> *s_sysProps = nil;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_propertyByClass = [NSMutableDictionary dictionary];
+        s_propertyByClass = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                                                  valueOptions:NSPointerFunctionsStrongMemory];
         s_recursiveLock = [[NSRecursiveLock alloc] init];
         s_recursiveLock.name = @"recursiveLock.TCMappingMeta.TCKit";
         
@@ -331,10 +332,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     });
     
     
-    NSString *key = NSStringFromClass(klass);
-    
     [s_recursiveLock lock];
-    NSMutableDictionary<NSString *, TCMappingMeta *> *propertyNames = s_propertyByClass[key];
+    NSMutableDictionary<NSString *, TCMappingMeta *> *propertyNames = [s_propertyByClass objectForKey:klass];
     if (nil != propertyNames) {
         [s_recursiveLock unlock];
         return propertyNames;
@@ -353,7 +352,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     free(properties);
     
     [propertyNames addEntriesFromDictionary:tc_propertiesUntilRootClass(class_getSuperclass(klass))];
-    s_propertyByClass[key] = propertyNames;
+    [s_propertyByClass setObject:propertyNames forKey:klass];
     
     [s_recursiveLock unlock];
     return propertyNames;
