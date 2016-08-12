@@ -93,7 +93,7 @@
         if (nil != data) {
             NSDictionary *options = nil;
             if (nil != _passwd) {
-                options = @{(__bridge id)kSecImportExportPassphrase: _passwd};
+                options = @{(__bridge NSString *)kSecImportExportPassphrase: _passwd};
                 _passwd = nil;
             }
             CFArrayRef items = CFArrayCreate(kCFAllocatorDefault, 0, 0, NULL);
@@ -107,7 +107,9 @@
                 }
             }
             
-            CFRelease(items);
+            if (NULL != items) {
+                CFRelease(items);
+            }
         }
     }
     
@@ -322,7 +324,6 @@
                                       signData.bytes,
                                       SecKeyGetBlockSize(key));
     
-    RLog(@"\n----------***---?????? : %d", status);
     //  if the signature is not verified because the underlying data has changed, then the status return is -9809.
     return errSecSuccess == status;
 }
