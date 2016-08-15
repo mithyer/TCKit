@@ -65,7 +65,7 @@
         NSValue *value = change[NSKeyValueChangeNewKey];
         if ([value isKindOfClass:NSValue.class]) {
             CGRect frame = value.CGRectValue;
-            CGFloat head = CGRectGetHeight(_headerView.frame);
+            CGFloat head = CGRectGetMaxY(_headerView.frame);
             if (CGRectGetMinY(frame) < head) {
                 frame.origin.y = head;
                 ((UIView *)object).frame = frame;
@@ -147,7 +147,7 @@
     if (scalesPageToFit) {
         [self.configuration.userContentController addUserScript:wkUScript];
     } else {
-        NSMutableArray *userScripts = self.configuration.userContentController.userScripts.copy;
+        NSMutableArray *userScripts = self.configuration.userContentController.userScripts.mutableCopy;
         NSInteger index = NSNotFound;
         for (WKUserScript *script in userScripts) {
             if ([script.source isEqualToString:jScript]) {
