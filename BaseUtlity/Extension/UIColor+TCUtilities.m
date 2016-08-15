@@ -174,7 +174,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
     CGFloat g = self.green;
     CGFloat b = self.blue;
     
-    CGFloat k = 1.0f - fmaxf(fmaxf(r, g), b);
+    CGFloat k = 1.0f - fmax(fmax(r, g), b);
     CGFloat dK = 1.0f - k;
     
     CGFloat c = (1.0f - (r + k)) / dK;

@@ -419,7 +419,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
     if (nil == block) {
         return;
     }
-    dispatch_time_t targetTime = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
+    dispatch_time_t targetTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
     dispatch_after(targetTime, dispatch_get_main_queue(), ^(void){
         block();
     });

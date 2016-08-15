@@ -74,8 +74,8 @@ size_t TC_FixedWidth(size_t width)
     }
     
     
-    size_t fix_w = TC_FixedWidth(w);
-    size_t fix_h = h / w * fix_w;
+    size_t fix_w = TC_FixedWidth((size_t)w);
+    size_t fix_h = (size_t)(h / w * fix_w);
     
     return CGSizeMake((size_t)fix_w, (size_t)fix_h);
 }
@@ -162,8 +162,8 @@ size_t TC_FixedWidth(size_t width)
     }
     
     if (pixelAlign) {
-        size_t fix_w = TC_FixedWidth(rawSize.width);
-        size_t fix_h = rawSize.height / rawSize.width * fix_w;
+        size_t fix_w = TC_FixedWidth((size_t)rawSize.width);
+        size_t fix_h = (size_t)(rawSize.height / rawSize.width * fix_w);
         rawSize = CGSizeMake(fix_w, fix_h);
     }
     

@@ -797,27 +797,27 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
 
 - (char)charValue
 {
-    return self.intValue;
+    return (char)self.intValue;
 }
 
 - (unsigned char)unsignedCharValue
 {
-    return self.intValue;
+    return (unsigned char)self.intValue;
 }
 
 - (short)shortValue
 {
-    return self.intValue;
+    return (short)self.intValue;
 }
 
 - (unsigned short)unsignedShortValue
 {
-    return self.intValue;
+    return (unsigned short)self.intValue;
 }
 
 - (unsigned int)unsignedIntValue
 {
-    return self.intValue;
+    return (unsigned int)self.intValue;
 }
 
 - (long)longValue
