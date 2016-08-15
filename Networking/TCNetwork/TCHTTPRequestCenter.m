@@ -291,7 +291,7 @@
     return YES;
 }
 
-- (void)fireDownloadTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request downloadUrl:(NSString *)downloadUrl successBlock:(void (^)())successBlock failureBlock:(void (^)())failureBlock
+- (void)fireDownloadTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request downloadUrl:(NSURL *)downloadUrl successBlock:(void (^)())successBlock failureBlock:(void (^)())failureBlock
 {
     NSParameterAssert(request);
     NSParameterAssert(downloadUrl);
@@ -322,7 +322,7 @@
     };
     
     AFHTTPSessionManager *requestMgr = self.requestManager;
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:downloadUrl]
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:downloadUrl
                                                 cachePolicy:requestMgr.requestSerializer.cachePolicy
                                             timeoutInterval:requestMgr.requestSerializer.timeoutInterval];
     
@@ -374,8 +374,9 @@
     NSURLSessionTask *task = nil;
     AFHTTPSessionManager *requestMgr = self.requestManager;
     
-    if (polling) {
-        task = [requestMgr dataTaskWithRequest:request.requestTask.originalRequest.copy completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+    if (polling && nil != request.requestTask.originalRequest) {
+        NSURLRequest *req = request.requestTask.originalRequest.copy;
+        task = [requestMgr dataTaskWithRequest:req completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
             if (nil != error) {
                 failureBlock(task, error);
             } else {
@@ -424,12 +425,16 @@
             NSParameterAssert(request.streamPolicy.downloadDestinationPath);
             NSString *downloadUrl = [TCHTTPRequestHelper urlString:url appendParameters:param];
             NSParameterAssert(downloadUrl);
+            NSURL *downloadURL = nil;
+            if (nil != downloadUrl) {
+                downloadURL = [NSURL URLWithString:downloadUrl];
+            }
             
-            if (downloadUrl.length < 1 || request.streamPolicy.downloadDestinationPath.length < 1) {
+            if (nil == downloadURL || downloadUrl.length < 1 || request.streamPolicy.downloadDestinationPath.length < 1) {
                 break; // !!!: break here, no return
             }
             
-            [self fireDownloadTaskFor:request downloadUrl:downloadUrl successBlock:successBlock failureBlock:failureBlock];
+            [self fireDownloadTaskFor:request downloadUrl:downloadURL successBlock:successBlock failureBlock:failureBlock];
             return;
         }
             

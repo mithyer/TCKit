@@ -168,19 +168,19 @@ static CGBitmapInfo const kTCSystemDefaultOrder = kCGBitmapByteOrderDefault | kC
         case UIImageOrientationDown:
         case UIImageOrientationDownMirrored:
             transform = CGAffineTransformTranslate(transform, pixelSize.width, pixelSize.height);
-            transform = CGAffineTransformRotate(transform, M_PI);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI);
             break;
             
         case UIImageOrientationLeft:
         case UIImageOrientationLeftMirrored:
             transform = CGAffineTransformTranslate(transform, pixelSize.width, 0);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI_2);
             break;
             
         case UIImageOrientationRight:
         case UIImageOrientationRightMirrored:
             transform = CGAffineTransformTranslate(transform, 0, pixelSize.height);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
             break;
         default:
             break;

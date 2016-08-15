@@ -56,7 +56,7 @@ size_t TC_FixedWidth(size_t width)
     CGFloat width = srcSize.width;
     CGFloat height = srcSize.height;
     
-    CGFloat ratio = sqrt(pixelSize/(width * height));
+    CGFloat ratio = (CGFloat)sqrt(pixelSize/(width * height));
     CGFloat w = width;
     CGFloat h = height;
     
@@ -203,14 +203,14 @@ size_t TC_FixedWidth(size_t width)
     CGFloat width = pixelSize.width;
     CGFloat height = pixelSize.height;
     
-    CGFloat x = (width - dstSize.width) * 0.5;
+    CGFloat x = (width - dstSize.width) * 0.5f;
     if (x >= 0) {
         width = dstSize.width;
     } else {
         x = 0;
     }
     
-    CGFloat y = (height - dstSize.height) * 0.5;
+    CGFloat y = (height - dstSize.height) * 0.5f;
     if (y >= 0) {
         height = dstSize.height;
     } else {
@@ -238,19 +238,19 @@ size_t TC_FixedWidth(size_t width)
         case UIImageOrientationDown:
 
             transform = CGAffineTransformTranslate(transform, width, height);
-            transform = CGAffineTransformRotate(transform, M_PI);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI);
             break;
             
         case UIImageOrientationLeft: // rotate right
             
             transform = CGAffineTransformTranslate(transform, width, 0.0);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI_2);
             break;
             
         case UIImageOrientationRight: // rotate left
 
             transform = CGAffineTransformTranslate(transform, 0.0, height);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
             break;
             
         case UIImageOrientationUpMirrored: // flip H
@@ -268,14 +268,14 @@ size_t TC_FixedWidth(size_t width)
         case UIImageOrientationLeftMirrored: // flip V, rotate right
         
             transform = CGAffineTransformScale(transform, 1.0, -1.0);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
             break;
             
         case UIImageOrientationRightMirrored: // flip H, rotate right
         
             transform = CGAffineTransformTranslate(transform, width, height);
             transform = CGAffineTransformScale(transform, -1.0, 1.0);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
             break;
             
         default:
@@ -336,19 +336,19 @@ size_t TC_FixedWidth(size_t width)
         case UIImageOrientationDown:
         case UIImageOrientationDownMirrored:
             transform = CGAffineTransformTranslate(transform, srcSize.width, srcSize.height);
-            transform = CGAffineTransformRotate(transform, M_PI);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI);
             break;
             
         case UIImageOrientationLeft:
         case UIImageOrientationLeftMirrored:
             transform = CGAffineTransformTranslate(transform, srcSize.width, 0);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI_2);
             break;
             
         case UIImageOrientationRight:
         case UIImageOrientationRightMirrored:
             transform = CGAffineTransformTranslate(transform, 0, srcSize.height);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
             break;
         default:
             break;

@@ -68,7 +68,7 @@ static char const kContentEdgeInsetsKey;
             
         case kTCTextVerticalAlignmentDefault:
         case kTCTextVerticalAlignmentMiddle:
-            textRect.origin.y = bounds.origin.y + (bounds.size.height - textRect.size.height) / 2.0;
+            textRect.origin.y = bounds.origin.y + (bounds.size.height - textRect.size.height) / 2.0f;
             break;
             
         default:

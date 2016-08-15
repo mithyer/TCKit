@@ -172,13 +172,13 @@ static void exceptionHandler(NSException *exception)
             angle = 0;
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
-            angle = M_PI;
+            angle = (CGFloat)M_PI;
             break;
         case UIInterfaceOrientationLandscapeLeft:
-            angle = -M_PI_2;
+            angle = (CGFloat)-M_PI_2;
             break;
         case UIInterfaceOrientationLandscapeRight:
-            angle = M_PI_2;
+            angle = (CGFloat)M_PI_2;
             break;
             
         default:

@@ -373,16 +373,16 @@ static char const kBtnExtraKey;
         CGSize titleSize = [self titleRectForContentRect:contentRect].size;
         
         CGSize size = contentRect.size;
-        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5;
-        CGFloat r = (titleSize.height + imageSize.height) * 0.5 - MIN(titleSize.height, imageSize.height);
+        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5f;
+        CGFloat r = (titleSize.height + imageSize.height) * 0.5f - MIN(titleSize.height, imageSize.height);
         CGFloat border = self.layer.borderWidth;
         
         if (up) {
-            self.imageEdgeInsets = UIEdgeInsetsMake(-imageSize.height * 0.5 - pad + border + r, (size.width - imageSize.width) * 0.5, imageSize.height * 0.5 + pad - border - r, -(size.width - imageSize.width) * 0.5);
-            self.titleEdgeInsets = UIEdgeInsetsMake(titleSize.height * 0.5 + pad + border + r, (size.width - titleSize.width) * 0.5 - imageSize.width, -titleSize.height * 0.5 - pad - border - r, 0);
+            self.imageEdgeInsets = UIEdgeInsetsMake(-imageSize.height * 0.5f - pad + border + r, (size.width - imageSize.width) * 0.5f, imageSize.height * 0.5f + pad - border - r, -(size.width - imageSize.width) * 0.5f);
+            self.titleEdgeInsets = UIEdgeInsetsMake(titleSize.height * 0.5f + pad + border + r, (size.width - titleSize.width) * 0.5f - imageSize.width, -titleSize.height * 0.5f - pad - border - r, 0);
         } else {
-            self.imageEdgeInsets = UIEdgeInsetsMake(imageSize.height * 0.5 + pad - r, (size.width - imageSize.width) * 0.5, -imageSize.height * 0.5 - pad + r, -titleSize.width);
-            self.titleEdgeInsets = UIEdgeInsetsMake(-titleSize.height * 0.5 - pad - r, (size.width - titleSize.width) * 0.5 - imageSize.width, titleSize.height * 0.5 + pad + r, 0);
+            self.imageEdgeInsets = UIEdgeInsetsMake(imageSize.height * 0.5f + pad - r, (size.width - imageSize.width) * 0.5f, -imageSize.height * 0.5f - pad + r, -titleSize.width);
+            self.titleEdgeInsets = UIEdgeInsetsMake(-titleSize.height * 0.5f - pad - r, (size.width - titleSize.width) * 0.5f - imageSize.width, titleSize.height * 0.5f + pad + r, 0);
         }
         
         CGSize dstSize = CGSizeMake(MAX(imageSize.width, titleSize.width) + border * 2, imageSize.height + titleSize.height + self.paddingBetweenTitleAndImage + border * 2);
@@ -411,7 +411,7 @@ static char const kBtnExtraKey;
         CGRect contentRect = [self contentRectForBounds:self.bounds];
         CGSize imageSize = [self imageRectForContentRect:contentRect].size;
         CGSize titleSize = [self titleRectForContentRect:contentRect].size;
-        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5;
+        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5f;
         
         self.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width - pad, 0, imageSize.width + pad);
         self.imageEdgeInsets = UIEdgeInsetsMake(0, titleSize.width + pad, 0, -titleSize.width - pad);
@@ -439,7 +439,7 @@ static char const kBtnExtraKey;
         self.titleEdgeInsets = UIEdgeInsetsZero;
         self.imageEdgeInsets = UIEdgeInsetsZero;
         
-        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5;
+        CGFloat pad = self.paddingBetweenTitleAndImage * 0.5f;
         CGFloat border = self.layer.borderWidth;
         self.titleEdgeInsets = UIEdgeInsetsMake(0, pad, 0, -pad);
         self.imageEdgeInsets = UIEdgeInsetsMake(0, -pad, 0, pad);

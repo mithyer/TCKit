@@ -12,6 +12,7 @@
 @interface TCPopupContainer ()
 
 @property (nonatomic, strong) UIWindow *oldKeyWindow;
+@property (nonatomic, strong) UIWindow *containerWindow;
 
 @end
 
@@ -92,7 +93,6 @@
 @implementation TCPopupContainer
 {
 @private
-    UIWindow *_containerWindow;
     UIControl *_backgroundView;
     UIButton *_closeBtn;
     
@@ -223,8 +223,8 @@ static NSUInteger s_containerCount;
         CGRect frame;
         UIViewAutoresizing autoresizingMask;
         if (_presentStyle == kTCPopupStyleCenter) {
-            frame.origin.x = (size.width - containerFrame.size.width) * 0.5;
-            frame.origin.y = (size.height - containerFrame.size.height - containerFrame.origin.y) * 0.5;
+            frame.origin.x = (size.width - containerFrame.size.width) * 0.5f;
+            frame.origin.y = (size.height - containerFrame.size.height - containerFrame.origin.y) * 0.5f;
             frame.size.width = containerFrame.size.width;
             frame.size.height = containerFrame.size.height + containerFrame.origin.y;
             autoresizingMask = UIViewAutoresizingFlexibleLeftMargin
@@ -232,7 +232,7 @@ static NSUInteger s_containerCount;
             | UIViewAutoresizingFlexibleTopMargin
             | UIViewAutoresizingFlexibleBottomMargin;
         } else {
-            frame.origin.x = (size.width - containerFrame.size.width) * 0.5;
+            frame.origin.x = (size.width - containerFrame.size.width) * 0.5f;
             frame.origin.y = size.height - containerFrame.size.height - containerFrame.origin.y;
             frame.size.width = containerFrame.size.width;
             frame.size.height = containerFrame.size.height + containerFrame.origin.y;
@@ -312,7 +312,7 @@ static NSUInteger s_containerCount;
 #endif
     
     if (animated) {
-        CGFloat duration = 0.35f;
+        CFTimeInterval duration = 0.35f;
         if ((_presentStyle == kTCPopupStyleCenter) || (_presentStyle == kTCPopupStyleFade)) {
             CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
             animation.values = @[@0.01, @1.1, @0.9, @1];
@@ -338,8 +338,9 @@ static NSUInteger s_containerCount;
         
         if (nil != _backgroundView) {
             _backgroundView.alpha = 0.0f;
+            __weak typeof(self) wSelf = self;
             [UIView animateWithDuration:duration animations:^{
-                _backgroundView.alpha = 1.0f;
+                wSelf.backgroundView.alpha = 1.0f;
             }];
         }
     }
@@ -357,17 +358,18 @@ static NSUInteger s_containerCount;
         return;
     }
     
+    __weak typeof(self) wSelf = self;
     void (^dismissCompletion)(void) = ^{
-        [_containerWindow removeFromSuperview];
-        _containerWindow.rootViewController = nil;
-        _containerWindow = nil;
+        [wSelf.containerWindow removeFromSuperview];
+        wSelf.containerWindow.rootViewController = nil;
+        wSelf.containerWindow = nil;
         
-        [_oldKeyWindow makeKeyWindow];
-        _oldKeyWindow = nil;
+        [wSelf.oldKeyWindow makeKeyWindow];
+        wSelf.oldKeyWindow = nil;
         
-        if (nil != _dismissdBlock) {
-            _dismissdBlock();
-            _dismissdBlock = nil;
+        if (nil != wSelf.dismissdBlock) {
+            wSelf.dismissdBlock();
+            wSelf.dismissdBlock = nil;
         }
     };
     
@@ -378,7 +380,7 @@ static NSUInteger s_containerCount;
 #endif
     
     if (animated) {
-        CGFloat duration = 0.35f;
+        CFTimeInterval duration = 0.35f;
         if (_presentStyle == kTCPopupStyleCenter) {
             CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
             animation.values = @[@1, @1.2, @0.01];
@@ -422,8 +424,9 @@ static NSUInteger s_containerCount;
         }
         
         if (nil != _backgroundView) {
+            __weak typeof(self) wSelf = self;
             [UIView animateWithDuration:duration animations:^{
-                _backgroundView.alpha = 0.0f;
+                wSelf.backgroundView.alpha = 0.0f;
             }];
         }
     } else {

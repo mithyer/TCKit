@@ -183,7 +183,7 @@ NS_INLINE UIColor *valueForUIColor(NSDictionary *dic, Class klass)
             nil != b ||
             nil != a) {
             
-            return [UIColor colorWithRed:r.doubleValue green:g.doubleValue blue:b.doubleValue alpha:nil != a ? a.doubleValue : 1.0f];
+            return [UIColor colorWithRed:(CGFloat)r.doubleValue green:(CGFloat)g.doubleValue blue:(CGFloat)b.doubleValue alpha:nil != a ? (CGFloat)a.doubleValue : 1.0f];
         }
     }
     
