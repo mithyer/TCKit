@@ -77,17 +77,45 @@
 {
     NSMutableString *queryString = nil;
     if (self.count > 0) {
-        queryString = [NSMutableString string];
-        for (NSString *key in self.allKeys) {
+        queryString = NSMutableString.string;
+        for (NSString *key in self) {
             NSString *value = self[key];
             if (nil != value) {
-                value = [NSString stringWithFormat:@"%@", value];
-                value = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)value, CFSTR("."), CFSTR(":/?#[]@!$&'()*+,;="), kCFStringEncodingUTF8);
                 [queryString appendFormat:queryString.length > 0 ? @"&%@=%@" : @"%@=%@", key, value];
             }
         }
     }
-    return queryString;
+    return [queryString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+}
+
+@end
+
+
+@implementation NSURL (TCHTTPRequestHelper)
+
+- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param
+{
+    if (param.count < 1) {
+        return self;
+    }
+    
+    NSURLComponents *com = [[NSURLComponents alloc] initWithURL:self resolvingAgainstBaseURL:NO];
+    NSMutableString *query = [NSMutableString string];
+    NSString *rawQuery = com.query.stringByRemovingPercentEncoding;
+    if (nil != rawQuery) {
+        [query appendString:rawQuery];
+    }
+    
+    for (NSString *key in param) {
+        if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", param[key]]];
+        } else {
+            NSAssert(false, @"conflict query param");
+        }
+    }
+    com.query = [query stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+    
+    return com.URL;
 }
 
 @end

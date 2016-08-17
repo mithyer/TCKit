@@ -29,15 +29,29 @@
 
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
 {
+    NSString *str = self.stringByRemovingPercentEncoding;
+    if (nil == str) {
+        return nil;
+    }
     // Explode based on outter glue
-    NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
+    NSArray<NSString *> *firstExplode = [str componentsSeparatedByString:outterGlue];
     
     // Explode based on inner glue
     NSMutableDictionary *returnDictionary = NSMutableDictionary.dictionary;
     for (NSInteger i = 0; i < firstExplode.count; ++i) {
-        NSArray *secondExplode = [firstExplode[i] componentsSeparatedByString:innerGlue];
+        NSArray<NSString *> *secondExplode = [firstExplode[i] componentsSeparatedByString:innerGlue];
         if (secondExplode.count == 2) {
-            returnDictionary[secondExplode[0]] = secondExplode[1];
+            NSString *key = secondExplode[0].stringByRemovingPercentEncoding;
+            if (nil == key) {
+                continue;
+            }
+            
+            NSString *value = secondExplode[1].stringByRemovingPercentEncoding;
+            if (nil == value) {
+                continue;
+            }
+            
+            returnDictionary[key] = value;
         }
     }
     
