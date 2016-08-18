@@ -71,7 +71,11 @@
             
             NSObject *value = [self valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:NO];
             if (nil != value) {
-                value = value.tc_dictionary;
+                if ([value isKindOfClass:NSURL.class]) {
+                    value = ((NSURL *)value).absoluteString;
+                } else {
+                    value = value.tc_dictionary;
+                }
             }
             
             if (nil != value) {
