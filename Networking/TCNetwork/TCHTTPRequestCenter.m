@@ -594,6 +594,7 @@
             [requests makeObjectsPerformSelector:@selector(cancel)];
         }
     }
+    [_requestPool removeAllObjects];
     [_poolLock unlock];
 }
 
@@ -606,7 +607,7 @@
     }
     NSString *path = self.cachePathForResponse;
     if (nil != path) {
-        [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
+        [NSFileManager.defaultManager removeItemAtPath:path error:NULL];
     }
 }
 

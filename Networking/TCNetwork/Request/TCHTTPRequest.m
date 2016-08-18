@@ -168,6 +168,7 @@
         nil == self.requestTask ||
         NSURLSessionTaskStateCanceling == self.requestTask.state ||
         NSURLSessionTaskStateCompleted == self.requestTask.state) {
+        self.isCancelled = YES;
         return;
     }
     
