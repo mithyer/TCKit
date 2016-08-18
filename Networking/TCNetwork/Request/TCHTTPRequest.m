@@ -25,6 +25,8 @@
 
 - (void)dealloc
 {
+    // weak self in dealloc may cause crash
+    // refer: http://www.jianshu.com/p/841f60876180/comments/2333249
     [self cancel];
 }
 
@@ -144,6 +146,7 @@
         
         BOOL isTicking = self.timerPolicy.isTicking;
         [self.timerPolicy invalidate];
+        
         if (nil == self.requestTask || NSURLSessionTaskStateCompleted == self.requestTask.state) {
             self.isCancelled = YES;
             if (isTicking) {
@@ -192,31 +195,31 @@
     }
 #endif
     
-    __weak typeof(self) wSelf = self;
+    // !!!: no weak self here
     dispatch_block_t block = ^{
         
         BOOL needForward = NO;
-        if (nil != wSelf.timerPolicy) { // must called before request callback called
-            needForward = [wSelf.timerPolicy checkForwardForRequest:isValid];
+        if (nil != self.timerPolicy) { // must called before request callback called
+            needForward = [self.timerPolicy checkForwardForRequest:isValid];
         }
         
-        if (nil != wSelf.delegate && [wSelf.delegate respondsToSelector:@selector(processRequest:success:)]) {
-            [wSelf.delegate processRequest:wSelf success:isValid];
+        if (nil != self.delegate && [self.delegate respondsToSelector:@selector(processRequest:success:)]) {
+            [self.delegate processRequest:self success:isValid];
         }
         
-        if (nil != wSelf.resultBlock) {
-            wSelf.resultBlock(wSelf, isValid);
+        if (nil != self.resultBlock) {
+            self.resultBlock(self, isValid);
         }
         
         if (clean && !needForward) {
-            wSelf.resultBlock = nil;
-            [wSelf.requestAgent removeRequestFromPool:wSelf];
+            self.resultBlock = nil;
+            [self.requestAgent removeRequestFromPool:self];
             
         } else if (needForward) {
-            wSelf.state = kTCRequestUnFire;
-            wSelf.requestTask = nil;
-            wSelf.rawResponseObject = nil;
-            [wSelf.timerPolicy forward];
+            self.state = kTCRequestUnFire;
+            self.requestTask = nil;
+            self.rawResponseObject = nil;
+            [self.timerPolicy forward];
         }
     };
     
