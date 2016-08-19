@@ -47,6 +47,7 @@
  NSAttributedString -> string
  SEL -> string
  
+ return NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber
 
  */
 - (id)tc_plistObject;

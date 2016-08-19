@@ -15,6 +15,13 @@
 
 #import "UIColor+TCUtilities.h"
 
+
+typedef NS_ENUM(NSInteger, TCPersisentStyle) {
+    kTCPersisentStylePlist = 0,
+    kTCPersisentStyleJSON,
+};
+
+
 /**
  @brief	Get ISO date formatter.
  
@@ -60,27 +67,30 @@ NS_INLINE NSString *mappingForNSValue(NSValue *value)
     return nil;
 }
 
-static id mappingToJSONObject(NSObject *obj)
+static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style)
 {
     if (nil == obj ||
         obj == (id)kCFNull ||
         [obj isKindOfClass:NSString.class] ||
         [obj isKindOfClass:NSNumber.class]) {
+        if (kTCPersisentStylePlist == style && obj == (id)kCFNull) {
+            return nil;
+        }
         return obj;
     }
     
     if ([obj isKindOfClass:NSDictionary.class]) {
-        if ([NSJSONSerialization isValidJSONObject:obj]) {
+        if (kTCPersisentStyleJSON == style && [NSJSONSerialization isValidJSONObject:obj]) {
             return obj;
         }
         
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         for (NSString *key in (NSDictionary *)obj) {
             NSString *strKey = [key isKindOfClass:NSString.class] ? key : key.description;
             if (strKey.length < 1) {
                 continue;
             }
-            id value = mappingToJSONObject(((NSDictionary *)obj)[key]);
+            NSObject *value = codingObject(((NSDictionary *)obj)[key], style);
             if (nil != value) {
                 dic[strKey] = value;
             }
@@ -88,13 +98,13 @@ static id mappingToJSONObject(NSObject *obj)
         return dic;
         
     } else if ([obj isKindOfClass:NSArray.class]) {
-        if ([NSJSONSerialization isValidJSONObject:obj]) {
+        if (kTCPersisentStyleJSON == style && [NSJSONSerialization isValidJSONObject:obj]) {
             return obj;
         }
         
-        NSMutableArray *arry = [NSMutableArray array];
+        NSMutableArray *arry = NSMutableArray.array;
         for (id value in (NSArray *)obj) {
-            id jsonValue = mappingToJSONObject(value);
+            NSObject *jsonValue = codingObject(value, style);
             if (nil != jsonValue) {
                 [arry addObject:jsonValue];
             }
@@ -102,15 +112,21 @@ static id mappingToJSONObject(NSObject *obj)
         return arry;
         
     } else if ([obj isKindOfClass:NSSet.class]) { // -> array
-        return mappingToJSONObject(((NSSet *)obj).allObjects);
+        return codingObject(((NSSet *)obj).allObjects, style);
         
     } else if ([obj isKindOfClass:NSURL.class]) { // -> string
         return ((NSURL *)obj).absoluteString;
         
     } else if ([obj isKindOfClass:NSDate.class]) { // -> string
+        if (kTCPersisentStylePlist == style) {
+            return obj;
+        }
         return [tcISODateFormatter() stringFromDate:(NSDate *)obj];
         
     } else if ([obj isKindOfClass:NSData.class]) { // -> Base64 string
+        if (kTCPersisentStylePlist == style) {
+            return obj;
+        }
         return [(NSData *)obj base64EncodedStringWithOptions:kNilOptions];
         
     } else if ([obj isKindOfClass:UIColor.class]) { // -> string
@@ -145,12 +161,12 @@ static id mappingToJSONObject(NSObject *obj)
                 continue;
             }
             
-            id value = [obj valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:!isNSNullValid];
+            NSObject *value = [obj valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:!isNSNullValid];
             if (nil == value && isNSNullValid) {
-                value = (id)kCFNull;
+                value = (typeof(value))kCFNull;
             }
             if (nil != value) {
-                value = mappingToJSONObject(value);
+                value = codingObject(value, style);
             }
             
             if (nil != value) {
@@ -174,7 +190,7 @@ static id mappingToJSONObject(NSObject *obj)
 
 - (id)tc_JSONObject
 {
-    id obj = mappingToJSONObject(self);
+    NSObject *obj = codingObject(self, kTCPersisentStyleJSON);
     if (nil == obj || [obj isKindOfClass:NSArray.class] || [obj isKindOfClass:NSDictionary.class]) {
         return obj;
     }
@@ -201,74 +217,17 @@ static id mappingToJSONObject(NSObject *obj)
 
 - (id)tc_plistObject
 {
-    TCEncodingType type = [TCMappingMeta typeForNSClass:self.class];
-    
-    if (kTCEncodingTypeNSDictionary == type) {
-        NSDictionary<NSString *, NSObject *> *selfDic = (NSDictionary *)self;
-        if (selfDic.count < 1) {
-            return self;
-        }
-        
-        NSMutableDictionary *dic = NSMutableDictionary.dictionary;
-        
-        for (NSString *key in selfDic) {
-            if ([key isKindOfClass:NSString.class] || [key isKindOfClass:NSNumber.class]) {
-                id value = selfDic[key].tc_plistObject;
-                if (nil != value) {
-                    dic[key] = value;
-                }
-            }
-        }
-        return [self.class dictionaryWithDictionary:dic];
-        
-    } else if (kTCEncodingTypeNSArray == type) {
-        if (((NSArray *)self).count < 1) {
-            return self;
-        }
-        
-        NSMutableArray *arry = NSMutableArray.array;
-        
-        for (NSObject *obj in (NSArray *)self) {
-            NSDictionary *dic = obj.tc_plistObject;
-            if (nil != dic) {
-                [arry addObject:dic];
-            }
-        }
-        
-        return [self.class arrayWithArray:arry];
-        
-        
-    } else if (kTCEncodingTypeUnknown == type) {
-        NSDictionary<NSString *, NSString *> *nameDic = [self.class tc_mappingOption].nameCodingMapping;
-        __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
-        NSMutableDictionary *dic = NSMutableDictionary.dictionary;
-        
-        for (NSString *key in metaDic) {
-            __unsafe_unretained TCMappingMeta *meta = metaDic[key];
-            if (NULL == meta->_getter ||
-                NULL == meta->_setter ||
-                nameDic[key] == (id)kCFNull) {
-                continue;
-            }
-            
-            NSObject *value = [self valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:NO];
-            if (nil != value) {
-                if ([value isKindOfClass:NSURL.class]) {
-                    value = ((NSURL *)value).absoluteString;
-                } else {
-                    value = value.tc_plistObject;
-                }
-            }
-            
-            if (nil != value) {
-                dic[nameDic[key] ?: key] = value;
-            }
-        }
-        
-        return dic.count > 0 ? dic : nil;
+    NSObject * obj = codingObject(self, kTCPersisentStylePlist);
+    if (nil == obj ||
+        [obj isKindOfClass:NSString.class] ||
+        [obj isKindOfClass:NSNumber.class] ||
+        [obj isKindOfClass:NSArray.class] ||
+        [obj isKindOfClass:NSDictionary.class] ||
+        [obj isKindOfClass:NSData.class] ||
+        [obj isKindOfClass:NSDate.class]) {
+        return obj;
     }
-    
-    return self;
+    return nil;
 }
 
 

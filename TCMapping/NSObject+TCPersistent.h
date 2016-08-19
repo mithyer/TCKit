@@ -14,6 +14,10 @@
 
 /**
  @brief	NSNull -> "<null>"
+ 
+ NSPropertyListSerialization, NSCoding: NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber.
+ key for NSDictionary must be NSString
+ 
  */
 
 @interface NSObject (TCPersistent)
