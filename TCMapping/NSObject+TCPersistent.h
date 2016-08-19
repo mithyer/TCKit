@@ -1,5 +1,5 @@
 //
-//  NSObject+TCNSCoding.h
+//  NSObject+TCPersistent.h
 //  TCKit
 //
 //  Created by dake on 16/3/2.
@@ -10,13 +10,13 @@
 #import "TCMappingOption.h"
 
 
-@protocol NSCodingIgnore; // unavailable for `Class`
+@protocol TCPersistentIgnore; // unavailable for `Class`
 
 /**
  @brief	NSNull -> "<null>"
  */
 
-@interface NSObject (TCNSCoding)
+@interface NSObject (TCPersistent)
 
 + (TCMappingOption *)tc_mappingOption;
 

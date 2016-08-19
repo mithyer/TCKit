@@ -61,23 +61,16 @@ typedef Class (^TCTypeMappingBlock)(id value);
 @property (nonatomic, strong) NSArray<NSString *> *nameCopyIgnore;
 
 
-#pragma mark - TCJSONMapping
+#pragma mark - TCCoding
 
 /**
  @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameJSONMapping;
-@property (nonatomic, assign) BOOL shouldJSONMappingNSNull; // ignore output NSNull or not
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameCodingMapping;
+@property (nonatomic, assign) BOOL shouldCodingNSNull; // ignore output NSNull or not
 
 
 // TODO: hash, equal  ignore
-
-
-#pragma mark - TCDictionaryMapping
-/**
- @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
- */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameDictionaryMapping;
 
 
 @end

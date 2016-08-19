@@ -22,8 +22,8 @@
 
 #import "NSObject+TCHelper.h"
 #import "NSObject+TCMapping.h"
-#import "NSObject+TCNSCoding.h"
-#import "NSObject+TCJSONMapping.h"
+#import "NSObject+TCPersistent.h"
+#import "NSObject+TCCoding.h"
 #import "NSString+TCCypher.h"
 
 

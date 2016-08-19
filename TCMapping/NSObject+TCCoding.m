@@ -1,12 +1,12 @@
 //
-//  NSObject+TCJSONMapping.m
+//  NSObject+TCCoding.m
 //  TCKit
 //
 //  Created by dake on 16/3/11.
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
-#import "NSObject+TCJSONMapping.h"
+#import "NSObject+TCCoding.h"
 #import <objc/runtime.h>
 
 #import <CoreGraphics/CGGeometry.h>
@@ -131,15 +131,15 @@ static id mappingToJSONObject(NSObject *obj)
         return NSStringFromClass((Class)obj);
         
     } else { // user defined class
-        BOOL isNSNullValid = [obj.class tc_mappingOption].shouldJSONMappingNSNull;
-        NSDictionary<NSString *, NSString *> *nameDic = [obj.class tc_mappingOption].nameJSONMapping;
+        BOOL isNSNullValid = [obj.class tc_mappingOption].shouldCodingNSNull;
+        NSDictionary<NSString *, NSString *> *nameDic = [obj.class tc_mappingOption].nameCodingMapping;
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(obj.class);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
-                tc_ignoreJSONMappingForInfo(meta->_info) ||
+                tc_ignoreCodingForInfo(meta->_info) ||
                 nameDic[key] == (id)kCFNull ||
                 tc_typeForInfo(meta->_info) == kTCEncodingTypeBlock) {
                 continue;
@@ -165,7 +165,7 @@ static id mappingToJSONObject(NSObject *obj)
 }
 
 
-@implementation NSObject (TCJSONMapping)
+@implementation NSObject (TCCoding)
 
 + (TCMappingOption *)tc_mappingOption
 {
@@ -195,6 +195,82 @@ static id mappingToJSONObject(NSObject *obj)
     }
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
+
+
+#pragma mark - TCPlistMapping
+
+- (id)tc_plistObject
+{
+    TCEncodingType type = [TCMappingMeta typeForNSClass:self.class];
+    
+    if (kTCEncodingTypeNSDictionary == type) {
+        NSDictionary<NSString *, NSObject *> *selfDic = (NSDictionary *)self;
+        if (selfDic.count < 1) {
+            return self;
+        }
+        
+        NSMutableDictionary *dic = NSMutableDictionary.dictionary;
+        
+        for (NSString *key in selfDic) {
+            if ([key isKindOfClass:NSString.class] || [key isKindOfClass:NSNumber.class]) {
+                id value = selfDic[key].tc_plistObject;
+                if (nil != value) {
+                    dic[key] = value;
+                }
+            }
+        }
+        return [self.class dictionaryWithDictionary:dic];
+        
+    } else if (kTCEncodingTypeNSArray == type) {
+        if (((NSArray *)self).count < 1) {
+            return self;
+        }
+        
+        NSMutableArray *arry = NSMutableArray.array;
+        
+        for (NSObject *obj in (NSArray *)self) {
+            NSDictionary *dic = obj.tc_plistObject;
+            if (nil != dic) {
+                [arry addObject:dic];
+            }
+        }
+        
+        return [self.class arrayWithArray:arry];
+        
+        
+    } else if (kTCEncodingTypeUnknown == type) {
+        NSDictionary<NSString *, NSString *> *nameDic = [self.class tc_mappingOption].nameCodingMapping;
+        __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
+        NSMutableDictionary *dic = NSMutableDictionary.dictionary;
+        
+        for (NSString *key in metaDic) {
+            __unsafe_unretained TCMappingMeta *meta = metaDic[key];
+            if (NULL == meta->_getter ||
+                NULL == meta->_setter ||
+                nameDic[key] == (id)kCFNull) {
+                continue;
+            }
+            
+            NSObject *value = [self valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:NO];
+            if (nil != value) {
+                if ([value isKindOfClass:NSURL.class]) {
+                    value = ((NSURL *)value).absoluteString;
+                } else {
+                    value = value.tc_plistObject;
+                }
+            }
+            
+            if (nil != value) {
+                dic[nameDic[key] ?: key] = value;
+            }
+        }
+        
+        return dic.count > 0 ? dic : nil;
+    }
+    
+    return self;
+}
+
 
 @end
 

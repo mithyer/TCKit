@@ -1,5 +1,5 @@
 //
-//  NSObject+TCJSONMapping.h
+//  NSObject+TCCoding.h
 //  TCKit
 //
 //  Created by dake on 16/3/11.
@@ -10,10 +10,16 @@
 #import "TCMappingOption.h"
 
 
-@protocol TCJSONMappingIgnore; // unavailable for `Class`
+@protocol TCCodingIgnore; // unavailable for `Class`
+
+
+@interface NSObject (TCCoding)
+
++ (TCMappingOption *)tc_mappingOption;
+
 
 /**
- @brief	
+ @brief JSONMapping
  
  UIColor -> "#1234FEA8" ARGB
  NSData -> base64 string
@@ -23,13 +29,27 @@
  SEL -> string
  
  */
-@interface NSObject (TCJSONMapping)
-
-+ (TCMappingOption *)tc_mappingOption;
-
 - (id/*NSArray or NSDictionary*/)tc_JSONObject;
 - (NSData *)tc_JSONData;
 - (NSString *)tc_JSONString;
+
+
+#pragma mark - TCPlistMapping
+
+/**
+ @brief PlistMapping
+
+ NSPropertyListSerialization, NSCoding: NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber.
+ key for NSDictionary must be NSString
+ 
+ UIColor -> "#1234FEA8" ARGB
+ NSURL -> string
+ NSAttributedString -> string
+ SEL -> string
+ 
+
+ */
+- (id)tc_plistObject;
 
 @end
 

@@ -18,10 +18,10 @@
 @protocol TCMappingIgnore
 @end
 
-@protocol TCJSONMappingIgnore
+@protocol TCCodingIgnore
 @end
 
-@protocol NSCodingIgnore
+@protocol TCPersistentIgnore
 @end
 
 @protocol NSCopyingIgnore
@@ -170,11 +170,11 @@ NS_INLINE TCEncodingIgnore ignoreForProtocols(NSString *ignoreProtocol)
     if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(TCMappingIgnore))].location != NSNotFound) {
         ignore |= kTCEncodingIgnoreMapping;
     }
-    if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(TCJSONMappingIgnore))].location != NSNotFound) {
-        ignore |= kTCEncodingIgnoreJSONMapping;
+    if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(TCCodingIgnore))].location != NSNotFound) {
+        ignore |= kTCEncodingIgnoreCoding;
     }
-    if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(NSCodingIgnore))].location != NSNotFound) {
-        ignore |= kTCEncodingIgnoreNSCoding;
+    if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(TCPersistentIgnore))].location != NSNotFound) {
+        ignore |= kTCEncodingIgnorePersistent;
     }
     if ([ignoreProtocol rangeOfString:NSStringFromProtocol(@protocol(NSCopyingIgnore))].location != NSNotFound) {
         ignore |= kTCEncodingIgnoreCopying;
