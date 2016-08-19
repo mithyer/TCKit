@@ -387,7 +387,7 @@
         return;
     }
     
-    NSString *url = [self buildRequestUrlForRequest:request];
+    NSURL *url = [self buildRequestUrlForRequest:request];
     NSParameterAssert(url);
     
     NSDictionary *param = request.parameters;
@@ -398,18 +398,18 @@
     switch (request.method) {
             
         case kTCHTTPMethodGet: {
-            task = [requestMgr GET:url parameters:param progress:nil success:successBlock failure:failureBlock];
+            task = [requestMgr GET:url.absoluteString parameters:param progress:nil success:successBlock failure:failureBlock];
             break;
         }
             
         case kTCHTTPMethodPost: {
             if (nil != request.streamPolicy.constructingBodyBlock) {
-                task = [requestMgr POST:url parameters:param constructingBodyWithBlock:request.streamPolicy.constructingBodyBlock progress:^(NSProgress * _Nonnull uploadProgress) {
+                task = [requestMgr POST:url.absoluteString parameters:param constructingBodyWithBlock:request.streamPolicy.constructingBodyBlock progress:^(NSProgress * _Nonnull uploadProgress) {
                     request.streamPolicy.progress = uploadProgress;
                 } success:successBlock failure:failureBlock];
                 request.streamPolicy.constructingBodyBlock = nil;
             } else {
-                task = [requestMgr POST:url parameters:param progress:^(NSProgress * _Nonnull uploadProgress) {
+                task = [requestMgr POST:url.absoluteString parameters:param progress:^(NSProgress * _Nonnull uploadProgress) {
                     request.streamPolicy.progress = uploadProgress;
                 } success:successBlock failure:failureBlock];
             }
@@ -417,20 +417,16 @@
         }
             
         case kTCHTTPMethodPut: {
-            task = [requestMgr PUT:url parameters:param success:successBlock failure:failureBlock];
+            task = [requestMgr PUT:url.absoluteString parameters:param success:successBlock failure:failureBlock];
             break;
         }
             
         case kTCHTTPMethodDownload: {
             NSParameterAssert(request.streamPolicy.downloadDestinationPath);
-            NSString *downloadUrl = [TCHTTPRequestHelper urlString:url appendParameters:param];
-            NSParameterAssert(downloadUrl);
-            NSURL *downloadURL = nil;
-            if (nil != downloadUrl) {
-                downloadURL = [NSURL URLWithString:downloadUrl];
-            }
+            NSURL *downloadURL = [url appendParamIfNeed:param];
+            NSParameterAssert(downloadURL);
             
-            if (nil == downloadURL || downloadUrl.length < 1 || request.streamPolicy.downloadDestinationPath.length < 1) {
+            if (nil == downloadURL || request.streamPolicy.downloadDestinationPath.length < 1) {
                 break; // !!!: break here, no return
             }
             
@@ -439,17 +435,17 @@
         }
             
         case kTCHTTPMethodHead: {
-            task = [requestMgr HEAD:url parameters:param success:successBlock failure:failureBlock];
+            task = [requestMgr HEAD:url.absoluteString parameters:param success:successBlock failure:failureBlock];
             break;
         }
             
         case kTCHTTPMethodDelete: {
-            task = [requestMgr DELETE:url parameters:param success:successBlock failure:failureBlock];
+            task = [requestMgr DELETE:url.absoluteString parameters:param success:successBlock failure:failureBlock];
             break;
         }
             
         case kTCHTTPMethodPatch: {
-            task = [requestMgr PATCH:url parameters:param success:successBlock failure:failureBlock];
+            task = [requestMgr PATCH:url.absoluteString parameters:param success:successBlock failure:failureBlock];
             break;
         }
             
@@ -614,7 +610,7 @@
 
 #pragma mark -
 
-- (NSString *)buildRequestUrlForRequest:(id<TCHTTPRequest>)request
+- (NSURL *)buildRequestUrlForRequest:(id<TCHTTPRequest>)request
 {
     NSString *queryUrl = request.apiUrl;
     
@@ -623,7 +619,7 @@
     }
     
     if ([queryUrl.lowercaseString hasPrefix:@"http"]) {
-        return queryUrl;
+        return [NSURL URLWithString:queryUrl];
     }
     
     NSURL *baseUrl = nil;
@@ -634,7 +630,7 @@
         baseUrl = self.baseURL;
     }
     
-    return [baseUrl URLByAppendingPathComponent:queryUrl].absoluteString;
+    return [baseUrl URLByAppendingPathComponent:queryUrl];
 }
 
 - (id<TCHTTPRespValidator>)responseValidatorForRequest:(id<TCHTTPRequest>)request

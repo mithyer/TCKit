@@ -15,22 +15,6 @@
 
 @implementation TCHTTPRequestHelper
 
-+ (NSString *)urlString:(NSString *)originUrlString appendParameters:(NSDictionary *)parameters
-{
-    NSString *url = originUrlString;
-    NSString *paraUrlString = parameters.convertToHttpQuery;
-    
-    if (nil != paraUrlString && paraUrlString.length > 0) {
-        if ([originUrlString rangeOfString:@"?"].location != NSNotFound) {
-            url = [originUrlString stringByAppendingString:paraUrlString];
-        } else {
-            url = [originUrlString stringByAppendingFormat:@"?%@", [paraUrlString substringFromIndex:1]];
-        }
-    }
-    
-    return url;
-}
-
 
 #pragma mark - MD5
 
@@ -71,25 +55,7 @@
 @end
 
 
-@implementation NSDictionary (TCHTTPRequestHelper)
-
-- (NSString *)convertToHttpQuery
-{
-    NSMutableString *queryString = nil;
-    if (self.count > 0) {
-        queryString = NSMutableString.string;
-        for (NSString *key in self) {
-            NSString *value = self[key];
-            if (nil != value) {
-                [queryString appendFormat:queryString.length > 0 ? @"&%@=%@" : @"%@=%@", key, value];
-            }
-        }
-    }
-    return [queryString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-}
-
-@end
-
+#ifndef __TCKit__
 
 @implementation NSURL (TCHTTPRequestHelper)
 
@@ -99,9 +65,10 @@
         return self;
     }
     
+    // NSURLComponents 自带 url encoding, property 自动 decoding
     NSURLComponents *com = [[NSURLComponents alloc] initWithURL:self resolvingAgainstBaseURL:NO];
-    NSMutableString *query = [NSMutableString string];
-    NSString *rawQuery = com.query.stringByRemovingPercentEncoding;
+    NSMutableString *query = NSMutableString.string;
+    NSString *rawQuery = com.query;
     if (nil != rawQuery) {
         [query appendString:rawQuery];
     }
@@ -113,9 +80,11 @@
             NSAssert(false, @"conflict query param");
         }
     }
-    com.query = [query stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+    com.query = query;
     
     return com.URL;
 }
 
 @end
+
+#endif // __TCKit__

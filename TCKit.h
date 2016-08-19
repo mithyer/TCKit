@@ -15,6 +15,7 @@
 #import "TCUIKit.h"
 
 #import "NSString+TCHelper.h"
+#import "NSURL+TCHelper.h"
 #import "UIImage+CGImage.h"
 #import "UIImage+Resize.h"
 #import "UIImage+TCHelper.h"

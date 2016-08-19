@@ -16,9 +16,9 @@
     BOOL ret = self.length > 1;
     if (ret) {
         NSURL *phoneNumber = [NSURL URLWithString:[@"telprompt://" stringByAppendingString:self]];
-        ret = [[UIApplication sharedApplication] canOpenURL:phoneNumber];
+        ret = [UIApplication.sharedApplication canOpenURL:phoneNumber];
         if (ret) {
-            ret = [[UIApplication sharedApplication] openURL:phoneNumber];
+            ret = [UIApplication.sharedApplication openURL:phoneNumber];
         }
     }
 
@@ -69,15 +69,16 @@
 - (NSString *)clearSymbolAndWhiteString
 {
     NSMutableCharacterSet *trimSet = [[NSMutableCharacterSet alloc] init];
-    [trimSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    [trimSet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
-    [trimSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-    [trimSet formUnionWithCharacterSet:[NSCharacterSet symbolCharacterSet]];
+    [trimSet formUnionWithCharacterSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    [trimSet formUnionWithCharacterSet:NSCharacterSet.punctuationCharacterSet];
+    [trimSet formUnionWithCharacterSet:NSCharacterSet.controlCharacterSet];
+    [trimSet formUnionWithCharacterSet:NSCharacterSet.symbolCharacterSet];
     
     // 去掉前后空格、换行符、标点等
     NSString *trimText = [self stringByTrimmingCharactersInSet:trimSet];
     // 去掉中间的空格
-    trimText = [trimText stringByReplacingOccurrencesOfString:@" " withString:@""];
+    trimText = [trimText stringByReplacingOccurrencesOfString:@"\x20" withString:@""];
+    // 去掉中间的全角空格
     trimText = [trimText stringByReplacingOccurrencesOfString:@"　" withString:@""];
     
     return trimText;

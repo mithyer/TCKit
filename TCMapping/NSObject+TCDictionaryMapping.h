@@ -16,5 +16,7 @@
 
 - (id)tc_dictionary;
 
+// NSPropertyListSerialization: NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber
+
 @end
 
