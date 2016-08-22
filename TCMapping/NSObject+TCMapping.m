@@ -14,7 +14,6 @@
 #import <UIKit/UIGeometry.h>
 
 #import "TCMappingMeta.h"
-#import "UIColor+TCUtilities.h"
 
 
 #if ! __has_feature(objc_arc)
@@ -190,7 +189,7 @@ NS_INLINE UIColor *valueForUIColor(NSDictionary *dic, Class klass)
     return nil;
 }
 
-NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOption *option)
+static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOption *option, Class curClass)
 {
     id ret = nil;
     
@@ -335,28 +334,27 @@ NS_INLINE id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMapping
                 if ([value isKindOfClass:meta->_typeClass]) {
                     ret = value;
                 } else if ([value isKindOfClass:NSString.class]) { // "0xff65ce00" or "#0xff65ce00"
-                    NSString *str = ((NSString *)value).lowercaseString;
-                    if ([str hasPrefix:@"#"]) {
-                        str = [str substringFromIndex:1];
-                    }
-                    
-                    if ([str hasPrefix:@"0x"]) {
-                        str = [str substringFromIndex:2];
-                    }
-                    
-                    NSUInteger len = str.length;
-                    if (len == 6) {
-                        ret = [UIColor colorWithRGBHexString:(NSString *)value];
-                        
-                    } else if (len == 8) {
-                        ret = [UIColor colorWithARGBHexString:(NSString *)value];
+                    if ([curClass respondsToSelector:@selector(tc_transformColorFromString:)]) {
+                        ret = [curClass tc_transformColorFromString:value];
                     }
                 } else if ([value isKindOfClass:NSNumber.class]) {
-                    uint32_t hex = ((NSNumber *)value).unsignedIntValue;
-                    if (hex < 0x01000000) { // RGB or clear
-                        ret = [UIColor colorWithRGBHex:hex];
-                    } else { // ARGB
-                        ret = [UIColor colorWithARGBHex:hex];
+                    if ([curClass respondsToSelector:@selector(tc_transformColorFromHex:)]) {
+                        ret = [curClass tc_transformColorFromHex:((NSNumber *)value).unsignedIntValue];
+                    }
+                }
+                break;
+            }
+                
+            case kTCEncodingTypeUIImage: {
+                if ([value isKindOfClass:meta->_typeClass]) {
+                    ret = value;
+                } else if ([value isKindOfClass:NSString.class]) { // base64 string
+                    if ([curClass respondsToSelector:@selector(tc_transformImageFromBase64String:)]) {
+                        ret = [curClass tc_transformImageFromBase64String:value];
+                    }
+                } else if ([value isKindOfClass:NSData.class]) {
+                    if ([curClass respondsToSelector:@selector(tc_transformImageFromData:)]) {
+                        ret = [curClass tc_transformImageFromData:value];
                     }
                 }
                 break;
@@ -434,7 +432,7 @@ static NSArray *mappingArray(NSArray *value, Class arryKlass, id<TCMappingPersis
                 meta->_propertyName =  property;
             }
 
-            id obj = valueForBaseTypeOfProperty(dic, meta, option);
+            id obj = valueForBaseTypeOfProperty(dic, meta, option, klass);
             if (nil != obj) {
                 [arry addObject:obj];
             }
@@ -746,7 +744,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             }
 
         } else if (value != (id)kCFNull) {
-            value = valueForBaseTypeOfProperty(value, meta, option);
+            value = valueForBaseTypeOfProperty(value, meta, option, curClass);
         }
         
         if (nil == value) {

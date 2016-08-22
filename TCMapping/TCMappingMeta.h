@@ -27,6 +27,7 @@ typedef NS_ENUM (uint8_t, TCEncodingType) {
     kTCEncodingTypeNSNull,
     kTCEncodingTypeNSAttributedString,
     kTCEncodingTypeUIColor,
+    kTCEncodingTypeUIImage,
     
     // no class obj type
     kTCEncodingTypeId,

@@ -21,6 +21,7 @@
 /**
  @brief JSONMapping
  
+ UIImage -> base64 string
  UIColor -> "#1234FEA8" ARGB
  NSData -> base64 string
  NSDate -> "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -42,6 +43,7 @@
  NSPropertyListSerialization, NSCoding: NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber.
  key for NSDictionary must be NSString
  
+ UIImage -> data
  UIColor -> "#1234FEA8" ARGB
  NSURL -> string
  NSAttributedString -> string

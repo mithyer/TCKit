@@ -8,6 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
+
+@protocol TCMappingTransform <NSObject>
+
+@optional
+// UIImage <--> NSData
++ (NSData *)tc_transformDataFromImage:(UIImage *)img;
++ (UIImage *)tc_transformImageFromData:(NSData *)data;
++ (UIImage *)tc_transformImageFromBase64String:(NSString *)str;
+
+// UIColor <--> NSString
++ (UIColor *)tc_transformColorFromString:(NSString *)string;
++ (UIColor *)tc_transformColorFromHex:(uint32_t)hex;
++ (NSString *)tc_transformHexStringFromColor:(UIColor *)color;
+
+@end
+
+
 typedef Class (^TCTypeMappingBlock)(id value);
 
 @interface TCMappingOption : NSObject <NSCopying>
