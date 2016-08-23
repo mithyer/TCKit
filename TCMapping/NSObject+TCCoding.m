@@ -194,7 +194,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_JSONObject
 {
-    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, obj.class);
+    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, self.class);
     if (nil == obj || [obj isKindOfClass:NSArray.class] || [obj isKindOfClass:NSDictionary.class]) {
         return obj;
     }
@@ -221,7 +221,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_plistObject
 {
-    NSObject * obj = codingObject(self, kTCPersisentStylePlist, obj.class);
+    NSObject * obj = codingObject(self, kTCPersisentStylePlist, self.class);
     if (nil == obj ||
         [obj isKindOfClass:NSString.class] ||
         [obj isKindOfClass:NSNumber.class] ||
