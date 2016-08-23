@@ -195,6 +195,20 @@ extern NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Cl
 @end
 
 
+
+@protocol TCMappingIgnore
+@end
+
+@protocol TCCodingIgnore
+@end
+
+@protocol TCPersistentIgnore
+@end
+
+@protocol NSCopyingIgnore
+@end
+
+
 @interface NSObject (TCMappingMeta) <TCNSValueSerializer>
 
 /**

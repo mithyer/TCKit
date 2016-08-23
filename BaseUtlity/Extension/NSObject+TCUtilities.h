@@ -79,6 +79,8 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 // Choose the first selector that the object responds to
 - (SEL)chooseSelector:(SEL)aSelector, ...;
 
+- (BOOL)isProperty:(NSString *)propertyName confirm:(Protocol *)protocol;
+
 #endif
 
 @end

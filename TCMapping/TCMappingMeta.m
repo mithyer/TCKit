@@ -15,19 +15,6 @@
 #import <UIKit/UIColor.h>
 
 
-@protocol TCMappingIgnore
-@end
-
-@protocol TCCodingIgnore
-@end
-
-@protocol TCPersistentIgnore
-@end
-
-@protocol NSCopyingIgnore
-@end
-
-
 static Class NSBlockClass(void)
 {
     static Class cls = Nil;
@@ -225,14 +212,15 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
                         typeName = @(mutableValue);
                         
                         if (value[len - 2] == '>') { // "@\"TestModel2<TCMappingIgnore><TCNSCodingIgnore>\"
-                            NSRange range = [typeName rangeOfString:@"<"];
-                            if (range.location != NSNotFound) {
+                            NSRange const r1 = [typeName rangeOfString:@"<"];
+                            NSRange const r2 = [typeName rangeOfString:@">" options:NSBackwardsSearch];
+                            if (r1.location != NSNotFound && r2.location != NSNotFound) {
                                 
-                                NSString *ignoreProtocol = [typeName substringWithRange:NSMakeRange(range.location + 1, typeName.length - range.location - 2)];
+                                NSString *ignoreProtocol = [typeName substringWithRange:NSMakeRange(r1.location + 1, r2.location - r1.location - 1)];
                                 info |= ignoreForProtocols(ignoreProtocol);
                                 
-                                if (range.location != 0) {
-                                    typeName = [typeName substringToIndex:range.location];
+                                if (r1.location != 0) {
+                                    typeName = [typeName substringToIndex:r1.location];
                                 } else {
                                     typeName = @(@encode(id));
                                     info |= kTCEncodingTypeId;
