@@ -438,6 +438,43 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 #pragma mark - Class Bits
 
+- (BOOL)isProperty:(NSString *)propertyName confirm:(Protocol *)protocol
+{
+    NSParameterAssert(propertyName);
+    NSParameterAssert(protocol);
+    if (nil == propertyName || nil == protocol) {
+        return NO;
+    }
+    
+    objc_property_t prop = class_getProperty(self.class, propertyName.UTF8String);
+    if (NULL == prop) {
+        return NO;
+    }
+    
+    char *value = property_copyAttributeValue(prop, "T");
+    if (NULL == value) {
+        return NO;
+    }
+    
+    NSString *type = @(value);
+    free(value);
+    
+    NSRange r1 = [type rangeOfString:@"<"];
+    if (r1.location == NSNotFound) {
+        return NO;
+    }
+    
+    NSRange r2 = [type rangeOfString:@">" options:NSBackwardsSearch];
+    if (r2.location == NSNotFound) {
+        return NO;
+    }
+    
+    NSString *protocols = [type substringWithRange:NSMakeRange(r1.location + 1, r2.location - r1.location - 1)];
+    
+    return [protocols rangeOfString:NSStringFromProtocol(protocol)].location != NSNotFound;
+}
+
+
 #ifdef DEBUG
 
 + (NSArray *)superclasses
@@ -610,42 +647,6 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
     va_end(selectors);
     
     return sel;
-}
-
-- (BOOL)isProperty:(NSString *)propertyName confirm:(Protocol *)protocol
-{
-    NSParameterAssert(propertyName);
-    NSParameterAssert(protocol);
-    if (nil == propertyName || nil == protocol) {
-        return NO;
-    }
-    
-    objc_property_t prop = class_getProperty(self.class, propertyName.UTF8String);
-    if (NULL == prop) {
-        return NO;
-    }
-    
-    char *value = property_copyAttributeValue(prop, "T");
-    if (NULL == value) {
-        return NO;
-    }
-    
-    NSString *type = @(value);
-    free(value);
-    
-    NSRange r1 = [type rangeOfString:@"<"];
-    if (r1.location == NSNotFound) {
-        return NO;
-    }
-    
-    NSRange r2 = [type rangeOfString:@">" options:NSBackwardsSearch];
-    if (r2.location == NSNotFound) {
-        return NO;
-    }
-    
-    NSString *protocols = [type substringWithRange:NSMakeRange(r1.location + 1, r2.location - r1.location - 1)];
-    
-    return [protocols rangeOfString:NSStringFromProtocol(protocol)].location != NSNotFound;
 }
 
 /*
