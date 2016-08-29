@@ -45,7 +45,7 @@
     }
 }
 
-- (void)setWebView:(WKWebView *)webView
+- (void)updateKVO:(WKWebView *)webView
 {
     NSMutableArray *arry = NSMutableArray.array;
     for (UIView *subView in webView.scrollView.subviews) {
@@ -54,6 +54,18 @@
         }
     }
     self.kvoSubviews = arry.copy;
+}
+
+- (void)fixKVOViews
+{
+    CGFloat h = CGRectGetMaxY(self.headerView.frame);
+    for (UIView *subView in _kvoSubviews) {
+        CGRect rect = subView.frame;
+        if (ABS(CGRectGetMinY(rect) - h) > 0.001f) {
+            rect.origin.y = h;
+            subView.frame = rect;
+        }
+    }
 }
 
 
@@ -66,7 +78,7 @@
         if ([value isKindOfClass:NSValue.class]) {
             CGRect frame = value.CGRectValue;
             CGFloat head = CGRectGetMaxY(_headerView.frame);
-            if (CGRectGetMinY(frame) < head) {
+            if (ABS(CGRectGetMinY(frame) - head) > 0.001f) {
                 frame.origin.y = head;
                 ((UIView *)object).frame = frame;
             }
@@ -85,6 +97,7 @@
 + (void)load
 {
     [self tc_swizzle:@selector(loadRequest:)];
+    [self tc_swizzle:@selector(layoutSubviews)];
     
     // trigger auto load
     [self tc_systemUserAgent];
@@ -205,13 +218,21 @@
         
     } else {
         NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject;
-        NSString *cookiesFolderPath = [libraryPath stringByAppendingPathComponent:@"Cookies"];
-        [[NSFileManager defaultManager] removeItemAtPath:cookiesFolderPath error:NULL];
+        NSString *cookiesPath = [libraryPath stringByAppendingPathComponent:@"Cookies"];
+        [[NSFileManager defaultManager] removeItemAtPath:cookiesPath error:NULL];
     }
 }
 
 
 #pragma mark -
+
+- (void)tc_layoutSubviews
+{
+    [self tc_layoutSubviews];
+    
+    // bug fix for iOS9
+    [self.obsvrExtra fixKVOViews];
+}
 
 - (_WKWebViewExtra *)obsvrExtra
 {
@@ -230,27 +251,27 @@
 
 - (void)setWebHeaderView:(UIView *)webHeaderView
 {
-    NSArray *kvoSubviews = nil;
     _WKWebViewExtra *extra = self.obsvrExtra;
     
-    if (nil != extra) {
-        kvoSubviews = extra->_kvoSubviews;
-    }
+    BOOL needUpdateKVO = NO;
     
     if (nil == webHeaderView) {
         self.obsvrExtra = nil;
     } else if (nil == extra) {
         extra = [[_WKWebViewExtra alloc] init];
-        extra.webView = self;
         self.obsvrExtra = extra;
-        
-        kvoSubviews = extra->_kvoSubviews;
+        needUpdateKVO = YES;
     }
 
     BOOL needUpdate = NO;
     UIScrollView *scrollView = self.scrollView;
     
     UIView *headerView = self.webHeaderView;
+    needUpdateKVO = needUpdateKVO || (headerView != webHeaderView);
+    if (needUpdateKVO) {
+        [extra updateKVO:self];
+    }
+    
     if (nil == headerView) {
         if (nil != webHeaderView) {
             needUpdate = YES;
@@ -281,16 +302,8 @@
         NSParameterAssert(headerView.superview == scrollView);
     }
     
-    if (needUpdate && nil != kvoSubviews) {
-        CGFloat h = CGRectGetMaxY(frame);
-        for (UIView *subView in kvoSubviews) {
-            // bug fix for iOS8
-            CGRect rect = subView.frame;
-            if (CGRectGetMinY(rect) < h) {
-                rect.origin.y = h;
-                subView.frame = rect;
-            }
-        }
+    if (needUpdate) {
+        [extra fixKVOViews];
     }
 }
 
