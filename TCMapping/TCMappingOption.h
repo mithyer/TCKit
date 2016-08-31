@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 
+@class UIImage, UIColor;
+
 @protocol TCMappingTransform <NSObject>
 
 @optional
