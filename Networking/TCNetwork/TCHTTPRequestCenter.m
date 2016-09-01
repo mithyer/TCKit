@@ -584,12 +584,14 @@
 - (void)removeAllRequests
 {
     [_poolLock lock];
+    NSMutableArray<id<TCHTTPRequest>> *arry = NSMutableArray.array;
     for (id key in _requestPool) {
         NSArray<id<TCHTTPRequest>> *requests = [_requestPool objectForKey:key].dictionaryRepresentation.allValues;
         if (nil != requests) {
-            [requests makeObjectsPerformSelector:@selector(cancel)];
+            [arry addObjectsFromArray:requests];
         }
     }
+    [arry makeObjectsPerformSelector:@selector(cancel)];
     [_requestPool removeAllObjects];
     [_poolLock unlock];
 }
