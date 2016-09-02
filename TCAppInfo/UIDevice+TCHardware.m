@@ -31,6 +31,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice5SiPhone] = @"iPhone 5S",
     [kTCDevice6iPhone] = @"iPhone 6",
     [kTCDevice6PlusiPhone] = @"iPhone 6 Plus",
+    [kTCDeviceSEiPhone] = @"iPhone SE",
     [kTCDevice6SiPhone] = @"iPhone 6S",
     [kTCDevice6SPlusiPhone] = @"iPhone 6S Plus",
     [kTCDeviceUnknowniPhone] = @"Unknown iPhone",
@@ -62,7 +63,8 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDeviceUnknowniPad] = @"Unknown iPad",
     
     // ipad pro
-    [kTCDevice1GiPadPro] = @"iPad Pro 1G",
+    [kTCDevice1GiPadPro9_7] = @"iPad Pro 1G 9.7-inch",
+    [kTCDevice1GiPadPro12_9] = @"iPad Pro 1G 12.9-inch",
     
     // apple TV
     [kTCDeviceAppleTV2] = @"Apple TV 2G",
@@ -198,6 +200,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     else if ([platform hasPrefix:@"iPhone7,2"])          return kTCDevice6iPhone;
     else if ([platform hasPrefix:@"iPhone8,1"])          return kTCDevice6SiPhone;
     else if ([platform hasPrefix:@"iPhone8,2"])          return kTCDevice6SPlusiPhone;
+    else if ([platform hasPrefix:@"iPhone8,4"])          return kTCDeviceSEiPhone;
     
     // iPod
     else if ([platform hasPrefix:@"iPod1"])              return kTCDevice1GiPod;
@@ -243,7 +246,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice2GiPadAir;
         }
     }
-    else if ([platform hasPrefix:@"iPad6"])              return kTCDevice1GiPadPro;
+    else if ([platform hasPrefix:@"iPad6"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        if (subVersion <= 4) {
+            return kTCDevice1GiPadPro9_7;
+        } else if (subVersion >= 7 && subVersion <= 8) {
+            return kTCDevice1GiPadPro12_9;
+        }
+    }
     
     // Apple TV
     else if ([platform hasPrefix:@"AppleTV2"])           return kTCDeviceAppleTV2;
