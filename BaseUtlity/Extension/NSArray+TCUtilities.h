@@ -11,22 +11,22 @@ typedef id (^MapBlock)(id object);
 typedef BOOL (^TestingBlock)(id object);
 
 
-@interface NSArray (TCUtilities)
+@interface NSArray<ObjectType> (TCUtilities)
 
 // Utility
-@property (nonatomic, strong, readonly) NSArray *reversed;
-@property (nonatomic, strong, readonly) NSArray *sorted;
-@property (nonatomic, strong, readonly) NSArray *sortedCaseInsensitive;
+@property (nonatomic, strong, readonly) NSArray<ObjectType> *reversed;
+@property (nonatomic, strong, readonly) NSArray<ObjectType> *sorted;
+@property (nonatomic, strong, readonly) NSArray<ObjectType> *sortedCaseInsensitive;
 
 
 // Setification
-@property (nonatomic, strong, readonly) NSArray *uniqueElements;
+@property (nonatomic, strong, readonly) NSArray<ObjectType> *uniqueElements;
 
 - (id)topObject;
 
-- (instancetype)unionWithArray:(NSArray *)anArray;
-- (instancetype)intersectionWithArray:(NSArray *)anArray;
-- (instancetype)differenceToArray:(NSArray *)anArray;
+- (instancetype)unionWithArray:(NSArray<ObjectType> *)anArray;
+- (instancetype)intersectionWithArray:(NSArray<ObjectType> *)anArray;
+- (instancetype)differenceToArray:(NSArray<ObjectType> *)anArray;
 
 
 // Lisp
@@ -36,7 +36,7 @@ typedef BOOL (^TestingBlock)(id object);
 
 @end
 
-@interface NSMutableArray (TCUtilities)
+@interface NSMutableArray<ObjectType> (TCUtilities)
 - (instancetype)reverse;
 //- (NSMutableArray *) scramble;
 

@@ -613,7 +613,36 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
     });
 }
 
+
+- (void)tc_merge:(__kindof NSObject *)obj map:(id (^)(SEL prop, id left, id right))map
+{
+    NSParameterAssert(obj);
+    NSParameterAssert(map);
+    NSAssert([obj isKindOfClass:self.class], @"obj must be kindof self class");
+    
+    if (nil == obj || nil == map || ![obj isKindOfClass:self.class]) {
+        return;
+    }
+    
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
+    for (NSString *key in metaDic) {
+        __unsafe_unretained TCMappingMeta *meta = metaDic[key];
+        if (NULL == meta->_setter || NULL == meta->_getter) {
+            continue;
+        }
+        
+        id left = [self valueForKey:key meta:meta ignoreNSNull:NO];
+        id right = [obj valueForKey:key meta:meta ignoreNSNull:NO];
+        id value = map(meta->_getter, left, right);
+        
+        if (value != left) {
+            [self setValue:value forKey:key meta:meta forPersistent:NO];
+        }
+    }
+}
+
 @end
+
 
 static id tc_mappingWithDictionary(NSDictionary *dataDic,
                                    TCMappingOption *opt,
@@ -624,7 +653,6 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     if (nil == dataDic || ![dataDic isKindOfClass:NSDictionary.class] || dataDic.count < 1) {
         return nil;
     }
-    
     
     NSDictionary *nameDic = opt.nameMapping;
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass);

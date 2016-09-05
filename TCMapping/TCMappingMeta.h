@@ -9,6 +9,14 @@
 #import <Foundation/Foundation.h>
 
 
+typedef NS_ENUM(NSUInteger, TCEncodingInfo) {
+    kTCEncodingInfoUnknown = 0,
+    
+    kTCEncodingTypeMask = 0xff,
+    kTCEncodingOptionMask = 0xf00,
+    kTCEncodingIgnoreMask = 0xf000,
+};
+
 typedef NS_ENUM (uint8_t, TCEncodingType) {
     kTCEncodingTypeUnknown = 0,
     
@@ -76,24 +84,18 @@ typedef NS_ENUM (uint8_t, TCEncodingType) {
 
 // 4 bit, [0, 15] << 8
 typedef NS_OPTIONS (uint16_t, TCEncodingOption) {
-    kTCEncodingOptionObj = 1 << 8,
-    kTCEncodingOptionStruct = 2 << 8,
+    kTCEncodingOptionShift = __builtin_ctzll(kTCEncodingOptionMask),
+    kTCEncodingOptionObj = 1 << kTCEncodingOptionShift,
+    kTCEncodingOptionStruct = 2 << kTCEncodingOptionShift,
 };
 
 // 4 bit, [0, 15] << 12
 typedef NS_OPTIONS (uint16_t, TCEncodingIgnore) {
-    kTCEncodingIgnoreMapping = (1<<0) << 12,
-    kTCEncodingIgnoreCoding = (1<<1) << 12,
-    kTCEncodingIgnorePersistent = (1<<2) << 12,
-    kTCEncodingIgnoreCopying = (1<<3) << 12,
-};
-
-typedef NS_ENUM(NSUInteger, TCEncodingInfo) {
-    kTCEncodingInfoUnknown = 0,
-    
-    kTCEncodingTypeMask = 0xff,
-    kTCEncodingOptionMask = 0xf00,
-    kTCEncodingIgnoreMask = 0xf000,
+    kTCEncodingIgnoreShift = __builtin_ctzll(kTCEncodingIgnoreMask),
+    kTCEncodingIgnoreMapping = (1<<0) << kTCEncodingIgnoreShift,
+    kTCEncodingIgnoreCoding = (1<<1) << kTCEncodingIgnoreShift,
+    kTCEncodingIgnorePersistent = (1<<2) << kTCEncodingIgnoreShift,
+    kTCEncodingIgnoreCopying = (1<<3) << kTCEncodingIgnoreShift,
 };
 
 

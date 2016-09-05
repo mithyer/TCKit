@@ -96,7 +96,7 @@
     NSMutableArray *resultArray = [NSMutableArray array];
     for (id object in self) {
         id result = aBlock(object);
-        [resultArray addObject:result ?: [NSNull null]];
+        [resultArray addObject:result ?: NSNull.null];
     }
     return resultArray.count > 0 ? resultArray.copy : nil;
 }
