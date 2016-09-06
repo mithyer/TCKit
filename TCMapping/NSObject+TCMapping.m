@@ -844,17 +844,17 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
 
 - (long)longValue
 {
-    return self.longLongValue;
+    return (long)self.longLongValue;
 }
 
 - (unsigned long)unsignedLongValue
 {
-    return self.longLongValue;
+    return (unsigned long)self.longLongValue;
 }
 
 - (unsigned long long)unsignedLongLongValue
 {
-    return self.longLongValue;
+    return (unsigned long long)self.longLongValue;
 }
 
 
