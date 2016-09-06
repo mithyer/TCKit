@@ -14,9 +14,9 @@
 // code from: https://github.com/leverdeterre/iAppInfos
 
 typedef NS_ENUM(NSInteger, TCMobileProvisionningPushConfiguration) {
-    TCMobileProvisionningPushConfigurationDisable,
-    TCMobileProvisionningPushConfigurationDevelopment,
-    TCMobileProvisionningPushConfigurationProduction
+    kTCMobileProvisionningPushConfigurationDisable,
+    kTCMobileProvisionningPushConfigurationDevelopment,
+    kTCMobileProvisionningPushConfigurationProduction
 };
 
 @interface TCMobileProvisioning : NSObject

@@ -29,7 +29,7 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 + (void)initialize
 {
     void (^block)(NSNotification *note) = ^(NSNotification * _Nonnull note) {
-        NSDictionary *fattributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
+        NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
         NSNumber *size = [fattributes objectForKey:NSFileSystemFreeSize];
         if (nil != size && size.unsignedLongLongValue < 500e6) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kTCApplicationDidReceiveDiskSpaceWarning object:size];
@@ -41,9 +41,9 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (NSString *)appVersion:(TCMigrationVersionType)type
 {
-    if (TCMigrationShortVersion == type) {
+    if (kTCMigrationShortVersion == type) {
         return DEFAULT_PLIST_FOR_KEY(@"CFBundleShortVersionString");
-    } else if (TCMigrationBuildVersion == type) {
+    } else if (kTCMigrationBuildVersion == type) {
         return DEFAULT_PLIST_FOR_KEY(kCFBundleVersionKey);
     }
     
@@ -160,9 +160,9 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 + (NSString *)versionMigrationKeyForType:(TCMigrationVersionType)type domain:(NSString *)domain
 {
     NSString *rootKey = nil;
-    if (TCMigrationShortVersion == type) {
+    if (kTCMigrationShortVersion == type) {
         rootKey = kTCMigrationLastVersionKey;
-    } else if (TCMigrationBuildVersion == type) {
+    } else if (kTCMigrationBuildVersion == type) {
         rootKey = kTCMigrationLastBuildKey;
     } else {
         rootKey = kTCMigrationLastBuildKey;
@@ -179,8 +179,8 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (void)setLastMigrationVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(NSString *)domain
 {
-    [[NSUserDefaults standardUserDefaults] setValue:version forKey:[self versionMigrationKeyForType:type domain:domain]];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setValue:version forKey:[self versionMigrationKeyForType:type domain:domain]];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 
@@ -189,9 +189,9 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 + (NSString *)versionUpdateKeyForType:(TCMigrationVersionType)type domain:(NSString *)domain
 {
     NSString *rootKey = nil;
-    if (TCMigrationShortVersion == type) {
+    if (kTCMigrationShortVersion == type) {
         rootKey = kTCMigrationLastAppVersionKey;
-    } else if (TCMigrationBuildVersion == type) {
+    } else if (kTCMigrationBuildVersion == type) {
         rootKey = kTCMigrationLastAppBuildKey;
     } else {
         rootKey = kTCMigrationLastAppBuildKey;
@@ -208,8 +208,8 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (void)setLastUpdateVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(NSString *)domain
 {
-    [[NSUserDefaults standardUserDefaults] setValue:version forKey:[self versionUpdateKeyForType:type domain:domain]];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [NSUserDefaults.standardUserDefaults setValue:version forKey:[self versionUpdateKeyForType:type domain:domain]];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 

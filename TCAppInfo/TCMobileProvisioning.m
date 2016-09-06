@@ -45,12 +45,12 @@
 - (TCMobileProvisionningPushConfiguration)pushConfiguration
 {
     if ([_apsEnvironment isEqualToString:@"development"]) {
-        return TCMobileProvisionningPushConfigurationDevelopment;
+        return kTCMobileProvisionningPushConfigurationDevelopment;
     } else if ([_apsEnvironment isEqualToString:@"production"]) {
-        return TCMobileProvisionningPushConfigurationProduction;
+        return kTCMobileProvisionningPushConfigurationProduction;
     }
     
-    return TCMobileProvisionningPushConfigurationDisable;
+    return kTCMobileProvisionningPushConfigurationDisable;
 }
 
 

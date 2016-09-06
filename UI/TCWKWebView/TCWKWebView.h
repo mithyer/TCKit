@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
-// TODO: define tc_systemUserAgent
-
 @protocol TCWKWebView <NSObject>
 
 @required

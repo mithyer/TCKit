@@ -100,6 +100,7 @@
     [self tc_swizzle:@selector(layoutSubviews)];
     
     // trigger auto load
+    // FIXME: slow launch
     [self tc_systemUserAgent];
 }
 
