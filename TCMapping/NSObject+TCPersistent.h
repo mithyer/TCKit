@@ -20,9 +20,7 @@
  
  */
 
-@interface NSObject (TCPersistent)
-
-+ (TCMappingOption *)tc_mappingOption;
+@interface NSObject (TCPersistent) <TCMappingOption>
 
 // - (void)encodeWithCoder:(NSCoder *)aCoder { [self tc_encodeWithCoder:aCoder]; }
 - (void)tc_encodeWithCoder:(NSCoder *)coder;
@@ -38,9 +36,7 @@
 
 @protocol NSCopyingIgnore; // unavailable for `Class`
 
-@interface NSObject (TCNSCopying)
-
-+ (TCMappingOption *)tc_mappingOption;
+@interface NSObject (TCNSCopying) <TCMappingOption>
 
 // - (instancetype)copyWithZone:(NSZone *)zone { return self.tc_copy; }
 - (instancetype)tc_copy;

@@ -14,11 +14,6 @@
 
 @implementation NSObject (TCPersistent)
 
-+ (TCMappingOption *)tc_mappingOption
-{
-    return nil;
-}
-
 - (void)tc_encodeWithCoder:(NSCoder *)coder
 {
     NSParameterAssert(coder);
@@ -27,7 +22,7 @@
         return;
     }
     
-    NSDictionary *nameMapping = self.class.tc_mappingOption.nameNSCodingMapping;
+    NSDictionary *nameMapping = [self respondsToSelector:@selector(tc_mappingOption)] ? self.class.tc_mappingOption.nameNSCodingMapping : nil;
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
@@ -82,7 +77,7 @@
         return nil;
     }
     
-    NSDictionary *nameMapping = self.class.tc_mappingOption.nameNSCodingMapping;
+    NSDictionary *nameMapping = [self respondsToSelector:@selector(tc_mappingOption)] ? self.class.tc_mappingOption.nameNSCodingMapping : nil;
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
@@ -109,11 +104,6 @@
 
 @implementation NSObject (TCNSCopying)
 
-+ (TCMappingOption *)tc_mappingOption
-{
-    return nil;
-}
-
 - (instancetype)tc_copy
 {
     NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use copy instead of %@!", NSStringFromSelector(_cmd));
@@ -123,7 +113,7 @@
     
     typeof(self) copy = [[self.class alloc] init];
     
-    NSArray<NSString *> *ignoreList = self.class.tc_mappingOption.nameCopyIgnore;
+    NSArray<NSString *> *ignoreList = [self respondsToSelector:@selector(tc_mappingOption)] ? self.class.tc_mappingOption.nameCopyIgnore : nil;
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];

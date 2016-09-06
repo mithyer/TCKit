@@ -13,10 +13,9 @@
 @protocol TCCodingIgnore; // unavailable for `Class`
 
 
-@interface NSObject (TCCoding)
+NS_ASSUME_NONNULL_BEGIN
 
-+ (TCMappingOption *)tc_mappingOption;
-
+@interface NSObject (TCCoding) <TCMappingOption>
 
 /**
  @brief JSONMapping
@@ -69,3 +68,5 @@
 - (id)tc_JSONObject;
 
 @end
+
+NS_ASSUME_NONNULL_END

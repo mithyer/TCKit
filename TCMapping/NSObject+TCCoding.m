@@ -151,8 +151,9 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         
     } else { // user defined class
         __unsafe_unretained Class curClass = obj.class;
-        BOOL isNSNullValid = [curClass tc_mappingOption].shouldCodingNSNull;
-        NSDictionary<NSString *, NSString *> *nameDic = [curClass tc_mappingOption].nameCodingMapping;
+        TCMappingOption *opt = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil;
+        BOOL isNSNullValid = opt.shouldCodingNSNull;
+        NSDictionary<NSString *, NSString *> *nameDic = opt.nameCodingMapping;
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
@@ -186,11 +187,6 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 
 @implementation NSObject (TCCoding)
-
-+ (TCMappingOption *)tc_mappingOption
-{
-    return nil;
-}
 
 - (id)tc_JSONObject
 {

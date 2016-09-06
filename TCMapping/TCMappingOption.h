@@ -11,23 +11,34 @@
 
 @class UIImage, UIColor;
 
+NS_ASSUME_NONNULL_BEGIN
+
+
+@class TCMappingOption;
+@protocol TCMappingOption <NSObject>
+
+@optional
++ (TCMappingOption * __nullable)tc_mappingOption;
+
+@end
+
 @protocol TCMappingTransform <NSObject>
 
 @optional
-// UIImage <--> NSData
-+ (NSData *)tc_transformDataFromImage:(UIImage *)img;
-+ (UIImage *)tc_transformImageFromData:(NSData *)data;
-+ (UIImage *)tc_transformImageFromBase64String:(NSString *)str;
+// UIImage <-> NSData
++ (NSData * __nullable)tc_transformDataFromImage:(UIImage *)img;
++ (UIImage * __nullable)tc_transformImageFromData:(NSData *)data;
++ (UIImage * __nullable)tc_transformImageFromBase64String:(NSString *)str;
 
-// UIColor <--> NSString
-+ (UIColor *)tc_transformColorFromString:(NSString *)string;
-+ (UIColor *)tc_transformColorFromHex:(uint32_t)hex;
-+ (NSString *)tc_transformHexStringFromColor:(UIColor *)color;
+// UIColor <-> NSString
++ (UIColor * __nullable)tc_transformColorFromString:(NSString *)string;
++ (UIColor * __nullable)tc_transformColorFromHex:(uint32_t)hex;
++ (NSString * __nullable)tc_transformHexStringFromColor:(UIColor *)color;
 
 @end
 
 
-typedef Class (^TCTypeMappingBlock)(id value);
+typedef Class __nullable (^TCTypeMappingBlock)(id value);
 
 @interface TCMappingOption : NSObject <NSCopying>
 
@@ -93,5 +104,7 @@ typedef Class (^TCTypeMappingBlock)(id value);
 
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 

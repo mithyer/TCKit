@@ -464,11 +464,6 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 
 @implementation NSObject (TCMapping)
 
-+ (TCMappingOption *)tc_mappingOption
-{
-    return nil;
-}
-
 + (NSMutableArray *)tc_mappingWithArray:(NSArray *)arry
 {
     return [self tc_mappingWithArray:arry context:nil];
@@ -565,7 +560,7 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
     [self tc_asyncMappingWithArray:arry context:nil inQueue:nil finish:finish];
 }
 
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary *)dic finish:(void(^)(id data))finish
++ (void)tc_asyncMappingWithDictionary:(NSDictionary *)dic finish:(void(^)(__kindof NSObject * __nullable data))finish
 {
     [self tc_asyncMappingWithDictionary:dic context:nil inQueue:nil finish:finish];
 }
@@ -575,13 +570,13 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
     [self tc_asyncMappingWithArray:arry context:nil inQueue:queue finish:finish];
 }
 
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary *)dic inQueue:(dispatch_queue_t)queue finish:(void(^)(id data))finish
++ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic inQueue:(dispatch_queue_t)queue finish:(void(^)(__kindof NSObject * __nullable data))finish
 {
     [self tc_asyncMappingWithDictionary:dic context:nil inQueue:queue finish:finish];
 }
 
 
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary *)dic context:(id<TCMappingPersistentContext>)context inQueue:(dispatch_queue_t)queue finish:(void(^)(id data))finish
++ (void)tc_asyncMappingWithDictionary:(NSDictionary *)dic context:(id<TCMappingPersistentContext>)context inQueue:(dispatch_queue_t)queue finish:(void(^)(__kindof NSObject * __nullable data))finish
 {
     if (nil == finish) {
         return;
@@ -660,7 +655,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     if (nameDic.count < 1) {
         NSDictionary *tmpDic = nameDic;
         if (tmpDic.count < 1) {
-            tmpDic = [curClass tc_mappingOption].nameMapping;
+            tmpDic = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption].nameMapping : nil;
         }
         nameDic = nameMappingDicFor(tmpDic, metaDic.allKeys);
     } else {
@@ -668,7 +663,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     }
     
     NSObject *obj = target;
-    TCMappingOption *option = opt ?: [curClass tc_mappingOption];
+    TCMappingOption *option = opt ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
     BOOL isNSNullValid = option.shouldMappingNSNull;
     NSDictionary *typeDic = option.typeMapping;
 
@@ -705,7 +700,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     if (Nil != dicItemClass) {
                         NSMutableDictionary *tmpDic = NSMutableDictionary.dictionary;
                         for (id dicKey in valueDic) {
-                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], [dicItemClass tc_mappingOption], context, nil, dicItemClass);
+                            TCMappingOption *opt = [dicItemClass respondsToSelector:@selector(tc_mappingOption)] ? [dicItemClass tc_mappingOption] : nil;
+                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], opt, context, nil, dicItemClass);
                             if (nil != tmpValue) {
                                 tmpDic[dicKey] = tmpValue;
                             }
@@ -843,17 +839,17 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
 
 - (unsigned int)unsignedIntValue
 {
-    return (unsigned int)self.intValue;
+    return (unsigned int)self.longLongValue;
 }
 
 - (long)longValue
 {
-    return self.integerValue;
+    return self.longLongValue;
 }
 
 - (unsigned long)unsignedLongValue
 {
-    return self.integerValue;
+    return self.longLongValue;
 }
 
 - (unsigned long long)unsignedLongLongValue

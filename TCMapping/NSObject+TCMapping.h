@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TCMappingIgnore; // unavailable for `Class`
 
 
-@interface NSObject (TCMapping)
+@interface NSObject (TCMapping) <TCMappingOption>
 
 
 /**
@@ -47,8 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
  
  */
 
-+ (TCMappingOption *)tc_mappingOption;
-
 
 + (NSMutableArray * __nullable)tc_mappingWithArray:(NSArray *)arry;
 + (NSMutableArray * __nullable)tc_mappingWithArray:(NSArray *)arry context:(id<TCMappingPersistentContext> __nullable)context;
@@ -65,20 +63,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - JSON file
 
-+ (instancetype)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError **)error;
-+ (NSMutableArray *)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError **)error;
++ (instancetype __nullable)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError ** __nullable)error;
++ (NSMutableArray * __nullable)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError ** __nullable)error;
 
 
 #pragma mark - async
 
-+ (void)tc_asyncMappingWithArray:(NSArray *)arry finish:(void(^)(NSMutableArray *dataList))finish;
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic finish:(void(^)(id data))finish;
++ (void)tc_asyncMappingWithArray:(NSArray *)arry finish:(void(^)(NSMutableArray * __nullable dataList))finish;
++ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic finish:(void(^)(__kindof NSObject * __nullable data))finish;
 
-+ (void)tc_asyncMappingWithArray:(NSArray *)arry inQueue:(dispatch_queue_t __nullable)queue finish:(void(^)(NSMutableArray *dataList))finish;
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic inQueue:(dispatch_queue_t)queue finish:(void(^)(id data))finish;
++ (void)tc_asyncMappingWithArray:(NSArray *)arry inQueue:(dispatch_queue_t __nullable)queue finish:(void(^)(NSMutableArray * __nullable dataList))finish;
++ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic inQueue:(dispatch_queue_t)queue finish:(void(^)(__kindof NSObject * __nullable data))finish;
 
 + (void)tc_asyncMappingWithArray:(NSArray *)arry context:(id<TCMappingPersistentContext> __nullable)context inQueue:(dispatch_queue_t __nullable)queue finish:(void(^)(NSMutableArray *dataList))finish;
-+ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic context:(id<TCMappingPersistentContext> __nullable)context inQueue:(dispatch_queue_t __nullable)queue finish:(void(^)(id data))finish;
++ (void)tc_asyncMappingWithDictionary:(NSDictionary<NSString *, id> *)dic context:(id<TCMappingPersistentContext> __nullable)context inQueue:(dispatch_queue_t __nullable)queue finish:(void(^)(__kindof NSObject * __nullable data))finish;
 
 
 @end
