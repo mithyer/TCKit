@@ -276,7 +276,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
             case kTCEncodingTypeNSURL: { // NSURL <- NSString
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
-                        NSString *str = [(NSString *)value stringByReplacingOccurrencesOfString:@"\x20" withString:@""];
+                        NSString *str = value;
                         ret = [klass URLWithString:str];
                         if (nil == ret) {
                             str = [str stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
