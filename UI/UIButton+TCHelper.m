@@ -378,11 +378,24 @@ static char const kBtnExtraKey;
         CGFloat border = self.layer.borderWidth;
         
         if (up) {
-            self.imageEdgeInsets = UIEdgeInsetsMake(-imageSize.height * 0.5f - pad + border + r, (size.width - imageSize.width) * 0.5f, imageSize.height * 0.5f + pad - border - r, -(size.width - imageSize.width) * 0.5f);
-            self.titleEdgeInsets = UIEdgeInsetsMake(titleSize.height * 0.5f + pad + border + r, (size.width - titleSize.width) * 0.5f - imageSize.width, -titleSize.height * 0.5f - pad - border - r, 0);
+            CGFloat left = (size.width - imageSize.width) * 0.5f;
+            self.imageEdgeInsets = UIEdgeInsetsMake(-imageSize.height * 0.5f - pad + border + r,
+                                                    left,
+                                                    imageSize.height * 0.5f + pad - border - r,
+                                                    -left);
+            self.titleEdgeInsets = UIEdgeInsetsMake(titleSize.height * 0.5f + pad + border + r,
+                                                    (size.width - titleSize.width) * 0.5f - imageSize.width,
+                                                    -titleSize.height * 0.5f - pad - border - r,
+                                                    0);
         } else {
-            self.imageEdgeInsets = UIEdgeInsetsMake(imageSize.height * 0.5f + pad - r, (size.width - imageSize.width) * 0.5f, -imageSize.height * 0.5f - pad + r, -titleSize.width);
-            self.titleEdgeInsets = UIEdgeInsetsMake(-titleSize.height * 0.5f - pad - r, (size.width - titleSize.width) * 0.5f - imageSize.width, titleSize.height * 0.5f + pad + r, 0);
+            self.imageEdgeInsets = UIEdgeInsetsMake(imageSize.height * 0.5f + pad - r,
+                                                    (size.width - imageSize.width) * 0.5f,
+                                                    -imageSize.height * 0.5f - pad + r,
+                                                    -titleSize.width);
+            self.titleEdgeInsets = UIEdgeInsetsMake(-titleSize.height * 0.5f - pad - r,
+                                                    (size.width - titleSize.width) * 0.5f - imageSize.width,
+                                                    titleSize.height * 0.5f + pad + r,
+                                                    0);
         }
         
         CGSize dstSize = CGSizeMake(MAX(imageSize.width, titleSize.width) + border * 2, imageSize.height + titleSize.height + self.paddingBetweenTitleAndImage + border * 2);
@@ -392,7 +405,8 @@ static char const kBtnExtraKey;
             }
         }
         
-//        self.backgroundColor = [UIColor yellowColor];
+//        self.imageView.backgroundColor = [UIColor grayColor];
+//        self.backgroundColor = [UIColor whiteColor];
 //        self.titleLabel.backgroundColor = [UIColor redColor];
         
         //            CGFloat expand = (titleSize.height + imageSize.height - size.height) * 0.5 + pad + border;
