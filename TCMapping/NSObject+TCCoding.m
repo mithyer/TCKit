@@ -212,6 +212,15 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
+- (BOOL)tc_writeJSONToFile:(NSString *)path atomically:(BOOL)useAuxiliaryFile
+{
+    NSParameterAssert(path);
+    if (path.length < 1) {
+        return NO;
+    }
+    
+    return [self.tc_JSONString writeToFile:path atomically:useAuxiliaryFile encoding:NSUTF8StringEncoding error:NULL];
+}
 
 #pragma mark - TCPlistMapping
 

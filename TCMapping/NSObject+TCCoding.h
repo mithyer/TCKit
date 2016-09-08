@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSData *)tc_JSONData;
 - (NSString *)tc_JSONString;
 
+- (BOOL)tc_writeJSONToFile:(NSString *)path atomically:(BOOL)useAuxiliaryFile;
 
 #pragma mark - TCPlistMapping
 

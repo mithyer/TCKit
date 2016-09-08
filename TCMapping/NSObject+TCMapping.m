@@ -199,17 +199,15 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
         
         switch (type) {
             case kTCEncodingTypeNSString: { // NSString <- non NSString
-                if (!option.ignoreTypeConsistency) {
-                    NSCAssert([value isKindOfClass:NSString.class], @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
-                }
-                if (![value isKindOfClass:NSString.class]) {
-                    ret = [klass stringWithFormat:@"%@", value];
-                } else {
+                if ([value isKindOfClass:NSString.class]) {
                     if ([value isKindOfClass:klass]) {
                         ret = value;
                     } else {
                         ret = [klass stringWithString:value];
                     }
+                } else {
+                    NSCAssert(option.ignoreTypeConsistency, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    ret = [klass stringWithFormat:@"%@", value];
                 }
             
                 break;
@@ -222,15 +220,13 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         if ([value isKindOfClass:klass]) {
                             ret = value;
                         } else {
-                            ret = [klass decimalNumberWithDecimal:[((NSNumber *)value) decimalValue]];
+                            ret = [klass decimalNumberWithDecimal:((NSNumber *)value).decimalValue];
                         }
                     } else if ([value isKindOfClass:klass]) {
                         ret = value;
                     }
                 } else {
-                    if (!option.ignoreTypeConsistency) {
-                        NSCAssert(false, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
-                    }
+                    NSCAssert(option.ignoreTypeConsistency, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
                     if ([value isKindOfClass:NSString.class] && ((NSString *)value).length > 0) {
                         if (type == kTCEncodingTypeNSNumber) {
                             ret = [tc_mapping_number_fmter() numberFromString:(NSString *)value];

@@ -51,9 +51,9 @@ NS_INLINE TCEncodingType typeForStructType(const char *type)
         return kTCEncodingTypeUIRectEdge;
     } else if (NULL != strstr(type, "b")) {
         return kTCEncodingTypeBitStruct;
-    } else {
-        return kTCEncodingTypeCommonStruct;
     }
+    
+    return kTCEncodingTypeCommonStruct;
 }
 
 NS_INLINE TCEncodingType typeForPrimitiveType(char const *typeStr)
@@ -88,9 +88,9 @@ NS_INLINE TCEncodingType typeForPrimitiveType(char const *typeStr)
         return kTCEncodingTypeUInt16;
     } else if (type == @encode(void)[0]) {
         return kTCEncodingTypeVoid;
-    } else {
-        return kTCEncodingTypePrimitiveUnkown;
     }
+    
+    return kTCEncodingTypePrimitiveUnkown;
 }
 
 NS_INLINE TCEncodingInfo infoForScalarType(char const *type)
@@ -108,9 +108,9 @@ NS_INLINE TCEncodingInfo infoForScalarType(char const *type)
         return kTCEncodingTypeCArray | 0;
     } else if (value == '(') {
         return kTCEncodingTypeUnion | 0;
-    } else {
-        return typeForPrimitiveType(type) | 0;
     }
+    
+    return typeForPrimitiveType(type) | 0;
 }
 
 NS_INLINE TCEncodingType typeForNSType(Class typeClass)
