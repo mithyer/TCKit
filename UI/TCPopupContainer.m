@@ -9,7 +9,11 @@
 #import "TCPopupContainer.h"
 #import "UIWindow+TCHelper.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @interface TCPopupContainer () <CAAnimationDelegate>
+#else
+@interface TCPopupContainer ()
+#endif
 
 @property (nonatomic, strong) UIWindow *oldKeyWindow;
 @property (nonatomic, strong) UIWindow *containerWindow;
