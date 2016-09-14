@@ -9,7 +9,7 @@
 #import "TCPopupContainer.h"
 #import "UIWindow+TCHelper.h"
 
-@interface TCPopupContainer ()
+@interface TCPopupContainer () <CAAnimationDelegate>
 
 @property (nonatomic, strong) UIWindow *oldKeyWindow;
 @property (nonatomic, strong) UIWindow *containerWindow;
