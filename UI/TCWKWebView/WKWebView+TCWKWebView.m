@@ -11,6 +11,57 @@
 #import "UIView+TCWKWebView.h"
 
 
+
+@interface _LocalURLFixer : NSObject
+
+@property (nonatomic, strong) NSURL *orgUrl;
+
+@end
+
+
+@implementation _LocalURLFixer
+{
+    @private
+    NSURL *_tmpPath;
+    
+}
+
+- (void)dealloc
+{
+    if (nil != _tmpPath) {
+        [NSFileManager.defaultManager removeItemAtURL:_tmpPath error:NULL];
+        _tmpPath = nil;
+    }
+}
+
+- (NSURL *)moveToTmp:(NSURL *)url
+{
+    _orgUrl = url;
+    
+    if (nil != _tmpPath) {
+        if (![NSFileManager.defaultManager fileExistsAtPath:_tmpPath.absoluteString]) {
+            _tmpPath = nil;
+        }
+    }
+    
+    if (nil == _tmpPath) {
+        NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:NSUUID.UUID.UUIDString];
+        NSURL *tmpUrl = [NSURL fileURLWithPath:path];
+        if ([NSFileManager.defaultManager copyItemAtURL:url.URLByDeletingLastPathComponent toURL:tmpUrl error:NULL]) {
+            _tmpPath = tmpUrl;
+        }
+    }
+    
+    NSURL *dstUrl = url;
+    if (nil != _tmpPath) {
+        dstUrl = [_tmpPath URLByAppendingPathComponent:url.lastPathComponent];
+    }
+
+    return dstUrl;
+}
+
+@end
+
 @interface _WKWebViewExtra : NSObject
 {
     @public
@@ -184,8 +235,30 @@
 
 - (nullable WKNavigation *)tc_loadRequest:(NSURLRequest *)request
 {
-    self.originalRequest = request;
-    return [self tc_loadRequest:request];
+    // TODO: load local request in iOS8, must move files to tmp
+    
+    typeof(request) req = request;
+    if (SYSTEM_VERSION_LESS_THAN(@"9.0") && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") &&
+        nil != req.URL && [req.URL.scheme hasPrefix:@"file"] &&
+        ![req.URL.resourceSpecifier hasPrefix:NSTemporaryDirectory()]) {
+    
+        _LocalURLFixer *fixer = objc_getAssociatedObject(self, _cmd);
+        if (nil != fixer && ![fixer.orgUrl isEqual:req.URL]) {
+            objc_setAssociatedObject(self, _cmd, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        
+        if (nil == fixer) {
+            fixer = [[_LocalURLFixer alloc] init];
+            objc_setAssociatedObject(self, _cmd, fixer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        
+        NSMutableURLRequest *mReq = req.mutableCopy;
+        mReq.URL = [fixer moveToTmp:req.URL];
+        req = mReq.copy;
+    }
+    
+    self.originalRequest = req;
+    return [self tc_loadRequest:req];
 }
 
 /*
