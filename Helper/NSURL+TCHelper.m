@@ -42,4 +42,23 @@
     return com.URL;
 }
 
+- (unsigned long long)contentSizeInByte
+{
+    NSURL *url = self.filePathURL;
+    if (nil == url) {
+        return 0;
+    }
+    
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.resourceSpecifier error:NULL];
+    if (subPath.count > 0) {
+        unsigned long long size = 0;
+        for (NSString *fileName in subPath) {
+            size += [self URLByAppendingPathComponent:fileName].contentSizeInByte;
+        }
+        return size;
+    }
+    
+    return [NSFileManager.defaultManager attributesOfItemAtPath:url.resourceSpecifier error:NULL].fileSize;
+}
+
 @end

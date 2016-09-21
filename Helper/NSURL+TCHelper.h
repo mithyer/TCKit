@@ -13,4 +13,6 @@
 - (NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary;
 - (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param;
 
+- (unsigned long long)contentSizeInByte;
+
 @end
