@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDevice6SiPhone,
     kTCDevice6SPlusiPhone,
     
+    kTCDevice7iPhone,
+    kTCDevice7PlusiPhone,
+    
     kTCDevice1GiPod,
     kTCDevice2GiPod,
     kTCDevice3GiPod,

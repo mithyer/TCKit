@@ -34,6 +34,9 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDeviceSEiPhone] = @"iPhone SE",
     [kTCDevice6SiPhone] = @"iPhone 6S",
     [kTCDevice6SPlusiPhone] = @"iPhone 6S Plus",
+    
+    [kTCDevice7iPhone] = @"iPhone 7",
+    [kTCDevice7PlusiPhone] = @"iPhone 7 Plus",
     [kTCDeviceUnknowniPhone] = @"Unknown iPhone",
     
     // iPod
@@ -201,6 +204,15 @@ static NSString *s_device_names[kTCDeviceCount] = {
     else if ([platform hasPrefix:@"iPhone8,1"])          return kTCDevice6SiPhone;
     else if ([platform hasPrefix:@"iPhone8,2"])          return kTCDevice6SPlusiPhone;
     else if ([platform hasPrefix:@"iPhone8,4"])          return kTCDeviceSEiPhone;
+    
+    else if ([platform hasPrefix:@"iPhone9"]) {
+    NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        if (1 == subVersion || 3 == subVersion) {
+            return kTCDevice7iPhone;
+        } else if (2 == subVersion || 4 == subVersion) {
+            return kTCDevice7PlusiPhone;
+        }
+    }
     
     // iPod
     else if ([platform hasPrefix:@"iPod1"])              return kTCDevice1GiPod;
