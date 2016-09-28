@@ -423,12 +423,6 @@ static void exceptionHandler(NSException *exception)
         if ([self.delegate respondsToSelector:@selector(debugPanelTapped:)]) {
             [self.delegate debugPanelTapped:self];
         }
-        //        NSString *URLSafeName = [self URLEncodedString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]];
-        //        NSString *URLSafeLog = [self URLEncodedString:[_log componentsJoinedByString:@"\n"]];
-        //        NSMutableString *URLString = [NSMutableString stringWithFormat:@"mailto:%@?subject=%@%%20Console%%20Log&body=%@",
-        //                                      _logSubmissionEmail ?: @"", URLSafeName, URLSafeLog];
-        //
-        //        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLString]];
     }
 }
 

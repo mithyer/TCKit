@@ -18,12 +18,8 @@
         NSURL *phoneNumber = [NSURL URLWithString:[@"telprompt://" stringByAppendingString:self]];
         ret = [UIApplication.sharedApplication canOpenURL:phoneNumber];
         if (ret) {
-            ret = [UIApplication.sharedApplication openURL:phoneNumber];
+            [UIApplication.sharedApplication openURL:phoneNumber options:@{} completionHandler:complete];
         }
-    }
-
-    if (nil != complete) {
-        complete(ret);
     }
 }
 
