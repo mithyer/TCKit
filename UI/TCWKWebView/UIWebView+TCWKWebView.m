@@ -61,6 +61,12 @@
     [self tc_loadRequest:request];
 }
 
+- (id)tc_goBack
+{
+    [self goBack];
+    return @YES;
+}
+
 
 #pragma mark -
 

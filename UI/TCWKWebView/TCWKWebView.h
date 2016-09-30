@@ -23,7 +23,7 @@
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (BOOL)canGoBack;
-- (void)goBack;
+- (id)tc_goBack;
 
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id result, NSError *error))completionHandler;
 

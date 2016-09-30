@@ -178,6 +178,11 @@
     return s_userAgent;
 }
 
+- (id)tc_goBack
+{
+    return [self goBack];
+}
+
 - (id<WKNavigationDelegate, WKUIDelegate>)delegate
 {
     id delegate = self.navigationDelegate ?: (id)self.UIDelegate;
