@@ -65,8 +65,8 @@
         return self;
     }
     
-    // NSURLComponents 自带 url encoding, property 自动 decoding
-    NSURLComponents *com = [[NSURLComponents alloc] initWithURL:self resolvingAgainstBaseURL:NO];
+    // NSURLComponents auto url encoding, property auto decoding
+    NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
     NSMutableString *query = NSMutableString.string;
     NSString *rawQuery = com.query;
     if (nil != rawQuery) {

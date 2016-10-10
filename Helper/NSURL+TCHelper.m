@@ -16,30 +16,50 @@
     return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&"];
 }
 
-- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param
+- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force
 {
     if (param.count < 1) {
         return self;
     }
     
-    // NSURLComponents 自带 url encoding, property 自动 decoding
-    NSURLComponents *com = [[NSURLComponents alloc] initWithURL:self resolvingAgainstBaseURL:NO];
-    NSMutableString *query = NSMutableString.string;
-    NSString *rawQuery = com.query;
-    if (nil != rawQuery) {
-        [query appendString:rawQuery];
-    }
-    
-    for (NSString *key in param) {
-        if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
-            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", param[key]]];
-        } else {
-            NSAssert(false, @"conflict query param");
+    // NSURLComponents auto url encoding, property auto decoding
+    NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
+
+    if (force) {
+        NSMutableDictionary *dic = self.parseQueryToDictionary;
+        if (nil == dic) {
+            dic = NSMutableDictionary.dictionary;
         }
+        [dic addEntriesFromDictionary:param];
+        
+        NSMutableString *query = NSMutableString.string;
+        for (NSString *key in dic) {
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", dic[key]]];
+        }
+        com.query = query;
+    } else {
+        NSMutableString *query = NSMutableString.string;
+        NSString *rawQuery = com.query;
+        if (nil != rawQuery) {
+            [query appendString:rawQuery];
+        }
+        
+        for (NSString *key in param) {
+            if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
+                [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", param[key]]];
+            } else {
+                NSAssert(false, @"conflict query param");
+            }
+        }
+        com.query = query;
     }
-    com.query = query;
     
     return com.URL;
+}
+
+- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param
+{
+    return [self appendParam:param override:NO];
 }
 
 - (unsigned long long)contentSizeInByte
