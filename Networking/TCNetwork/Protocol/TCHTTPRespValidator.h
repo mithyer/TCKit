@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol TCHTTPRequest;
+
 @protocol TCHTTPRespValidator <NSObject>
 
 @required
@@ -32,7 +34,7 @@
 @property (nonatomic, assign) NSUInteger pageIndex;
 @property (nonatomic, assign) NSUInteger pageSize;
 
-+ (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache;
-- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache;
++ (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request;
+- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request;
 
 @end

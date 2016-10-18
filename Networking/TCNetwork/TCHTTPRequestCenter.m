@@ -652,8 +652,8 @@
         id<TCHTTPRespValidator> validator = request.responseValidator;
         if (nil != validator) {
             if (isValid) {
-                if ([validator respondsToSelector:@selector(validateHTTPResponse:fromCache:)]) {
-                    isValid = [validator validateHTTPResponse:request.responseObject fromCache:NO];
+                if ([validator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
+                    isValid = [validator validateHTTPResponse:request.responseObject fromCache:NO forRequest:request];
                 }
             } else {
                 [validator reset];

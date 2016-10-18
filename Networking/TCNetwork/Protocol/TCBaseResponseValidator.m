@@ -15,7 +15,7 @@
 @implementation TCBaseResponseValidator
 
 
-#pragma mark - TCHTTPResponseValidator
+#pragma mark - TCHTTPRespValidator
 
 + (NSDictionary<NSString *, NSArray<NSNumber *> *> *)errorFilter
 {
