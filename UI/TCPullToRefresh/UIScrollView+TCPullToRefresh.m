@@ -217,7 +217,7 @@ static char const kHeaderClassKey;
 
 - (CGFloat)priorContentOffsetY
 {
-    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+    return (CGFloat)[objc_getAssociatedObject(self, _cmd) doubleValue];
 }
 
 - (void)setPriorContentOffsetY:(CGFloat)priorContentOffsetY
