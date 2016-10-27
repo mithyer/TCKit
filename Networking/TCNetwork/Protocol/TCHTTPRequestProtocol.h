@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
     
     kTCHTTPMethodGet,
     kTCHTTPMethodPost,
+    kTCHTTPMethodPostJSON,
     kTCHTTPMethodHead,
     kTCHTTPMethodPut,
     kTCHTTPMethodDelete,

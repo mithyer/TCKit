@@ -402,7 +402,17 @@
             break;
         }
             
-        case kTCHTTPMethodPost: {
+        case kTCHTTPMethodPost:
+        case kTCHTTPMethodPostJSON: {
+            
+            BOOL rawJSON = kTCHTTPMethodPostJSON == request.method;
+            
+            typeof(requestMgr.requestSerializer) serializer = nil;
+            if (rawJSON && ![requestMgr.requestSerializer isKindOfClass:AFJSONRequestSerializer.class]) {
+                serializer = requestMgr.requestSerializer;
+                requestMgr.requestSerializer = AFJSONRequestSerializer.serializer;
+            }
+            
             if (nil != request.streamPolicy.constructingBodyBlock) {
                 task = [requestMgr POST:url.absoluteString parameters:param constructingBodyWithBlock:request.streamPolicy.constructingBodyBlock progress:^(NSProgress * _Nonnull uploadProgress) {
                     request.streamPolicy.progress = uploadProgress;
@@ -413,6 +423,11 @@
                     request.streamPolicy.progress = uploadProgress;
                 } success:successBlock failure:failureBlock];
             }
+            
+            if (nil != serializer) {
+                requestMgr.requestSerializer = serializer;
+            }
+            
             break;
         }
             
@@ -487,6 +502,7 @@
                                               userInfo:@{NSLocalizedFailureReasonErrorKey: @"fire request error",
                                                          NSLocalizedDescriptionKey: @"generate NSURLSessionTask instances failed."}];
         }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [request requestResponded:NO clean:YES];
         });
