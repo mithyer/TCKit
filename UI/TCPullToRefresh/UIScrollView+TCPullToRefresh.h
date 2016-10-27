@@ -28,7 +28,7 @@
 - (BOOL)tc_triggerLoadMore;
 
 - (void)tc_scrollViewDidScroll:(UIScrollView *)scrollView;
-//- (void)tc_scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+- (void)tc_scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 - (void)tc_scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 @end

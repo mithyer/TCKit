@@ -23,16 +23,25 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if ([scrollView.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+    if ([scrollView.delegate respondsToSelector:_cmd]) {
         [scrollView.delegate scrollViewDidScroll:scrollView];
     }
     
     [scrollView tc_scrollViewDidScroll:scrollView];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([scrollView.delegate respondsToSelector:_cmd]) {
+        [scrollView.delegate scrollViewDidEndDecelerating:scrollView];
+    }
+    
+    [scrollView tc_scrollViewDidEndDecelerating:scrollView];
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if ([scrollView.delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+    if ([scrollView.delegate respondsToSelector:_cmd]) {
         [scrollView.delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
     
@@ -204,6 +213,16 @@ static char const kHeaderClassKey;
 - (void)setPullRefreshDelegate:(id<TCPullToRefreshDelegate>)pullRefreshDelegate
 {
     objc_setAssociatedObject(self, &kPullRefreshDelegateKey, pullRefreshDelegate, OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (CGFloat)priorContentOffsetY
+{
+    return [objc_getAssociatedObject(self, _cmd) doubleValue];
+}
+
+- (void)setPriorContentOffsetY:(CGFloat)priorContentOffsetY
+{
+    objc_setAssociatedObject(self, @selector(priorContentOffsetY), @(priorContentOffsetY), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 
@@ -483,9 +502,9 @@ static char const kHeaderClassKey;
     return YES;
 }
 
+
 - (void)tc_scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    static CGFloat const kDeltaY = 0.0f;
     // 刷新操作
     if (nil != self.refreshHeaderView && self.refreshEnabled) {
         [self.refreshHeaderView tcRefreshScrollViewDidScroll:scrollView];
@@ -498,44 +517,46 @@ static char const kHeaderClassKey;
     if (scrollView.contentSize.height < scrollView.bounds.size.height) {
         return;
     }
-    
+
+    // 向上滚动
     CGFloat yVelocity = [scrollView.panGestureRecognizer velocityInView:scrollView].y;
     
-    if (yVelocity < kDeltaY && !self.reloading && (self.listMode & kTCPullRefreshModeLoadMore2)
+    if (yVelocity < 0.0f && !self.reloading && ((self.listMode & kTCPullRefreshModeLoadMore2) == kTCPullRefreshModeLoadMore2)
         && self.loadMoreEnabled && !self.loadingMore && self.canLoadMore) {
-        if (scrollView.contentOffset.y > 40.0f) {
+        if (scrollView.contentOffset.y - self.priorContentOffsetY >= scrollView.bounds.size.height / 2) {
+            self.priorContentOffsetY = scrollView.contentOffset.y;
             [self tc_triggerLoadMore];
         }
     }
 }
 
-//- (void)tc_scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-//{
-////    _scrollDecelerating = NO;
-//    
-//    //    if (!_reloading && (_listMode & kTCListViewModeLoadMore2) && _loadMoreEnabled && !_loadingMore && [self canLoadMore]) {
-//    //        CGFloat offset_y = scrollView.contentSize.height - scrollView.contentOffset.y;
-//    //
-//    //        static CGFloat const kDeltaY = 200.0f; // 离bottom 200 point
-//    //        BOOL reachBottom = (scrollView.contentOffset.y > 10.0f) && (offset_y <= scrollView.bounds.size.height + kDeltaY);
-//    //        if (reachBottom) {
-//    //            [self loadMoreViewDataSource];
-//    //        }
-//    //    }
-//}
+- (void)tc_scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.priorContentOffsetY = scrollView.contentOffset.y;
+    
+    if (!self.reloading && ((self.listMode & kTCPullRefreshModeLoadMore2) == kTCPullRefreshModeLoadMore2)
+        && self.loadMoreEnabled && !self.loadingMore && self.canLoadMore) {
+        
+        CGFloat offset_y = scrollView.contentSize.height - scrollView.contentOffset.y;
+        
+        static CGFloat const kDeltaY = 200.0f; // 离 bottom 200 point
+        BOOL reachBottom = (scrollView.contentOffset.y > 10.0f) && (offset_y <= scrollView.bounds.size.height + kDeltaY);
+        if (reachBottom) {
+            [self tc_triggerLoadMore];
+        }
+    }
+}
 
 - (void)tc_scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-//    _scrollDecelerating = decelerate;
-    
     // 刷新操作
     if (!self.reloading && !self.loadingMore && nil != self.refreshHeaderView && self.refreshEnabled) {
         [self.refreshHeaderView tcRefreshScrollViewDidEndDragging:scrollView];
     }
     
-    if (!self.reloading && !self.loadingMore && nil != self.loadMoreView && self.loadMoreEnabled) { // 翻页操作
+//    if (!self.reloading && !self.loadingMore && nil != self.loadMoreView && self.loadMoreEnabled) { // 翻页操作
         //        [_loadMoreView tcLoadMoreScrollViewDidEndDragging:scrollView];
-    }
+//    }
 }
 
 
