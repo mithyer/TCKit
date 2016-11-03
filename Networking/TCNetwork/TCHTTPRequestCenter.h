@@ -12,6 +12,7 @@
 #import "TCHTTPCachePolicy.h"
 #import "TCHTTPStreamPolicy.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @class AFSecurityPolicy;
 NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPRequestAgent>
@@ -21,19 +22,19 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 @property (nonatomic, assign, readonly) BOOL networkReachable;
 // default: 0, use Max(TCHTTPRequestCenter.timeoutInterval, TCHTTPRequest.timeoutInterval)
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
-@property (nonatomic, strong) NSSet *acceptableContentTypes;
+@property (nonatomic, strong, nullable) NSSet *acceptableContentTypes;
 
 @property (nonatomic, strong, readonly) NSURLSessionConfiguration *sessionConfiguration;
-@property (nonatomic, weak) id<TCHTTPRequestUrlFilter> urlFilter;
+@property (nonatomic, weak, nullable) id<TCHTTPRequestUrlFilter> urlFilter;
 
 
 + (instancetype)defaultCenter;
-- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration;
+- (instancetype)initWithBaseURL:(nullable NSURL *)url sessionConfiguration:(nullable NSURLSessionConfiguration *)configuration;
 - (AFSecurityPolicy *)securityPolicy;
 
-- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError **)error;
+- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable *)error;
 
-- (void)removeRequestObserver:(__unsafe_unretained id)observer forIdentifier:(id<NSCoding>)identifier;
+- (void)removeRequestObserver:(__unsafe_unretained id)observer forIdentifier:(nullable id<NSCoding>)identifier;
 - (void)removeRequestObserver:(__unsafe_unretained id)observer;
 - (void)removeAllRequests;
 
@@ -52,14 +53,14 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 
 #pragma mark - Custom value in HTTP Head
 
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *customHeaderValue;
+@property (nonatomic, strong, nullable) NSDictionary<NSString *, NSString *> *customHeaderValue;
 
 /**
  Sets the "Authorization" HTTP header set in request objects made by the HTTP client to a basic authentication value with Base64-encoded username and password. 
  This overwrites any existing value for this header.
  */
-@property (nonatomic, copy) NSString *authorizationUsername;
-@property (nonatomic, copy) NSString *authorizationPassword;
+@property (nonatomic, copy, nullable) NSString *authorizationUsername;
+@property (nonatomic, copy, nullable) NSString *authorizationPassword;
 
 @end
 
@@ -69,10 +70,12 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 //
 // request method below, will not auto start
 //
-- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method apiUrl:(NSString *)apiUrl host:(NSString *)host;
-- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method cachePolicy:(TCHTTPCachePolicy *)policy apiUrl:(NSString *)apiUrl host:(NSString *)host;
-- (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(TCHTTPCachePolicy *)cachePolicy;
+- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
+- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method cachePolicy:(nullable TCHTTPCachePolicy *)policy apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
+- (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(nullable TCHTTPCachePolicy *)cachePolicy;
 - (id<TCHTTPRequest>)requestForUploadTo:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy;
 - (id<TCHTTPRequest>)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
 @end
+
+NS_ASSUME_NONNULL_END

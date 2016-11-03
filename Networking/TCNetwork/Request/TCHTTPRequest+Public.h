@@ -8,6 +8,8 @@
 
 #import "TCHTTPRequest.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TCHTTPRequest (Public)
 
 + (instancetype)requestWithMethod:(TCHTTPMethod)method;
@@ -15,3 +17,5 @@
 + (instancetype)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
 @end
+
+NS_ASSUME_NONNULL_END

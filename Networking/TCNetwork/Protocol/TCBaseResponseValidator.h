@@ -9,16 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "TCHTTPRespValidator.h"
 
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TCBaseResponseValidator : NSObject <TCHTTPRespValidator>
 
-@property (nonatomic, strong) id data;
+@property (nonatomic, strong, nullable) id data;
 @property (nonatomic, assign) BOOL success;
-@property (nonatomic, copy) NSString *successMsg;
-@property (nonatomic, strong) NSError *error;
+@property (nonatomic, copy, nullable) NSString *successMsg;
+@property (nonatomic, strong, nullable) NSError *error;
 
-@property (nonatomic, strong) NSDictionary<NSString *, NSArray<NSNumber *> *> *errorFilter;
+@property (nonatomic, strong, nullable) NSDictionary<NSString *, NSArray<NSNumber *> *> *errorFilter;
 
 - (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache;
 
 @end
 
+NS_ASSUME_NONNULL_END

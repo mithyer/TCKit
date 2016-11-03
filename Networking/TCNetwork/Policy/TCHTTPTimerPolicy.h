@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 
 
-
 typedef NS_ENUM(NSInteger, TCHTTPTimerType) {
     kTCHTTPTimerTypePolling = 0,
     kTCHTTPTimerTypeRetry,
     kTCHTTPTimerTypeDelay,
 };
+
+
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSTimeInterval kTCHTTPTimerIntervalEnd;
 
@@ -33,7 +35,7 @@ extern NSTimeInterval kTCHTTPTimerIntervalEnd;
 
 @property (nonatomic, assign, readonly) TCHTTPTimerType timerType;
 
-@property (nonatomic, copy) NSTimeInterval (^intervalFunc)(TCHTTPTimerPolicy *policy, NSUInteger index); // return >= 0: continue, return < 0: break
+@property (nonatomic, copy, nullable) NSTimeInterval (^intervalFunc)(TCHTTPTimerPolicy *policy, NSUInteger index); // return >= 0: continue, return < 0: break
 
 
 // for polling
@@ -46,6 +48,8 @@ extern NSTimeInterval kTCHTTPTimerIntervalEnd;
 + (instancetype)retryPolicyWithIntervals:(NSTimeInterval (^)(TCHTTPTimerPolicy *policy, NSUInteger index))intervalFunc;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 
 

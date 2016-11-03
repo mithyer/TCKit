@@ -11,12 +11,15 @@
 #import "TCHTTPReqAgentDelegate.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSInteger const kTCHTTPRequestCacheNeverExpired;
+
 
 @interface TCHTTPCachePolicy : NSObject
 
 @property (nonatomic, weak) id<TCHTTPRequest, TCHTTPReqAgentDelegate> request;
-@property (nonatomic, strong) id cachedResponse;
+@property (nonatomic, strong, nullable) id cachedResponse;
 
 
 @property (nonatomic, assign) BOOL shouldIgnoreCache; // default: NO
@@ -29,13 +32,13 @@ extern NSInteger const kTCHTTPRequestCacheNeverExpired;
 
 - (BOOL)isCacheValid;
 - (BOOL)isDataFromCache;
-- (NSDate *)cacheDate;
+- (nullable NSDate *)cacheDate;
 - (TCCachedRespState)cacheState;
 
 
 // default: parameters = nil, sensitiveData = nil
-- (void)setCachePathFilterWithRequestParameters:(NSDictionary *)parameters
-                                  sensitiveData:(id)sensitiveData;
+- (void)setCachePathFilterWithRequestParameters:(nullable NSDictionary *)parameters
+                                  sensitiveData:(nullable id)sensitiveData;
 
 
 - (NSString *)cacheFileName;
@@ -43,3 +46,5 @@ extern NSInteger const kTCHTTPRequestCacheNeverExpired;
 - (BOOL)shouldWriteToCache;
 
 @end
+
+NS_ASSUME_NONNULL_END

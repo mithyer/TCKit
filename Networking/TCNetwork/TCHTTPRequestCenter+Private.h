@@ -8,6 +8,8 @@
 
 #import "TCHTTPRequestCenter.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TCHTTPRequestCenter (Private)
 
 - (void)loadResumeData:(void(^)(NSData *data))finish forPolicy:(TCHTTPStreamPolicy *)policy;
@@ -19,10 +21,12 @@
 //
 // request method below, will not auto start
 //
-- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method apiUrl:(NSString *)apiUrl host:(NSString *)host;
-- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method cachePolicy:(TCHTTPCachePolicy *)policy apiUrl:(NSString *)apiUrl host:(NSString *)host;
-- (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(TCHTTPCachePolicy *)cachePolicy;
+- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
+- (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method cachePolicy:(nullable TCHTTPCachePolicy *)policy apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
+- (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(nullable TCHTTPCachePolicy *)cachePolicy;
 - (id<TCHTTPRequest>)requestForUploadTo:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy;
 - (id<TCHTTPRequest>)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
 @end
+
+NS_ASSUME_NONNULL_END

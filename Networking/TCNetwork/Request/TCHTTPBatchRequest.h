@@ -8,6 +8,9 @@
 
 #import "TCHTTPRequest.h"
 
+
+NS_ASSUME_NONNULL_BEGIN
+
 NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPBatchRequest : TCHTTPRequest
 
 @property (nonatomic, copy) NSArray<id<TCHTTPRequest>> *batchRequests;
@@ -15,7 +18,9 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPBatchRequest : TCHTTPRequest
 + (instancetype)requestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 - (instancetype)initWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
-- (BOOL)start:(NSError **)error;
+- (BOOL)start:(NSError * _Nullable *)error;
 
 
 @end
+
+NS_ASSUME_NONNULL_END
