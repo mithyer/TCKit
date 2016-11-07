@@ -14,6 +14,7 @@
 #import <UIKit/UIGeometry.h>
 
 #import "TCMappingMeta.h"
+#import "NSObject+TCCoding.h"
 
 
 #if ! __has_feature(objc_arc)
@@ -722,7 +723,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     
                     if ([klass isSubclassOfClass:UIColor.class]) {
                         value = valueForUIColor((NSDictionary *)value, klass);
-                        
+                    } else if ([klass isSubclassOfClass:NSString.class]) {
+                        value = value.tc_JSONString;
                     } else {
                         value = tc_mappingWithDictionary(valueDic, nil, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
                     }
