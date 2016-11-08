@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TCMappingOption <NSObject>
 
 @optional
-+ (TCMappingOption * __nullable)tc_mappingOption;
++ (nullable TCMappingOption *)tc_mappingOption;
 
 @end
 
@@ -26,19 +26,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 // UIImage <-> NSData
-+ (NSData * __nullable)tc_transformDataFromImage:(UIImage *)img;
-+ (UIImage * __nullable)tc_transformImageFromData:(NSData *)data;
-+ (UIImage * __nullable)tc_transformImageFromBase64String:(NSString *)str;
++ (nullable NSData *)tc_transformDataFromImage:(UIImage *)img;
++ (nullable UIImage *)tc_transformImageFromData:(NSData *)data;
++ (nullable UIImage *)tc_transformImageFromBase64String:(NSString *)str;
 
 // UIColor <-> NSString
-+ (UIColor * __nullable)tc_transformColorFromString:(NSString *)string;
-+ (UIColor * __nullable)tc_transformColorFromHex:(uint32_t)hex;
-+ (NSString * __nullable)tc_transformHexStringFromColor:(UIColor *)color;
++ (nullable UIColor *)tc_transformColorFromString:(NSString *)string;
++ (nullable UIColor *)tc_transformColorFromHex:(uint32_t)hex;
++ (nullable NSString *)tc_transformHexStringFromColor:(UIColor *)color;
 
 @end
 
 
 typedef Class __nullable (^TCTypeMappingBlock)(id value);
+typedef id __nullable (^TCValueMappingBlock)(id value);
 
 @interface TCMappingOption : NSObject <NSCopying>
 
@@ -52,7 +53,9 @@ typedef Class __nullable (^TCTypeMappingBlock)(id value);
 /**
  @brief	format: @{@"propertyName": @"object'class name or Class or `TCTypeMappingBlock`, or yyyy-MM-dd...(-> NSDate)"}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, Class> *typeMapping;
+@property (nonatomic, strong) NSDictionary<NSString *, Class/* Class/TCTypeMappingBlock/yyyy-MM-dd... */> *typeMapping;
+
+@property (nonatomic, strong) NSDictionary<NSString *, id/* TCValueMappingBlock */> *undefineMapping;
 
 /**
  @brief	format: @{@"primaryKey1": @"value", @"primaryKey2": NSNull.null}
@@ -70,7 +73,7 @@ typedef Class __nullable (^TCTypeMappingBlock)(id value);
 
 @property (nonatomic, copy) BOOL (^mappingValidate)(id obj);
 
-@property (nonatomic, assign) BOOL ignoreTypeConsistency;
+@property (nonatomic, assign) BOOL ignoreUndefineMapping;
 
 
 + (instancetype)optionWithNameMapping:(NSDictionary<NSString *, NSString *> *)nameMapping;

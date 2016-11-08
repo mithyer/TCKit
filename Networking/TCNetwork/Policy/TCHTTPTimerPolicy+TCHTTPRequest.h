@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (atomic, assign, readwrite) BOOL isValid;
 @property (nonatomic, assign, readwrite) NSUInteger polledCount;
-@property (atomic, assign, readwrite) BOOL finished;
+@property (atomic, assign, readwrite) BOOL finished; // update before request callback, only normal completed set `finished` to YES
 @property (nonatomic, weak) id<TCHTTPTimerDelegate> delegate;
 
 

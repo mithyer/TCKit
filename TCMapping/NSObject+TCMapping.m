@@ -14,7 +14,6 @@
 #import <UIKit/UIGeometry.h>
 
 #import "TCMappingMeta.h"
-#import "NSObject+TCCoding.h"
 
 
 #if ! __has_feature(objc_arc)
@@ -207,7 +206,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         ret = [klass stringWithString:value];
                     }
                 } else {
-                    NSCAssert(option.ignoreTypeConsistency, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    NSCAssert(option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
                     ret = [klass stringWithFormat:@"%@", value];
                 }
             
@@ -227,7 +226,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         ret = value;
                     }
                 } else {
-                    NSCAssert(option.ignoreTypeConsistency, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    NSCAssert(option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
                     if ([value isKindOfClass:NSString.class] && ((NSString *)value).length > 0) {
                         if (type == kTCEncodingTypeNSNumber) {
                             ret = [tc_mapping_number_fmter() numberFromString:(NSString *)value];
@@ -685,25 +684,34 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             value = dataDic[property];
         }
         
+        if ([value isKindOfClass:NSSet.class]) {
+            value = ((NSSet *)value).allObjects;
+        } else if ([value isKindOfClass:NSHashTable.class]) {
+            value = ((NSHashTable *)value).setRepresentation.allObjects;
+        } else if ([value isKindOfClass:NSMapTable.class]) {
+            value = ((NSMapTable *)value).dictionaryRepresentation;
+        }
+        
         if (nil == value || ((id)kCFNull == value && !isNSNullValid)) {
             continue;
         }
         
+        NSObject *rawValue = value;
         
         TCEncodingType type = tc_typeForInfo(meta->_info);
-        BOOL emptyDictionaryToNSNull = option.emptyDictionaryToNSNull;
+        BOOL emptyDicToNSNull = option.emptyDictionaryToNSNull;
         
-        if ([value isKindOfClass:NSDictionary.class]) {
-            __unsafe_unretained NSDictionary *valueDic = (NSDictionary *)value;
+        if ([rawValue isKindOfClass:NSDictionary.class]) {
+            __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
             
             if (valueDic.count > 0) {
                 if (type == kTCEncodingTypeNSDictionary) {
-                    __unsafe_unretained Class dicItemClass = classForType(typeDic[property], value);
+                    __unsafe_unretained Class dicItemClass = classForType(typeDic[property], valueDic);
                     if (Nil != dicItemClass) {
                         NSMutableDictionary *tmpDic = NSMutableDictionary.dictionary;
                         for (id dicKey in valueDic) {
-                            TCMappingOption *opt = [dicItemClass respondsToSelector:@selector(tc_mappingOption)] ? [dicItemClass tc_mappingOption] : nil;
-                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], opt, context, nil, dicItemClass);
+                            TCMappingOption *childOpt = [dicItemClass respondsToSelector:@selector(tc_mappingOption)] ? [dicItemClass tc_mappingOption] : nil;
+                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], childOpt, context, nil, dicItemClass);
                             if (nil != tmpValue) {
                                 tmpDic[dicKey] = tmpValue;
                             }
@@ -718,25 +726,24 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                 } else {
                     __unsafe_unretained Class klass = meta->_typeClass;
                     if (Nil == klass) {
-                        klass = classForType(typeDic[property], value);
+                        klass = classForType(typeDic[property], valueDic);
                     }
                     
                     if ([klass isSubclassOfClass:UIColor.class]) {
-                        value = valueForUIColor((NSDictionary *)value, klass);
-                    } else if ([klass isSubclassOfClass:NSString.class]) {
-                        value = value.tc_JSONString;
+                        value = valueForUIColor(valueDic, klass);
+                    } else if ([TCMappingMeta isNSTypeForClass:klass]) {
+                        value = nil;
                     } else {
                         value = tc_mappingWithDictionary(valueDic, nil, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
                     }
                 }
-                
             } else {
-                value = emptyDictionaryToNSNull ? (id)kCFNull : nil;
+                value = emptyDicToNSNull ? (id)kCFNull : nil;
             }
             
-        } else if ([value isKindOfClass:NSArray.class] || [value isKindOfClass:NSSet.class]) {
+        } else if ([rawValue isKindOfClass:NSArray.class]) {
+            __unsafe_unretained NSArray *valueArry = (typeof(valueArry))rawValue;
             
-            NSArray *valueArry = [value isKindOfClass:NSArray.class] ? (NSArray *)value : ((NSSet *)value).allObjects;
             if (valueArry.count > 0) {
                 if (Nil == meta->_typeClass || (type != kTCEncodingTypeNSArray && type != kTCEncodingTypeNSSet)) {
                     value = nil;
@@ -761,21 +768,33 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     if (nil != value) {
                         if (type == kTCEncodingTypeNSArray) {
                             if (![value isKindOfClass:meta->_typeClass]) {
-                                value = [meta->_typeClass arrayWithArray:(NSArray *)value];
+                                value = [meta->_typeClass arrayWithArray:valueArry];
                             }
                         } else { // NSSet
-                            value = [meta->_typeClass setWithArray:(NSArray *)value];
+                            value = [meta->_typeClass setWithArray:valueArry];
                         }
                     }
                 }
             }
-
-        } else if (value != (id)kCFNull) {
-            value = valueForBaseTypeOfProperty(value, meta, option, curClass);
+            
+        } else if (rawValue != (id)kCFNull) {
+            value = valueForBaseTypeOfProperty(rawValue, meta, option, curClass);
         }
         
         if (nil == value) {
-            continue;
+            // undefineMapping
+            TCValueMappingBlock block = option.undefineMapping[property];
+            if (nil != block) {
+                value = block(rawValue);
+                if (nil == value) {
+                    continue;
+                }
+            } else {
+#ifdef DEBUG
+                NSLog(@"undefine mapping for property:%@, value:%@\n try to fix it or impl `-[TCMappingOption undefineMapping]`", property, rawValue);
+#endif
+                continue;
+            }
         }
         
         if (value == (id)kCFNull && !isNSNullValid) {
@@ -793,7 +812,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         [obj setValue:value forKey:property meta:meta forPersistent:NO];
     }
     
-    if (nil == option.mappingValidate) {
+    if (nil == obj || nil == option.mappingValidate) {
         return obj;
     }
     
