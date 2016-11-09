@@ -36,13 +36,18 @@
     NSMutableDictionary *returnDictionary = NSMutableDictionary.dictionary;
     for (NSInteger i = 0; i < firstExplode.count; ++i) {
         NSArray<NSString *> *secondExplode = [firstExplode[i] componentsSeparatedByString:innerGlue];
-        if (secondExplode.count == 2) {
+        if (secondExplode.count >= 2) {
             NSString *key = secondExplode[0].stringByRemovingPercentEncoding;
             if (nil == key) {
                 continue;
             }
             
-            NSString *value = secondExplode[1].stringByRemovingPercentEncoding;
+            NSString *value = nil;
+            if (secondExplode.count == 2) {
+                value = secondExplode[1].stringByRemovingPercentEncoding;
+            } else {
+                value = [firstExplode[i] substringFromIndex:secondExplode[0].length].stringByRemovingPercentEncoding;
+            }
             if (nil == value) {
                 continue;
             }
