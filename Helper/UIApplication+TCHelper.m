@@ -9,6 +9,9 @@
 #import "UIApplication+TCHelper.h"
 #import <objc/runtime.h>
 
+
+NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationDelegateChangedNotification";
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 
@@ -38,8 +41,22 @@
             NSAssert(false, @"add %@ failed", NSStringFromSelector(sel));
         }
     }
+    
+    [self tc_swizzle:@selector(setDelegate:)];
+}
+
+#pragma clang diagnostic pop
+
+- (void)tc_setDelegate:(id<UIApplicationDelegate>)delegate
+{
+    [self tc_setDelegate:delegate];
+    
+    if (nil != delegate) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [NSNotificationCenter.defaultCenter postNotificationName:kTCUIApplicationDelegateChangedNotification object:delegate];
+        });
+    }
 }
 
 @end
-
-#pragma clang diagnostic pop
