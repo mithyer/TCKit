@@ -11,6 +11,16 @@
 
 @implementation NSURL (TCHelper)
 
+- (NSCharacterSet *)urlComponentAllowedCharacters
+{
+    static NSCharacterSet *set = nil;
+    if (nil == set) {
+        set = [NSCharacterSet characterSetWithCharactersInString:@"/:?&=#\x20"].invertedSet;
+    }
+    
+    return set;
+}
+
 - (NSMutableDictionary *)parseQueryToDictionary
 {
     return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&"];
@@ -34,7 +44,9 @@
         
         NSMutableString *query = NSMutableString.string;
         for (NSString *key in dic) {
-            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", dic[key]]];
+            NSString *value = [NSString stringWithFormat:@"%@", dic[key]];
+            value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
         }
         com.query = query;
     } else {
@@ -46,7 +58,9 @@
         
         for (NSString *key in param) {
             if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
-                [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", param[key]]];
+                NSString *value = [NSString stringWithFormat:@"%@", param[key]];
+                value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+                [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
             } else {
                 NSAssert(false, @"conflict query param");
             }
