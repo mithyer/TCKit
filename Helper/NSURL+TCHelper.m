@@ -15,7 +15,7 @@
 {
     static NSCharacterSet *set = nil;
     if (nil == set) {
-        set = [NSCharacterSet characterSetWithCharactersInString:@"/:?&=#\x20"].invertedSet;
+        set = [NSCharacterSet characterSetWithCharactersInString:@"/:?&=#%\x20"].invertedSet;
     }
     
     return set;
