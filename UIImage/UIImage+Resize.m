@@ -415,6 +415,8 @@ size_t TC_FixedWidth(size_t width)
     return scaledImage;
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
+
 + (UIImage *)imageForAssetRepresentation:(ALAssetRepresentation *)assetRepresentation withMaxSide:(CGFloat)size
 {
     UIImage *result = nil;
@@ -451,6 +453,7 @@ size_t TC_FixedWidth(size_t width)
     return result;
 }
 
+#endif
 
 
 

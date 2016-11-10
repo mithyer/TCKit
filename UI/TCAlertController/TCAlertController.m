@@ -184,10 +184,12 @@
 {
     if ([_alertView isKindOfClass:UIViewController.class]) {
         [_parentCtrler presentViewController:(UIViewController *)_alertView animated:YES completion:nil];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
     } else if ([_alertView isKindOfClass:UIAlertView.class]) {
         [((UIAlertView *)_alertView) show];
     } else if ([_alertView isKindOfClass:UIActionSheet.class]) {
         [((UIActionSheet *)_alertView) showInView:_parentCtrler.view];
+#endif
     }
     
     _alertView = nil;

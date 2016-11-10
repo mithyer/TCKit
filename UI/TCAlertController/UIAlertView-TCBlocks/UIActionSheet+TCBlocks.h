@@ -5,9 +5,10 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+
 #import <UIKit/UIKit.h>
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
 @class TCAlertAction;
 @interface UIActionSheet (TCBlocks)

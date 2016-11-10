@@ -36,8 +36,10 @@
 #import <stdarg.h>
 #import <string.h>
 
-
 #import <Availability.h>
+
+#import "TCAlertController.h"
+
 #if !__has_feature(objc_arc)
 #error This class requires automatic reference counting
 #endif
@@ -53,7 +55,7 @@
 #define ACTION_BUTTON_WIDTH 28
 
 
-@interface iConsole () <UITextFieldDelegate, UIActionSheetDelegate>
+@interface iConsole () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UITextView *consoleView;
 @property (nonatomic, strong) UITextField *inputField;
@@ -144,23 +146,25 @@ static void exceptionHandler(NSException *exception)
 - (void)infoAction
 {
     [self findAndResignFirstResponder:[self mainWindow]];
-    
-    
-    NSString *title = nil;
+
 #ifdef TC_IOS_DEBUG
-    title = [@"测试环境 " stringByAppendingString:[[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey]];
+    NSString *title = [@"测试环境 " stringByAppendingString:[[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey]];
 #else
-    title = [@"生产环境 " stringByAppendingString:[[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey]];
+    NSString *title = [@"生产环境 " stringByAppendingString:[[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey]];
 #endif
     
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:title
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                         destructiveButtonTitle:@"Clear Log"
-                                              otherButtonTitles:@"调试信息面板", nil];
-    
-    sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [sheet showInView:self.view];
+    __weak typeof(self) wSelf = self;
+    [[[TCAlertController alloc] initActionSheetWithTitle:title
+                                           presentCtrler:self
+                                            cancelAction:[TCAlertAction cancelActionWithTitle:@"Cancel" handler:nil]
+                                       destructiveAction:[TCAlertAction destructiveActionWithTitle:@"Clear Log" handler:^(TCAlertAction *action) {
+         [iConsole clear];
+    }]
+                                             otherAction:[TCAlertAction defaultActionWithTitle:@"调试信息面板" handler:^(TCAlertAction *action) {
+        if ([wSelf.delegate respondsToSelector:@selector(debugPanelTapped:)]) {
+            [wSelf.delegate debugPanelTapped:wSelf];
+        }
+    }], nil] show];
 }
 
 - (CGAffineTransform)viewTransform
@@ -190,7 +194,7 @@ static void exceptionHandler(NSException *exception)
 
 - (CGRect)onscreenFrame
 {
-    return [UIScreen mainScreen].applicationFrame;
+    return UIScreen.mainScreen.bounds;
 }
 
 - (CGRect)offscreenFrame
@@ -403,27 +407,6 @@ static void exceptionHandler(NSException *exception)
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     return YES;
-}
-
-
-#pragma mark -
-#pragma mark UIActionSheetDelegate methods
-
-- (NSString *)URLEncodedString:(NSString *)string
-{
-    return CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, NULL, CFSTR("!*'\"();:@&=+$,/?%#[]% "), kCFStringEncodingUTF8));
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        [iConsole clear];
-    } else if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-        
-        if ([self.delegate respondsToSelector:@selector(debugPanelTapped:)]) {
-            [self.delegate debugPanelTapped:self];
-        }
-    }
 }
 
 
