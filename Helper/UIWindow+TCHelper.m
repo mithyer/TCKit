@@ -15,7 +15,6 @@
     return UIApplication.sharedApplication.delegate.window.topMostViewController;
 }
 
-
 // code from: http://stackoverflow.com/questions/11637709/get-the-current-displaying-uiviewcontroller-on-the-screen-in-appdelegate-m
 - (UIViewController *)topMostViewController
 {
@@ -23,7 +22,7 @@
         UIResponder *responder = subView.nextResponder;
         
         // added this block of code for iOS 8 which puts a UITransitionView in between the UIWindow and the UILayoutContainerView
-        if ([responder isEqual:self]) {
+        if (responder == self) {
             // this is a UITransitionView
             if (subView.subviews.count > 0) {
                 UIView *subSubView = subView.subviews.firstObject; // this should be the UILayoutContainerView
@@ -46,20 +45,26 @@
         // this path is called only on iOS 6+, so -presentedViewController is fine here.
         UIViewController *presented = controller.presentedViewController;
         isPresenting = presented != nil;
-        if (presented != nil) {
+        if (isPresenting) {
             controller = presented;
         }
         
     } while (isPresenting);
     
     if ([controller isKindOfClass:UITabBarController.class]) {
-        controller = [self topViewController:((UITabBarController *)controller).selectedViewController];
+        UIViewController *ctrler = ((UITabBarController *)controller).selectedViewController;
+        controller = [self topViewController:ctrler];
+        
     } else if ([controller isKindOfClass:UINavigationController.class]) {
-        controller = [self topViewController:((UINavigationController *)controller).visibleViewController];
+        UINavigationController *navi = (typeof(navi))controller;
+        UIViewController *ctrler = navi.visibleViewController;
+        controller = [self topViewController:ctrler];
     }
     
     return controller;
 }
+
+
 
 #ifdef __IPHONE_7_0
 
@@ -84,3 +89,6 @@
 #endif
 
 @end
+
+
+

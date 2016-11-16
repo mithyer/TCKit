@@ -25,6 +25,18 @@
 }
 
 
+- (UIViewController *)fixedPresentingCtrler
+{
+    UIViewController *ctrler = [self bk_associatedValueForKey:_cmd];
+    return ctrler ?: self.presentingViewController;
+}
+
+- (void)setFixedPresentingCtrler:(UIViewController *)fixedPresentingCtrler
+{
+    [self bk_weaklyAssociateValue:fixedPresentingCtrler withKey:@selector(fixedPresentingCtrler)];
+}
+
+
 - (BOOL)tc_prefersStatusBarHidden
 {
     NSNumber *value = objc_getAssociatedObject(self, @selector(setPrefersStatusBarHidden:));

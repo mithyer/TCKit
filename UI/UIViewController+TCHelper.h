@@ -34,6 +34,8 @@ typedef void (^TCViewControllerCallbackType)(UIViewController *ctrler);
 @property (nonatomic, copy) TCViewControllerCallbackType viewDidAppearCallback;
 @property (nonatomic, copy) TCViewControllerCallbackType viewDidDisappearCallback;
 
+@property (nonatomic, weak) UIViewController *fixedPresentingCtrler;
+
 
 + (CGFloat)statusBarHeight;
 - (CGFloat)statusBarHeight;
