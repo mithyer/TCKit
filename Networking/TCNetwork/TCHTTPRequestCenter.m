@@ -55,6 +55,14 @@
     return obj;
 }
 
+- (void)setBaseURL:(NSURL *)baseURL
+{
+    if (baseURL != _baseURL) {
+        _baseURL = baseURL;
+        _requestManager = nil;
+    }
+}
+
 - (Class)responseValidorClass
 {
     return _respValidorClass ?: TCBaseResponseValidator.class;
@@ -136,7 +144,6 @@
 {
     NSUInteger policyHash = self.innerSecurityPolicy.hash;
     NSUInteger configurationHash = _sessionConfig.hash;
-    
     
     NSUInteger contentTypeHash = 0;
     for (NSString *type in self.acceptableContentTypes) {

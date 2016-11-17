@@ -73,6 +73,11 @@ iConsoleLogLevel;
 
 @interface iConsole : UIViewController
 
+#if defined(TC_IOS_RELEASE) || !(defined(TC_IOS_DEBUG) || defined(TC_IOS_PUBLISH))
+@property (nonatomic, assign) BOOL isProductionEnv;
+#endif
+
+
 //enabled/disable console features
 
 @property (nonatomic, assign) BOOL enabled;
