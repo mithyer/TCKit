@@ -45,7 +45,7 @@
     @synchronized(centers) {
         obj = [centers objectForKey:self];
         if (nil == obj) {
-            obj = [[self alloc] initWithBaseURL:nil sessionConfiguration:nil];
+            obj = [[self alloc] initWithSessionConfiguration:nil];
             if (nil != obj) {
                 [centers setObject:obj forKey:self];
             }
@@ -207,11 +207,10 @@
     return _requestManager;
 }
 
-- (instancetype)initWithBaseURL:(NSURL *)url sessionConfiguration:(NSURLSessionConfiguration *)configuration
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration
 {
     self = [self init];
     if (self) {
-        _baseURL = url;
         _sessionConfig = configuration;
     }
     return self;
