@@ -48,7 +48,7 @@ NS_INLINE BOOL IS_IPAD(void)
 
 NS_INLINE NSComparisonResult COMPARE_SYSTEM_VERSION(NSString *v)
 {
-    return [[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch];
+    return [UIDevice.currentDevice.systemVersion compare:v options:NSNumericSearch];
 }
 
 NS_INLINE BOOL SYSTEM_VERSION_EQUAL_TO(NSString *v)

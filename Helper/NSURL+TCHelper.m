@@ -26,7 +26,7 @@
     return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&"];
 }
 
-- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force
+- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode
 {
     if (param.count < 1) {
         return self;
@@ -34,7 +34,7 @@
     
     // NSURLComponents auto url encoding, property auto decoding
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
-
+    
     if (force) {
         NSMutableDictionary *dic = self.parseQueryToDictionary;
         if (nil == dic) {
@@ -45,7 +45,9 @@
         NSMutableString *query = NSMutableString.string;
         for (NSString *key in dic) {
             NSString *value = [NSString stringWithFormat:@"%@", dic[key]];
-            value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+            if (encode) {
+                value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+            }
             [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
         }
         com.query = query;
@@ -59,7 +61,9 @@
         for (NSString *key in param) {
             if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
                 NSString *value = [NSString stringWithFormat:@"%@", param[key]];
-                value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+                if (encode) {
+                    value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+                }
                 [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
             } else {
                 NSAssert(false, @"conflict query param");
@@ -69,6 +73,11 @@
     }
     
     return com.URL;
+}
+
+- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force
+{
+    return [self appendParam:param override:force encodeQuering:NO];
 }
 
 - (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param

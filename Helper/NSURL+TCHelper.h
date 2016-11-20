@@ -11,6 +11,7 @@
 @interface NSURL (TCHelper)
 
 - (NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary;
+- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode;
 - (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force;
 - (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param;
 
