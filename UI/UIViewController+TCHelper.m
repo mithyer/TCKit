@@ -259,8 +259,10 @@
 
 - (void)tc_dealloc
 {
-    self.tableView.delegate = nil;
-    self.tableView.dataSource = nil;
+    if (self.isViewLoaded) {
+        self.tableView.delegate = nil;
+        self.tableView.dataSource = nil;
+    }
     [self tc_dealloc];
 }
 
