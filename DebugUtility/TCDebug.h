@@ -18,25 +18,25 @@
 
 #ifdef TC_IOS_DEBUG
 
-// info (优先级:低)
+// info
 #define DLog_i(fmt, ...) \
 [iConsole info:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 
-// warning (优先级:中)
+// warning
 #define DLog_w(fmt, ...) \
 [iConsole warn:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
  __LINE__, \
  __PRETTY_FUNCTION__,## __VA_ARGS__]
 
-// error (优先级:高)
+// error
 #define DLog_e(fmt, ...) \
 [iConsole error:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 
-// crash (优先级:最高)
+// crash
 #define DLog_c(fmt, ...) \
 [iConsole crash:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
@@ -95,25 +95,25 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 #ifdef TC_IOS_DEBUG
 
-// info (优先级:低)
+// info
 #define DLog_i(fmt, ...) \
 NSLog(@"INFO: %@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__)
 
-// warning (优先级:中)
+// warning
 #define DLog_w(fmt, ...) \
 NSLog(@"🚸WARNING: %@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__)
 
-// error (优先级:高)
+// error
 #define DLog_e(fmt, ...) \
 NSLog(@"‼️ERROR: %@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__)
 
-// crash (优先级:最高)
+// crash
 #define DLog_c(fmt, ...) \
 NSLog(@"❌CRASH: %@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
