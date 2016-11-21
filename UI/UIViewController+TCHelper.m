@@ -248,3 +248,20 @@
 }
 
 @end
+
+
+@implementation UITableViewController (CrashFix)
+
++ (void)load
+{
+    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
+}
+
+- (void)tc_dealloc
+{
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+    [self tc_dealloc];
+}
+
+@end
