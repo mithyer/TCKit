@@ -84,13 +84,6 @@ static void exceptionHandler(NSException *exception)
 
 #pragma mark -
 
-
-+ (void)load
-{
-    //initialise the console
-    [iConsole performSelectorOnMainThread:@selector(sharedConsole) withObject:nil waitUntilDone:NO];
-}
-
 - (UIWindow *)mainWindow
 {
     UIApplication *app = [UIApplication sharedApplication];

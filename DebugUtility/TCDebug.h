@@ -20,25 +20,25 @@
 
 // info
 #define DLog_i(fmt, ...) \
-[iConsole info:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
+[NSClassFromString(@"iConsole") info:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 // warning
 #define DLog_w(fmt, ...) \
-[iConsole warn:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
+[NSClassFromString(@"iConsole") warn:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
  __LINE__, \
  __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 // error
 #define DLog_e(fmt, ...) \
-[iConsole error:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
+[NSClassFromString(@"iConsole") error:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 // crash
 #define DLog_c(fmt, ...) \
-[iConsole crash:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
+[NSClassFromString(@"iConsole") crash:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 
@@ -65,7 +65,7 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 #ifndef TC_IOS_PUBLISH
 
 #define RLog(fmt, ...) \
-[iConsole info:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
+[NSClassFromString(@"iConsole") info:@"%@(%d)\n%s: " fmt , [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
 __LINE__, \
 __PRETTY_FUNCTION__,## __VA_ARGS__]
 

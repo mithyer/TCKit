@@ -39,8 +39,11 @@ typedef void (^TCViewControllerCallbackType)(UIViewController *ctrler);
 @property (nonatomic, weak) UIViewController *fixedPresentingCtrler;
 
 
+#ifndef TARGET_IS_EXTENSION
 + (CGFloat)statusBarHeight;
 - (CGFloat)statusBarHeight;
+#endif
+
 - (CGFloat)navigationBarHeight;
 
 

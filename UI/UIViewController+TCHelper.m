@@ -193,10 +193,11 @@
     }
 }
 
+#ifndef TARGET_IS_EXTENSION
 + (CGFloat)statusBarHeight
 {
-    // Landscape mode on iPad, the [UIApplication sharedApplication].statusBarFrame.size.height is bigger, so we get the smaller
-    CGSize size = [UIApplication sharedApplication].statusBarFrame.size;
+    // Landscape mode on iPad, UIApplication.sharedApplication.statusBarFrame.size.height is bigger, so we get the smaller
+    CGSize size = UIApplication.sharedApplication.statusBarFrame.size;
     return MIN(size.width, size.height);
 }
 
@@ -204,6 +205,8 @@
 {
     return self.class.statusBarHeight;
 }
+
+#endif
 
 - (CGFloat)navigationBarHeight
 {
