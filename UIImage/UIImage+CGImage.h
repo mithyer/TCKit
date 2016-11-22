@@ -76,7 +76,7 @@ CG_INLINE CGAffineTransform tcTransformFrom(CGRect fromRect, CGRect toRect) {
  
  @param size [IN] 单位：像素
  
- @return
+ @return <#return value description#>
  */
 + (CGContextRef)createImageContext:(CGSize)size CF_RETURNS_RETAINED;
 

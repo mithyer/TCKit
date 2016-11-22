@@ -10,8 +10,11 @@
 
 @interface NSString (TCHelper)
 
+#ifndef TARGET_IS_EXTENSION
 
 - (void)phoneCall:(void(^)(BOOL success))complete;
+
+#endif
 
 - (NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
 

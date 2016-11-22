@@ -11,6 +11,8 @@
 
 @implementation NSString (TCHelper)
 
+#ifndef TARGET_IS_EXTENSION
+
 - (void)phoneCall:(void(^)(BOOL success))complete
 {
     BOOL ret = self.length > 1;
@@ -22,6 +24,8 @@
         }
     }
 }
+
+#endif
 
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
 {

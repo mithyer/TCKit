@@ -82,7 +82,7 @@ extern size_t TC_FixedWidth(size_t width);
 /**
  @brief	缩放至size尺寸图片
  
- @param size [IN] 目标尺寸，单位：像素
+ @param dstSize [IN] 目标尺寸，单位：像素
  
  @return fix to UIImageOrientationUp
  */
