@@ -5,6 +5,8 @@
 //  Copyright 2013 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import "UIViewController+PopBackHandler.h"
 #import <objc/runtime.h>
 
@@ -108,3 +110,5 @@
 #endif
 
 @end
+
+#endif

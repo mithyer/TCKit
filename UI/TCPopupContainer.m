@@ -6,6 +6,8 @@
 //  Copyright (c) 2014年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import "TCPopupContainer.h"
 #import "UIWindow+TCHelper.h"
 
@@ -464,3 +466,5 @@ static NSUInteger s_containerCount;
 }
 
 @end
+
+#endif

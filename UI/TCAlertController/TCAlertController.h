@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import <Foundation/Foundation.h>
 #import "TCAlertAction.h"
 
@@ -53,3 +55,5 @@ typedef NS_ENUM(NSInteger, TCAlertControllerStyle) {
 - (void)show;
 
 @end
+
+#endif

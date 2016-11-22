@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <UIKit/UIKit.h>
 #import "TCPullToRefresh.h"
 
@@ -32,3 +34,5 @@
 - (void)tc_scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 @end
+
+#endif

@@ -6,6 +6,8 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import "UIApplication+TCHelper.h"
 #import <objc/runtime.h>
 
@@ -60,3 +62,5 @@ NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationD
 }
 
 @end
+
+#endif

@@ -6,6 +6,8 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <Foundation/Foundation.h>
 
 @protocol TCWKWebView <NSObject>
@@ -31,3 +33,5 @@
 - (void)clearCookies;
 
 @end
+
+#endif

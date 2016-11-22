@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 Sudiyi. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import "UIView+TCHelper.h"
 #import <objc/runtime.h>
 #import "NSObject+TCUtilities.h"
@@ -46,3 +48,5 @@ static char const kAlignmentRectInsetsKey;
 //}
 
 @end
+
+#endif

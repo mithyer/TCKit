@@ -30,6 +30,7 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
+#ifndef TARGET_IS_EXTENSION
 
 #ifndef TC_IOS_PUBLISH
 
@@ -125,5 +126,7 @@ iConsoleLogLevel;
 @interface iConsoleWindow : UIWindow
 
 @end
+
+#endif
 
 #endif

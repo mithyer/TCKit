@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import "UILabel+TCHelper.h"
 #import <objc/runtime.h>
 #import "NSObject+TCUtilities.h"
@@ -89,6 +91,6 @@ static char const kContentEdgeInsetsKey;
     [self tc_drawTextInRect:fixRect];
 }
 
-
-
 @end
+
+#endif

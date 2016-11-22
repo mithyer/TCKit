@@ -5,6 +5,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
 #import <UIKit/UIKit.h>
@@ -23,5 +25,7 @@
 @property (nonatomic, copy) dispatch_block_t dismissalAction;
 
 @end
+
+#endif
 
 #endif

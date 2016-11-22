@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 Sudiyi. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <UIKit/UIKit.h>
 
 @interface UIView (TCHelper)
@@ -15,3 +17,5 @@
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets;
 
 @end
+
+#endif

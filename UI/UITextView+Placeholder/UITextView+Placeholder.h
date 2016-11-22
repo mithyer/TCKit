@@ -22,6 +22,8 @@
  SOFTWARE.
 */
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <UIKit/UIKit.h>
 
 @interface UITextView (Placeholder)
@@ -34,3 +36,5 @@
 + (UIColor *)defaultPlaceholderColor;
 
 @end
+
+#endif

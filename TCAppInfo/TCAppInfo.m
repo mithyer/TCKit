@@ -12,7 +12,7 @@
 #import <UIKit/UIApplication.h>
 #import "FCUUID.h"
 
-#define DEFAULT_PLIST_FOR_KEY(key)      ([[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)(key)] ?: @"")
+#define DEFAULT_PLIST_FOR_KEY(key)      ([NSBundle.mainBundle objectForInfoDictionaryKey:(NSString *)(key)] ?: @"")
 
 
 static NSString *const kTCMigrationLastVersionKey = @"lastMigrationVersion.TCMigration.TCKit";

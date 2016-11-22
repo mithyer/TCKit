@@ -6,6 +6,8 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
 #import "TCAlertViewDelegate.h"
@@ -73,5 +75,7 @@
 
 
 @end
+
+#endif
 
 #endif

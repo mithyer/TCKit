@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <UIKit/UIKit.h>
 
 
@@ -55,3 +57,5 @@ typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
 
 
 @end
+
+#endif

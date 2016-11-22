@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import "TCAlertAction.h"
 
 
@@ -44,3 +46,5 @@
 }
 
 @end
+
+#endif

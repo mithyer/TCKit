@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 
 #import <UIKit/UIKit.h>
@@ -20,5 +22,7 @@
 - (void)addAction:(TCAlertAction *)action;
 
 @end
+
+#endif
 
 #endif

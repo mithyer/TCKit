@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import "TCAlertController.h"
 
 #import "UIAlertView+TCBlocks.h"
@@ -197,3 +199,5 @@
 
 
 @end
+
+#endif

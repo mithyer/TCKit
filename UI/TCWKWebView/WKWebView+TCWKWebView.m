@@ -6,6 +6,8 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import "WKWebView+TCWKWebView.h"
 #import <objc/runtime.h>
 #import "UIView+TCWKWebView.h"
@@ -419,4 +421,6 @@
 }
 
 @end
+
+#endif
 

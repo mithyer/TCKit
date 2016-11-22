@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import "UIWindow+TCHelper.h"
 
 @implementation UIWindow (TCHelper)
@@ -89,6 +91,8 @@
 #endif
 
 @end
+
+#endif
 
 
 

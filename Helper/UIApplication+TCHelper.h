@@ -6,6 +6,8 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import <UIKit/UIKit.h>
 
 
@@ -23,3 +25,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

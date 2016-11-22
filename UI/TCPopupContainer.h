@@ -6,6 +6,8 @@
 //  Copyright (c) 2014年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, TCPopupStyle) {
@@ -43,3 +45,5 @@ typedef NS_ENUM(NSInteger, TCPopupStyle) {
 - (UIImage *)closeImageForState:(UIControlState)state;
 
 @end
+
+#endif

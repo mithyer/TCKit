@@ -22,6 +22,8 @@
  SOFTWARE.
 */
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import <objc/runtime.h>
 #import "UITextView+Placeholder.h"
 
@@ -228,3 +230,5 @@
 #endif
 
 @end
+
+#endif

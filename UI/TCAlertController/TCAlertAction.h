@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
+#ifndef TARGET_IS_EXTENSION
+
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, TCAlertActionStyle) {
@@ -34,3 +36,5 @@ typedef NS_ENUM(NSInteger, TCAlertActionStyle) {
 @property (nonatomic, copy) void (^handler)(TCAlertAction *action);
 
 @end
+
+#endif
