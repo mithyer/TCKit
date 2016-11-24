@@ -58,7 +58,7 @@ NS_INLINE TCEncodingType typeForStructType(const char *type)
 
 NS_INLINE TCEncodingType typeForPrimitiveType(char const *typeStr)
 {
-    char type = typeStr[0];
+    char const type = typeStr[0];
     
     if (type == @encode(bool)[0] || type == @encode(BOOL)[0]) {
         return kTCEncodingTypeBool;
@@ -95,7 +95,7 @@ NS_INLINE TCEncodingType typeForPrimitiveType(char const *typeStr)
 
 NS_INLINE TCEncodingInfo infoForScalarType(char const *type)
 {
-    char value = type[0];
+    char const value = type[0];
     if (value == @encode(Class)[0]) {
         return kTCEncodingTypeClass | kTCEncodingOptionObj;
     } else if (value == @encode(SEL)[0]) {
@@ -399,7 +399,14 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         if ([self.class instancesRespondToSelector:@selector(tc_serializedStringForKey:meta:)]) {
             id value = [self tc_serializedStringForKey:key meta:meta];
             if (nil == value && type == kTCEncodingTypeCommonStruct) {
-                value = [self valueForKey:key];
+                @try {
+                    value = [self valueForKey:key];
+                } @catch (NSException *exception) {
+                    NSLog(@"%@", exception);
+                    value = nil;
+                } @finally {
+                    return value;
+                }
             }
             return value;
         } else {
@@ -418,9 +425,15 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         value = NULL != cstr ? @(cstr) : nil;
         
     } else {
-        value = [self valueForKey:NSStringFromSelector(meta->_getter)];
+        @try {
+            value = [self valueForKey:NSStringFromSelector(meta->_getter)];
+        } @catch (NSException *exception) {
+            NSLog(@"type: %@, %@", meta->_typeName, exception);
+            value = nil;
+        }
+        
         // FIXME: deal with real kNSNullString, but NSNull
-        if (tc_isObjForInfo(meta->_info) && type != kTCEncodingTypeNSString && [value isKindOfClass:NSString.class] && [value isEqualToString:NSNull.null.description]) {
+        if (tc_isObjForInfo(meta->_info) && type != kTCEncodingTypeNSString && nil != value && [value isKindOfClass:NSString.class] && [value isEqualToString:NSNull.null.description]) {
             value = (id)kCFNull;
         }
     }
