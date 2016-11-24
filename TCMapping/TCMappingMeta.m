@@ -76,7 +76,7 @@ NS_INLINE TCEncodingType typeForPrimitiveType(char const *typeStr)
         return kTCEncodingTypeDouble;
     } else if (type == @encode(long double)[0]) {
         return kTCEncodingTypeLongDouble;
-    } else if (type == @encode(char *)[0] || strcmp(typeStr, @encode(char const *)) == 0) {
+    } else if (type == @encode(char *)[0]) {
         return kTCEncodingTypeCString;
     } else if (type == @encode(int8_t)[0]) {
         return kTCEncodingTypeInt8;
@@ -235,7 +235,11 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
                 } else {
                     if (len > 0) {
                         typeName = @(value);
-                        info |= infoForScalarType(value);
+                        if (value[0] == @encode(const void *)[0]) {
+                            info |= (infoForScalarType(value + 1) | kTCEncodingOptionConstPointee);
+                        } else {
+                            info |= infoForScalarType(value);
+                        }
                     }
                 }
                 

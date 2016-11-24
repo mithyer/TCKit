@@ -87,6 +87,7 @@ typedef NS_OPTIONS (uint16_t, TCEncodingOption) {
     kTCEncodingOptionShift = __builtin_ctzll(kTCEncodingOptionMask),
     kTCEncodingOptionObj = 1 << kTCEncodingOptionShift,
     kTCEncodingOptionStruct = 2 << kTCEncodingOptionShift,
+    kTCEncodingOptionConstPointee = 3 << kTCEncodingOptionShift,
 };
 
 // 4 bit, [0, 15] << 12
