@@ -50,7 +50,9 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 #endif
 
 #ifndef NSLog
-#define NSLog DLog_i
+#define NSLog(...) \
+[NSClassFromString(@"iConsole") info:__VA_ARGS__]
+
 #endif
 
 #else // TC_IOS_DEBUG
@@ -74,7 +76,8 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 #endif
 
 #ifndef NSLog
-#define NSLog RLog
+#define NSLog(...) \
+[NSClassFromString(@"iConsole") info:__VA_ARGS__]
 #endif
 
 #else // TC_IOS_PUBLISH
