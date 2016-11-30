@@ -10,6 +10,7 @@
 
 #import "UIApplication+TCHelper.h"
 #import <objc/runtime.h>
+#import "NSObject+TCUtilities.h"
 
 
 NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationDelegateChangedNotification";

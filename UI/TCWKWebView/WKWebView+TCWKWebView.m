@@ -12,7 +12,9 @@
 #import <objc/runtime.h>
 #import "UIView+TCWKWebView.h"
 
-
+#import "TCDefines.h"
+#import "NSObject+TCUtilities.h"
+#import "TCDebug.h"
 
 @interface _LocalURLFixer : NSObject
 

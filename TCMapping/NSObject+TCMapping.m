@@ -14,6 +14,7 @@
 #import <UIKit/UIGeometry.h>
 
 #import "TCMappingMeta.h"
+#import "UIColor+TCUtilities.h"
 
 
 #if ! __has_feature(objc_arc)

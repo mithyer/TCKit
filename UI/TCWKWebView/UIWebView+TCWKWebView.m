@@ -10,6 +10,7 @@
 
 #import "UIWebView+TCWKWebView.h"
 #import "UIView+TCWKWebView.h"
+#import "NSObject+TCUtilities.h"
 
 @implementation UIWebView (TCWKWebView)
 
