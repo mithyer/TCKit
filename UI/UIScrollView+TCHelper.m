@@ -45,6 +45,33 @@
     return [self tc_touchesShouldCancelInContentView:view];
 }
 
+
+#pragma mark -
+
+- (void)delayContentTouches
+{
+    self.delaysContentTouches = NO;
+    for (UIView *view in self.subviews) {
+        // looking for a UITableViewWrapperView
+        if ([NSStringFromClass(view.class) isEqualToString:@"UITableViewWrapperView"]) {
+            // this test is necessary for safety and because a "UITableViewWrapperView" is NOT a UIScrollView in iOS7
+            if ([view isKindOfClass:UIScrollView.class]) {
+                // turn OFF delaysContentTouches in the hidden subview
+                UIScrollView *scroll = (UIScrollView *)view;
+                scroll.delaysContentTouches = NO;
+            }
+            break;
+        }
+    }
+    
+    self.tc_touchesShouldCancelInContentViewBlock = ^BOOL(UIView * view, BOOL (^originalBlock)(UIView *view)){
+        if ([view isKindOfClass:UIButton.class]) {
+            return YES;
+        }
+        return originalBlock(view);
+    };
+}
+
 @end
 
 #endif

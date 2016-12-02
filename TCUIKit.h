@@ -16,6 +16,7 @@
 #import "UITextField+TCHelper.h"
 #import "TCAlertController.h"
 #import "UIWindow+TCHelper.h"
+#import "UIScrollView+TCHelper.h"
 
 
 #endif /* TCUIKit_h */

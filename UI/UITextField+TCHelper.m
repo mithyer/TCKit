@@ -111,4 +111,151 @@
 
 @end
 
+
+
+static char const kInputFormatKey;
+static char const kInputTextKey;
+static char const kNumberOfSepecialCharactersKey;
+
+@implementation UITextField (InputFormat)
+
+- (void)setInputFormat:(NSString *)inputFormat
+{
+    objc_setAssociatedObject(self, &kInputFormatKey, inputFormat, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)inputFormat
+{
+    return objc_getAssociatedObject(self, &kInputFormatKey);
+}
+
+- (void)setInputText:(NSString *)inputText
+{
+    objc_setAssociatedObject(self, &kInputTextKey, inputText, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)inputText
+{
+    return objc_getAssociatedObject(self, &kInputTextKey);
+}
+
+- (void)setNumberOfSepecialCharacters:(NSInteger)numberOfSepecialCharacters
+{
+    objc_setAssociatedObject(self, &kNumberOfSepecialCharactersKey, @(numberOfSepecialCharacters), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)numberOfSepecialCharacters
+{
+    return [objc_getAssociatedObject(self, &kNumberOfSepecialCharactersKey) integerValue];
+}
+
+- (NSString *)generateFormattedTextInRange:(NSRange)range withString:(NSString *)string
+{
+    NSString *inputText = self.inputText;
+    if (nil == inputText) {
+        inputText = NSString.string;
+    }
+    
+    if (string.length < 1) {
+        inputText = [inputText substringToIndex:inputText.length - (inputText.length > 0 ? 1 : 0)];
+    } else {
+        inputText = [inputText stringByAppendingString:string];
+    }
+    
+    NSString *toBeString = inputText;
+    UITextRange *selectedRange = self.markedTextRange;
+    // check highlight selection position
+    UITextPosition *position = nil;
+    if (nil != selectedRange) {
+        position = [self positionFromPosition:selectedRange.start offset:0];
+    }
+    // no highlight selection
+    if (nil == position) {
+        
+        NSInteger maxLength = self.tc_maxTextLength - self.numberOfSepecialCharacters;
+        
+        if (maxLength >= 0 && toBeString.length > maxLength) {
+            NSRange range = [toBeString rangeOfComposedCharacterSequenceAtIndex:maxLength];
+            inputText = [toBeString substringToIndex:range.location == NSNotFound ? maxLength : range.location];
+        }
+    } else {
+    }
+    self.inputText = inputText;
+    
+    return [self formattedText:self.text inRange:range withString:string];
+}
+
+- (NSString *)formattedText:(NSString *)text inRange:(NSRange)range withString:(NSString *)string
+{
+    NSString *changedString = [text stringByReplacingCharactersInRange:range withString:string];
+    
+    if (range.length == 1 && string.length < range.length && [[text substringWithRange:range] isEqualToString:@"\x20"]) {
+        NSInteger location = changedString.length - 1;
+        if (location > 0) {
+            for (; location > 0; --location) {
+                if (isdigit([changedString characterAtIndex:location])) {
+                    break;
+                }
+            }
+            changedString = [changedString substringToIndex:location];
+        }
+    }
+    
+    return [self formattedString:changedString withFormat:self.inputFormat];
+}
+
+- (NSString *)formattedString:(NSString *)string {
+    return [self formattedString:string withFormat:self.inputFormat];
+}
+
+// 输入时 显示指定的固定的格式
+- (NSString *)formattedString:(NSString *)string withFormat:(NSString *)format
+{
+    NSUInteger onOriginal = 0, onFilter = 0, onOutput = 0;
+    char outputString[format.length];
+    BOOL done = NO;
+    
+    while (onFilter < format.length && !done) {
+        unichar filterChar = [format characterAtIndex:onFilter];
+        unichar originalChar = onOriginal >= string.length ? '\0' : [string characterAtIndex:onOriginal];
+        switch (filterChar) {
+            case '#': {
+                if (originalChar == '\0') {
+                    // We have no more input numbers for the filter.  We're done.
+                    done = YES;
+                    break;
+                }
+                // !!!: do not ignore non digit (by jia)
+                //                if(isdigit(originalChar))
+                //                {
+                outputString[onOutput] = (char)originalChar;
+                onOriginal++;
+                onFilter++;
+                onOutput++;
+                //                }
+                //                else
+                //                {
+                //                    onOriginal++;
+                //                }
+                break;
+            }
+            default: {
+                outputString[onOutput] = (char)filterChar;
+                onOutput++;
+                onFilter++;
+                if (originalChar == filterChar) {
+                    onOriginal++;
+                }
+                break;
+            }
+        }
+    }
+    outputString[onOutput] = '\0'; // Cap the output string
+    return [NSString stringWithUTF8String:(const char *)outputString];
+    
+}
+
+
+@end
+
 #endif

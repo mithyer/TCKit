@@ -26,6 +26,17 @@
 
 @end
 
+@interface UITextField (InputFormat)
+
+@property (nonatomic, copy) NSString *inputFormat;
+@property (nonatomic, copy) NSString *inputText;
+@property (nonatomic, assign) NSInteger numberOfSepecialCharacters;
+
+- (NSString *)generateFormattedTextInRange:(NSRange)range withString:(NSString *)string;
+- (NSString *)formattedString:(NSString *)string;
+
+@end
+
 #endif
 
 

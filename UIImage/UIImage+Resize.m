@@ -455,6 +455,33 @@ size_t TC_FixedWidth(size_t width)
 
 #endif
 
-
+- (NSData *)JPGDataForCompression:(NSUInteger)bytes
+{
+    if (bytes < 1) {
+        return nil;
+    }
+    
+    CGFloat compressQuality = 1.0f;
+    static const CGFloat kMinQuality = 0.4f;
+    static const CGFloat kQualityDelta = 0.2f;
+    
+    NSData *data = nil;
+    
+    do {
+        @autoreleasepool {
+            data = UIImageJPEGRepresentation(self, compressQuality);
+            if (data.length <= bytes) {
+                break;
+            }
+            compressQuality = MAX(compressQuality - kQualityDelta, kMinQuality);
+        }
+    } while (compressQuality > kMinQuality);
+    
+    if (nil != data && data.length > bytes) {
+        data = nil;
+    }
+    
+    return data;
+}
 
 @end

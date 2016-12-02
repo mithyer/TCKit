@@ -98,4 +98,16 @@ extern size_t TC_FixedWidth(size_t width);
 #endif
 
 
+
+/**
+ @brief	compress image to jpg data
+ 
+ @param bytes [IN] <#bytes description#>
+ 
+ @return nil if expected cmpression not archived
+ */
+- (NSData *)JPGDataForCompression:(NSUInteger)bytes;
+
+
+
 @end

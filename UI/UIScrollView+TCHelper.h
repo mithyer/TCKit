@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) BOOL (^tc_touchesShouldCancelInContentViewBlock)(UIView * view, BOOL (^originalBlock)(UIView *view));
 
+- (void)delayContentTouches;
+
 @end
 
 NS_ASSUME_NONNULL_END
