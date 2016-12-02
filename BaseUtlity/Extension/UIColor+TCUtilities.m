@@ -84,7 +84,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
     }
     
     if (useBorder) {
-        [[UIColor blackColor] set];
+        [UIColor.blackColor set];
         path = [UIBezierPath bezierPathWithArcCenter:center radius:(side / 2) - (side / 28) startAngle:0 endAngle:(CGFloat)(2 * M_PI) clockwise:YES];
         path.lineWidth = 4;
         [path stroke];
@@ -939,7 +939,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 // Pick a color that is likely to contrast well with this color
 - (instancetype)contrastingColor
 {
-    return (self.luminance > 0.5f) ? [UIColor blackColor] : [UIColor whiteColor];
+    return (self.luminance > 0.5f) ? UIColor.blackColor : UIColor.whiteColor;
 }
 
 // Pick the color that is 180 degrees away in hue

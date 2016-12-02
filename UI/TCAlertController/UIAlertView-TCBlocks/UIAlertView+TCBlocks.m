@@ -47,7 +47,7 @@ static char const kRI_BUTTON_ASS_KEY;
         self = [self initWithTitle:title message:message delegate:nil cancelButtonTitle:cancelAction.title otherButtonTitles:nil];
         self.delegate = self.tc_innerDelegate;
         
-        NSMutableArray *buttonsArray = [NSMutableArray array];
+        NSMutableArray *buttonsArray = NSMutableArray.array;
         if (nil != cancelAction) {
             [buttonsArray addObject:cancelAction];
         }
@@ -66,7 +66,7 @@ static char const kRI_BUTTON_ASS_KEY;
 {
     NSMutableArray *arry = nil;
     if (nil != otherAction) {
-        arry = [NSMutableArray array];
+        arry = NSMutableArray.array;
         TCAlertAction *eachItem = otherAction;
         va_list argList;
         va_start(argList, otherAction);

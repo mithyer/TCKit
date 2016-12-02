@@ -66,13 +66,13 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 + (instancetype)dateWithDaysFromNow:(NSInteger)days
 {
     // Thanks, Jim Morrison
-	return [[NSDate date] dateByAddingDays:days];
+	return [NSDate.date dateByAddingDays:days];
 }
 
 + (instancetype)dateWithDaysBeforeNow:(NSInteger)days
 {
     // Thanks, Jim Morrison
-	return [[NSDate date] dateBySubtractingDays:days];
+	return [NSDate.date dateBySubtractingDays:days];
 }
 
 + (instancetype)dateTomorrow
@@ -87,25 +87,25 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 + (instancetype)dateWithHoursFromNow:(NSInteger)dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_HOUR * dHours;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate + D_HOUR * dHours;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
 + (instancetype)dateWithHoursBeforeNow:(NSInteger)dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_HOUR * dHours;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate - D_HOUR * dHours;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
 + (instancetype)dateWithMinutesFromNow:(NSInteger)dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate + D_MINUTE * dMinutes;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
 + (instancetype)dateWithMinutesBeforeNow:(NSInteger)dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_MINUTE * dMinutes;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate - D_MINUTE * dMinutes;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
@@ -189,7 +189,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (BOOL)isToday
 {
-	return [self isEqualToDateIgnoringTime:[NSDate date]];
+	return [self isEqualToDateIgnoringTime:NSDate.date];
 }
 
 - (BOOL)isTomorrow
@@ -219,19 +219,19 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (BOOL)isThisWeek
 {
-	return [self isSameWeekAsDate:[NSDate date]];
+	return [self isSameWeekAsDate:NSDate.date];
 }
 
 - (BOOL)isNextWeek
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_WEEK;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate + D_WEEK;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return [self isSameWeekAsDate:newDate];
 }
 
 - (BOOL)isLastWeek
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_WEEK;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate - D_WEEK;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return [self isSameWeekAsDate:newDate];
 }
@@ -246,18 +246,18 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (BOOL)isThisMonth
 {
-    return [self isSameMonthAsDate:[NSDate date]];
+    return [self isSameMonthAsDate:NSDate.date];
 }
 
 // Thanks Marcin Krzyzanowski, also for adding/subtracting years and months
 - (BOOL)isLastMonth
 {
-    return [self isSameMonthAsDate:[[NSDate date] dateBySubtractingMonths:1]];
+    return [self isSameMonthAsDate:[NSDate.date dateBySubtractingMonths:1]];
 }
 
 - (BOOL)isNextMonth
 {
-    return [self isSameMonthAsDate:[[NSDate date] dateByAddingMonths:1]];
+    return [self isSameMonthAsDate:[NSDate.date dateByAddingMonths:1]];
 }
 
 - (BOOL)isSameYearAsDate:(NSDate *)aDate
@@ -270,13 +270,13 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 - (BOOL)isThisYear
 {
     // Thanks, baspellis
-	return [self isSameYearAsDate:[NSDate date]];
+	return [self isSameYearAsDate:NSDate.date];
 }
 
 - (BOOL)isNextYear
 {
 	NSDateComponents *components1 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:self];
-	NSDateComponents *components2 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents *components2 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:NSDate.date];
 	
 	return (components1.year == (components2.year + 1));
 }
@@ -284,7 +284,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 - (BOOL)isLastYear
 {
 	NSDateComponents *components1 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:self];
-	NSDateComponents *components2 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents *components2 = [self.class.currentCalendar components:NSYearCalendarUnit fromDate:NSDate.date];
 	
 	return (components1.year == (components2.year - 1));
 }
@@ -302,13 +302,13 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 // Thanks, markrickert
 - (BOOL)isInFuture
 {
-    return [self isLaterThanDate:[NSDate date]];
+    return [self isLaterThanDate:NSDate.date];
 }
 
 // Thanks, markrickert
 - (BOOL)isInPast
 {
-    return [self isEarlierThanDate:[NSDate date]];
+    return [self isEarlierThanDate:NSDate.date];
 }
 
 
@@ -368,7 +368,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (instancetype)dateByAddingHours:(NSInteger)dHours
 {
-	NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + D_HOUR * dHours;
+	NSTimeInterval aTimeInterval = self.timeIntervalSinceReferenceDate + D_HOUR * dHours;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
@@ -379,7 +379,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (instancetype)dateByAddingMinutes:(NSInteger)dMinutes
 {
-	NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
+	NSTimeInterval aTimeInterval = self.timeIntervalSinceReferenceDate + D_MINUTE * dMinutes;
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 }
 
@@ -467,7 +467,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 - (NSInteger)nearestHour
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_MINUTE * 30;
+	NSTimeInterval aTimeInterval = NSDate.date.timeIntervalSinceReferenceDate + D_MINUTE * 30;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	NSDateComponents *components = [self.class.currentCalendar components:NSHourCalendarUnit fromDate:newDate];
 	return components.hour;

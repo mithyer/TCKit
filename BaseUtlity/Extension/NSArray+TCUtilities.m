@@ -93,7 +93,7 @@
         return self;
     }
     
-    NSMutableArray *resultArray = [NSMutableArray array];
+    NSMutableArray *resultArray = NSMutableArray.array;
     for (id object in self) {
         id result = aBlock(object);
         [resultArray addObject:result ?: NSNull.null];
@@ -107,7 +107,7 @@
         return self;
     }
     
-    NSMutableArray *resultArray = [NSMutableArray array];
+    NSMutableArray *resultArray = NSMutableArray.array;
     for (id object in self) {
         if (aBlock(object)) {
             [resultArray addObject:object];
@@ -122,7 +122,7 @@
         return self;
     }
     
-    NSMutableArray *resultArray = [NSMutableArray array];
+    NSMutableArray *resultArray = NSMutableArray.array;
     for (id object in self) {
         if (!aBlock(object)) {
             [resultArray addObject:object];
@@ -146,7 +146,7 @@
     return self;
 }
 
-//// Make sure to run srandom([[NSDate date] timeIntervalSince1970]); or similar somewhere in your program
+//// Make sure to run srandom([NSDate.date timeIntervalSince1970]); or similar somewhere in your program
 //- (NSMutableArray *) scramble
 //{
 //	for (int i=0; i<([self count]-2); i++) 

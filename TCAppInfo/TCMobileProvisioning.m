@@ -121,7 +121,7 @@
         
         if ([self lineString:line containsKey:MobileProvisioningApplicationIdentifierPrefix]) {
             NSString *nextLine = lines[i+1];
-            NSMutableArray *arryOfApplicationIdentifierPrefix = [NSMutableArray array];
+            NSMutableArray *arryOfApplicationIdentifierPrefix = NSMutableArray.array;
             while ([nextLine rangeOfString:@"</array>"].location == NSNotFound) {
                 NSString *value = [self extractStringValueInLine:nextLine];
                 if (value.length > 0) {
@@ -163,7 +163,7 @@
         
         if ([self lineString:line containsKey:MobileProvisioningKeychainAccessGroups]) {
             NSString *nextLine = lines[i+1];
-            NSMutableArray *arryOfProvisionedDevices = [NSMutableArray array];
+            NSMutableArray *arryOfProvisionedDevices = NSMutableArray.array;
             while ([nextLine rangeOfString:@"</array>"].location == NSNotFound) {
                 NSString *value = [self extractStringValueInLine:nextLine];
                 if (value.length > 0) {
@@ -180,7 +180,7 @@
         
         if ([self lineString:line containsKey:MobileProvisioningProvisionedDevices]) {
             NSString *nextLine = lines[i+1];
-            NSMutableArray *arryOfProvisionedDevices = [NSMutableArray array];
+            NSMutableArray *arryOfProvisionedDevices = NSMutableArray.array;
             while ([nextLine rangeOfString:@"</array>"].location == NSNotFound) {
                 NSString *value = [self extractStringValueInLine:nextLine];
                 if (value.length > 0) {

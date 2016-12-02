@@ -112,7 +112,7 @@ static void exceptionHandler(NSException *exception)
 
 - (void)resetLog
 {
-    self.log = [NSMutableArray array];
+    self.log = NSMutableArray.array;
     [self setConsoleText];
 }
 
@@ -457,8 +457,8 @@ static void exceptionHandler(NSException *exception)
         self.inputPlaceholderString = @"Enter command...";
         self.logSubmissionEmail = nil;
         
-        self.backgroundColor = [UIColor blackColor];
-        self.textColor = [UIColor whiteColor];
+        self.backgroundColor = UIColor.blackColor;
+        self.textColor = UIColor.whiteColor;
         
         [[NSUserDefaults standardUserDefaults] synchronize];
         self.log = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"iConsoleLog"]];
@@ -497,7 +497,7 @@ static void exceptionHandler(NSException *exception)
     _consoleView = [[UITextView alloc] initWithFrame:self.view.bounds];
     _consoleView.font = [UIFont fontWithName:@"Courier" size:12];
     _consoleView.textColor = _textColor;
-    _consoleView.backgroundColor = [UIColor clearColor];
+    _consoleView.backgroundColor = UIColor.clearColor;
     _consoleView.editable = NO;
     _consoleView.scrollsToTop = YES;
     _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;

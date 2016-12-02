@@ -477,7 +477,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
         return nil;
     }
     
-    NSMutableArray *outArry = [NSMutableArray array];
+    NSMutableArray *outArry = NSMutableArray.array;
     for (NSDictionary *dic in arry) {
         @autoreleasepool {
             id obj = tc_mappingWithDictionary(dic, nil, context, nil, self);

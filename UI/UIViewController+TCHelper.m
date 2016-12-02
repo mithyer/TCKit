@@ -157,7 +157,7 @@
         titleContainer.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin
         | UIViewAutoresizingFlexibleRightMargin
         | UIViewAutoresizingFlexibleHeight;
-        titleContainer.backgroundColor = [UIColor clearColor];
+        titleContainer.backgroundColor = UIColor.clearColor;
         
         self.navigationItem.titleView = titleContainer;
     }

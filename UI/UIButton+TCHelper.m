@@ -407,9 +407,9 @@ static char const kBtnExtraKey;
             }
         }
         
-//        self.imageView.backgroundColor = [UIColor grayColor];
-//        self.backgroundColor = [UIColor whiteColor];
-//        self.titleLabel.backgroundColor = [UIColor redColor];
+//        self.imageView.backgroundColor = UIColor.grayColor;
+//        self.backgroundColor = UIColor.whiteColor;
+//        self.titleLabel.backgroundColor = UIColor.redColor;
         
         //            CGFloat expand = (titleSize.height + imageSize.height - size.height) * 0.5 + pad + border;
         //            CGRect bounds = self.bounds;

@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
  NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:@"The Underlined text"];
  
  // making text property to underline text-
- [titleString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(0, [titleString length])];
+ [titleString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, [titleString length])];
  
  // using text on button
  [button setAttributedTitle: titleString forState:UIControlStateNormal];

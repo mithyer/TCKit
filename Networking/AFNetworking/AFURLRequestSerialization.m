@@ -120,7 +120,7 @@ FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dicti
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value);
 
 NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
-    NSMutableArray *mutablePairs = [NSMutableArray array];
+    NSMutableArray *mutablePairs = NSMutableArray.array;
     for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
         [mutablePairs addObject:[pair URLEncodedStringValue]];
     }
@@ -133,7 +133,7 @@ NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary) {
 }
 
 NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
-    NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
+    NSMutableArray *mutableQueryStringComponents = NSMutableArray.array;
 
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES selector:@selector(compare:)];
 
@@ -210,7 +210,7 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
     self.mutableHTTPRequestHeaders = [NSMutableDictionary dictionary];
 
     // Accept-Language HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
-    NSMutableArray *acceptLanguagesComponents = [NSMutableArray array];
+    NSMutableArray *acceptLanguagesComponents = NSMutableArray.array;
     [[NSLocale preferredLanguages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         float q = 1.0f - (idx * 0.1f);
         [acceptLanguagesComponents addObject:[NSString stringWithFormat:@"%@;q=%0.1g", obj, q]];
@@ -851,7 +851,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     }
 
     self.stringEncoding = encoding;
-    self.HTTPBodyParts = [NSMutableArray array];
+    self.HTTPBodyParts = NSMutableArray.array;
     self.numberOfBytesInPacket = NSIntegerMax;
 
     return self;

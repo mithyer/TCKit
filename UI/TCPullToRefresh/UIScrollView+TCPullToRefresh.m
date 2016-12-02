@@ -471,7 +471,7 @@ static char const kHeaderClassKey;
 
 - (NSDate *)tcRefreshHeaderDataSourceLastUpdated:(UIView<TCRefreshHeaderInterface> *)view
 {
-    return [NSDate date];
+    return NSDate.date;
 }
 
 

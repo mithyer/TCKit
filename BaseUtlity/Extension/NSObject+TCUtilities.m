@@ -505,7 +505,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 // Return an array of all an object's selectors
 + (NSArray *)getSelectorListForClass
 {
-	NSMutableArray *selectors = [NSMutableArray array];
+	NSMutableArray *selectors = NSMutableArray.array;
 	unsigned int num = 0;
 	Method *methods = class_copyMethodList(self, &num);
     for (NSInteger i = 0; i < num; ++i) {
@@ -529,7 +529,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 // Return an array of all an object's properties
 + (NSArray *)getPropertyListForClass
 {
-	NSMutableArray *propertyNames = [NSMutableArray array];
+	NSMutableArray *propertyNames = NSMutableArray.array;
 	unsigned int num = 0;
 	objc_property_t *properties = class_copyPropertyList(self, &num);
     for (NSInteger i = 0; i < num; ++i) {
@@ -553,7 +553,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 // Return an array of all an object's properties
 + (NSArray *)getIvarListForClass
 {
-	NSMutableArray *ivarNames = [NSMutableArray array];
+	NSMutableArray *ivarNames = NSMutableArray.array;
 	unsigned int num = 0;
 	Ivar *ivars = class_copyIvarList(self, &num);
     for (NSInteger i = 0; i < num; ++i) {
@@ -577,7 +577,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 // Return an array of all an object's properties
 + (NSArray *)getProtocolListForClass
 {
-	NSMutableArray *protocolNames = [NSMutableArray array];
+	NSMutableArray *protocolNames = NSMutableArray.array;
 	unsigned int num = 0;
 	Protocol * const *protocols = class_copyProtocolList(self, &num);
     for (int i = 0; i < num; i++) {
@@ -801,7 +801,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
         char *readonly = property_copyAttributeValue(prop, "R");
         char *copyAt = property_copyAttributeValue(prop, "C");
         char *strong = property_copyAttributeValue(prop, "&");
-        NSMutableArray *attributes = [NSMutableArray array];
+        NSMutableArray *attributes = NSMutableArray.array;
         if (nonatomic) {
             [attributes addObject:@"nonatomic"];
         }

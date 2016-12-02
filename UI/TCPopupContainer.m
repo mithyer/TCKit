@@ -166,7 +166,7 @@ static NSUInteger s_containerCount;
         // Initialization code
         ++s_containerCount;
         _shouldShowCloseBtn = YES;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = UIColor.clearColor;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return self;
@@ -177,7 +177,7 @@ static NSUInteger s_containerCount;
 {
     if (nil == _containerView) {
         _containerView = [[UIView alloc] initWithFrame:self.bounds];
-        _containerView.backgroundColor = [UIColor clearColor];
+        _containerView.backgroundColor = UIColor.clearColor;
         [self addSubview:_containerView];
     }
     

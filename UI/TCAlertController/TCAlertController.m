@@ -98,7 +98,7 @@
 {
     NSMutableArray *arry = nil;
     if (nil != otherAction) {
-        arry = [NSMutableArray array];
+        arry = NSMutableArray.array;
         TCAlertAction *eachItem = otherAction;
         va_list argumentList;
         va_start(argumentList, otherAction);
@@ -159,7 +159,7 @@
 {
     NSMutableArray *arry = nil;
     if (nil != otherAction) {
-        arry = [NSMutableArray array];
+        arry = NSMutableArray.array;
         TCAlertAction *eachItem = otherAction;
         va_list argumentList;
         va_start(argumentList, otherAction);
