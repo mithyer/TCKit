@@ -17,10 +17,22 @@ typedef NS_ENUM(NSUInteger, TCTextVerticalAlignment) {
     kTCTextVerticalAlignmentBottom,
 };
 
+@protocol TCLabelHelperDelegate <NSObject>
+
+@optional
+- (NSString *)copyStringForLabel:(UILabel *)sender;
+
+@end
+
 @interface UILabel (TCHelper)
 
 @property (nonatomic, assign) TCTextVerticalAlignment textVerticalAlignment;
 @property (nonatomic, assign) UIEdgeInsets contentEdgeInsets;
+@property (nonatomic, weak) id<TCLabelHelperDelegate> tc_delegate;
+@property (nonatomic, assign) BOOL copyEnable;
+
+- (void)showMenu:(CGRect)rect;
+
 
 @end
 

@@ -15,13 +15,14 @@
 
 @optional
 - (void)tc_textFieldValueChanged:(UITextField *)sender;
+- (NSString *)tc_textField:(UITextField *)sender stringForPaste:(NSString *)string;
 
 @end
 
 @interface UITextField (TCHelper)
 
 @property (nonatomic, assign) NSInteger tc_maxTextLength;
-@property (nonatomic, assign) id<TCTextFieldHelperDelegate> tc_delegate;
+@property (nonatomic, weak) id<TCTextFieldHelperDelegate> tc_delegate;
 
 @end
 

@@ -10,6 +10,7 @@
 
 #import "UITextField+TCHelper.h"
 #import <objc/runtime.h>
+#import "NSObject+TCUtilities.h"
 
 
 @interface TCTextFieldTarget : NSObject
@@ -52,14 +53,15 @@
 
 @implementation UITextField (TCHelper)
 
+
 - (id<TCTextFieldHelperDelegate>)tc_delegate
 {
-    return objc_getAssociatedObject(self, _cmd);
+    return [self bk_associatedValueForKey:_cmd];
 }
 
 - (void)setTc_delegate:(id<TCTextFieldHelperDelegate>)tc_delegate
 {
-    objc_setAssociatedObject(self, @selector(tc_delegate), tc_delegate, OBJC_ASSOCIATION_ASSIGN);
+    [self bk_weaklyAssociateValue:tc_delegate withKey:@selector(tc_delegate)];
     
     id target = (id)TCTextFieldTarget.class;
     if (![self.allTargets containsObject:target]) {
@@ -81,6 +83,29 @@
     id target = (id)TCTextFieldTarget.class;
     if (![self.allTargets containsObject:target]) {
         [self addTarget:target action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
+    }
+}
+
+
+#pragma mark - paste
+
++ (void)load
+{
+    [self tc_swizzle:@selector(paste:)];
+}
+
+- (void)tc_paste:(UIMenuController *)sender
+{
+    id<TCTextFieldHelperDelegate> tc_delegate = self.tc_delegate;
+    
+    if (nil != tc_delegate && [tc_delegate respondsToSelector:@selector(tc_textField:stringForPaste:)]) {
+        UIPasteboard *board = UIPasteboard.generalPasteboard;
+        NSString *raw = board.string;
+        board.string = [tc_delegate tc_textField:self stringForPaste:raw];
+        [self tc_paste:sender];
+        board.string = raw;
+    } else {
+        [self tc_paste:sender];
     }
 }
 
