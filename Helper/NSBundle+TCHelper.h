@@ -6,7 +6,7 @@
 //  Copyright © 2016年 dake. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIImage.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
