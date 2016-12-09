@@ -265,6 +265,7 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
                 break;
                 
             case '&': // retain
+                break;
                 
             case 'R': // readonly
                 break;
@@ -272,9 +273,9 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
             case 'N': // nonatomic
                 break;
                 
-            case 'D':
+            case 'D': // dynamic
                 dynamic = YES;
-                break; // dynamic
+                break;
                 
             case 'W': // weak
                 break;

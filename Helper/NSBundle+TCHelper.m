@@ -13,13 +13,14 @@
 + (NSBundle *)hostMainBundle
 {
     static NSBundle *s_bundle = nil;
-    if (nil == s_bundle) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         s_bundle = NSBundle.mainBundle;
         if ([s_bundle.bundleURL.pathExtension isEqualToString:@"appex"]) {
             NSURL *url = s_bundle.bundleURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent;
             s_bundle = [NSBundle bundleWithURL:url];
         }
-    }
+    });
     return s_bundle;
 }
 
