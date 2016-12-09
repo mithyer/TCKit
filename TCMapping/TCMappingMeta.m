@@ -184,6 +184,7 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
     
     SEL getter = NULL;
     SEL setter = NULL;
+    BOOL dynamic = NO;
     NSString *typeName = nil;
     TCEncodingInfo info = kTCEncodingInfoUnknown;
     __unsafe_unretained Class typeClass = Nil;
@@ -260,6 +261,30 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
                 break;
             }
                 
+            case 'C': // copy
+                break;
+                
+            case '&': // retain
+                
+            case 'R': // readonly
+                break;
+                
+            case 'N': // nonatomic
+                break;
+                
+            case 'D':
+                dynamic = YES;
+                break; // dynamic
+                
+            case 'W': // weak
+                break;
+                
+            case 'V': // instance var
+                break;
+                
+            case 'P': // garbage
+                break;
+                
             default:
                 break;
         }
@@ -282,14 +307,14 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
     if (NULL == getter) {
         getter = NSSelectorFromString(propertyName);
     }
-    if ([klass instancesRespondToSelector:getter]) {
+    if (dynamic || [klass instancesRespondToSelector:getter]) {
         meta->_getter = getter;
     }
     
     if (NULL == setter) {
         setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]]);
     }
-    if ([klass instancesRespondToSelector:setter]) {
+    if (dynamic || [klass instancesRespondToSelector:setter]) {
         meta->_setter = setter;
     }
     
@@ -301,7 +326,7 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
 }
 
 
-NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass)
+NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass, BOOL untilRoot)
 {
     if (Nil == klass || Nil == class_getSuperclass(klass)) {
         return nil;
@@ -333,7 +358,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         return propertyNames;
     }
     
-    propertyNames = [NSMutableDictionary dictionary];
+    propertyNames = NSMutableDictionary.dictionary;
     unsigned int num = 0;
     objc_property_t *properties = class_copyPropertyList(klass, &num);
     
@@ -345,7 +370,9 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     }
     free(properties);
     
-    [propertyNames addEntriesFromDictionary:tc_propertiesUntilRootClass(class_getSuperclass(klass))];
+    if (untilRoot) {
+        [propertyNames addEntriesFromDictionary:tc_propertiesUntilRootClass(class_getSuperclass(klass), untilRoot)];
+    }
     [s_propertyByClass setObject:propertyNames forKey:klass];
     
     [s_recursiveLock unlock];

@@ -621,7 +621,10 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
         return;
     }
     
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class);
+    
+    TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
+    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_setter || NULL == meta->_getter) {
@@ -652,7 +655,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     }
     
     NSDictionary *nameDic = opt.nameMapping;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass);
+    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, autoMapUntilRoot);
     
     if (nameDic.count < 1) {
         NSDictionary *tmpDic = nameDic;

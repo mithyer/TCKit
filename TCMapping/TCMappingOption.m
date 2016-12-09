@@ -11,6 +11,15 @@
 
 @implementation TCMappingOption
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _autoMapUntilRoot = YES;
+    }
+    return self;
+}
+
 - (instancetype)copyWithZone:(NSZone *)zone
 {
     return self.tc_copy;

@@ -176,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-extern NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass);
+extern NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass, BOOL untilRoot);
 
 
 @protocol TCNSValueSerializer <NSObject>

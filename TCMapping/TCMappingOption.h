@@ -43,6 +43,8 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 
 @interface TCMappingOption : NSObject <NSCopying>
 
+@property (nonatomic, assign) BOOL autoMapUntilRoot; // default: YES
+
 #pragma mark - TCMapping
 
 /**

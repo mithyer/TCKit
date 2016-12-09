@@ -153,8 +153,9 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         __unsafe_unretained Class curClass = obj.class;
         TCMappingOption *opt = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil;
         BOOL isNSNullValid = opt.shouldCodingNSNull;
+        BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
         NSDictionary<NSString *, NSString *> *nameDic = opt.nameCodingMapping;
-        __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass);
+        __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, autoMapUntilRoot);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
         for (NSString *key in metaDic) {
@@ -226,7 +227,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_plistObject
 {
-    NSObject * obj = codingObject(self, kTCPersisentStylePlist, self.class);
+    NSObject *obj = codingObject(self, kTCPersisentStylePlist, self.class);
     if (nil == obj ||
         [obj isKindOfClass:NSString.class] ||
         [obj isKindOfClass:NSNumber.class] ||
