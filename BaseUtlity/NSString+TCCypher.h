@@ -20,4 +20,8 @@
 
 - (instancetype)SHA_1;
 
+// base64
+- (instancetype)base64Encode;
+- (instancetype)base64Decode;
+
 @end

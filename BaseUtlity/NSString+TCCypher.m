@@ -84,5 +84,16 @@
     return outputString;
 }
 
+- (instancetype)base64Encode
+{
+    return  [[self dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:kNilOptions];
+}
+
+- (instancetype)base64Decode
+{
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
 
 @end
