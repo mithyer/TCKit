@@ -22,10 +22,10 @@ static NSString const *kDefaultDomain = @"TCKit";
     //    path = [path stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
     //#endif
     
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:dir
-                                   withIntermediateDirectories:YES
-                                                    attributes:nil
-                                                         error:NULL]) {
+    if (![NSFileManager.defaultManager createDirectoryAtPath:dir
+                                 withIntermediateDirectories:YES
+                                                  attributes:nil
+                                                       error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
@@ -37,10 +37,10 @@ static NSString const *kDefaultDomain = @"TCKit";
 {
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:domain?:kDefaultDomain];
     
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:dir
-                                   withIntermediateDirectories:YES
-                                                    attributes:nil
-                                                         error:NULL]) {
+    if (![NSFileManager.defaultManager createDirectoryAtPath:dir
+                                 withIntermediateDirectories:YES
+                                                  attributes:nil
+                                                       error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
@@ -50,10 +50,10 @@ static NSString const *kDefaultDomain = @"TCKit";
 + (NSString *)defaultTmpDirectoryInDomain:(NSString *)domain
 {
     NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:domain?:kDefaultDomain];
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:dir
-                                   withIntermediateDirectories:YES
-                                                    attributes:nil
-                                                         error:NULL]) {
+    if (![NSFileManager.defaultManager createDirectoryAtPath:dir
+                                 withIntermediateDirectories:YES
+                                                  attributes:nil
+                                                       error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
@@ -70,7 +70,7 @@ static NSString const *kDefaultDomain = @"TCKit";
 - (NSString *)humanDescription
 {
     NSString *str = objc_getAssociatedObject(self, @selector(setHumanDescription:));
-    return str ?: [self.class humanDescription];
+    return str ?: self.class.humanDescription;
 }
 
 - (void)setHumanDescription:(NSString *)humanDescription

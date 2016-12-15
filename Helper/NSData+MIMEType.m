@@ -53,8 +53,9 @@ static _TCMIMETypes s_types[] = {
 
 - (nullable NSString *)MIMEType
 {
-    uint8_t bytes[12] = {0};
-    [self getBytes:&bytes length:12];
+    static int const kLen = 12;
+    uint8_t bytes[kLen] = {0};
+    [self getBytes:&bytes length:self.length >= kLen ? kLen : self.length];
     
     for (NSInteger i = 0; i < sizeof(s_types)/sizeof(s_types[0]); ++i) {
         _TCMIMETypes mime = s_types[i];
