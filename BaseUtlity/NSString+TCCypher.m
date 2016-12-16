@@ -20,6 +20,18 @@
 
 #pragma mark - AES
 
+- (nullable instancetype)AES128EncryptWithKey:(NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte
+{
+    NSData *data = [[self dataUsingEncoding:NSUTF8StringEncoding] AES128EncryptWithKey:key_16_byte iv:iv_16_byte];
+    return [data base64EncodedStringWithOptions:kNilOptions];
+}
+
+- (nullable instancetype)AES128DecryptWithKey:(NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte
+{
+    NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] AES128DecryptWithKey:key_16_byte iv:iv_16_byte];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
 - (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv
 {
     NSData *data = [[self dataUsingEncoding:NSUTF8StringEncoding] AES256EncryptWithKey:key iv:iv];

@@ -64,7 +64,7 @@ static _TCMIMETypes s_types[] = {
         }
     }
     
-    return @"application/octet-stream"; // default type
+    return nil; // default type
 }
 
 @end

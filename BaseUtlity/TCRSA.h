@@ -11,22 +11,24 @@
 // reference: git@github.com:PanXianyue/XYCryption.git
 // http://www.jianshu.com/p/a1bad1e2be55
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  @brief	RSA with system keychain
  */
 @interface TCRSA : NSObject
 
-+ (instancetype)RSAWithPublicFile:(NSString *)derFile;
-+ (instancetype)RSAWithPublicFile:(NSString *)derFile privateFile:(NSString *)p12File passwd:(NSString *)passwd;
++ (nullable instancetype)RSAWithPublicFile:(NSString *)derFile;
++ (nullable instancetype)RSAWithPublicFile:(NSString *)derFile privateFile:(nullable NSString *)p12File passwd:(nullable NSString *)passwd;
 
 
 #pragma mark - encrypt with public key, decrypt with private key
 
-- (NSData *)encryptData:(NSData *)plainData;
-- (NSData *)decryptData:(NSData *)cypherData;
+- (nullable NSData *)encryptData:(NSData *)plainData;
+- (nullable NSData *)decryptData:(NSData *)cypherData;
 
-- (NSString *)encryptString:(NSString *)plainStr;
-- (NSString *)decryptString:(NSString *)cypherStr;
+- (nullable NSString *)encryptString:(NSString *)plainStr;
+- (nullable NSString *)decryptString:(NSString *)cypherStr;
 
 
 
@@ -39,7 +41,7 @@
  
  @return raw data
  */
-- (NSData *)signSHA256Data:(NSData *)plainData;
+- (nullable NSData *)signSHA256Data:(NSData *)plainData;
 
 /**
  @brief	verify
@@ -58,7 +60,7 @@
  
  @return base64 string
  */
-- (NSString *)signSHA256String:(NSString *)plainStr;
+- (nullable NSString *)signSHA256String:(NSString *)plainStr;
 
 /**
  @brief	verify
@@ -72,3 +74,5 @@
 
 
 @end
+
+NS_ASSUME_NONNULL_END

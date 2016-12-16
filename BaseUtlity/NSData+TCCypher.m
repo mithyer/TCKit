@@ -20,27 +20,26 @@
 
 #pragma mark - AESCrypt
 
-- (instancetype)AES128EncryptWithKey:(NSString *)key iv:(NSString *)iv
+- (instancetype)AES128EncryptWithKey:(NSString *)key_16_byte iv:(NSString *)iv_16_byte
 {
-    return [self AESOperation:kCCEncrypt key:key iv:iv keySize:kCCKeySizeAES128];
+    return [self AESOperation:kCCEncrypt key:key_16_byte iv:iv_16_byte keySize:kCCKeySizeAES128];
 }
 
-- (instancetype)AES128DecryptWithKey:(NSString *)key iv:(NSString *)iv
+- (instancetype)AES128DecryptWithKey:(NSString *)key_16_byte iv:(NSString *)iv_16_byte
 {
-    return [self AESOperation:kCCDecrypt key:key iv:iv keySize:kCCKeySizeAES128];
+    return [self AESOperation:kCCDecrypt key:key_16_byte iv:iv_16_byte keySize:kCCKeySizeAES128];
 }
 
 
-- (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv
+- (instancetype)AES256EncryptWithKey:(NSString *)key_32_byte iv:(NSString *)iv_16_byte
 {
-    return [self AESOperation:kCCEncrypt key:key iv:iv keySize:kCCKeySizeAES256];
+    return [self AESOperation:kCCEncrypt key:key_32_byte iv:iv_16_byte keySize:kCCKeySizeAES256];
 }
 
-- (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv
+- (instancetype)AES256DecryptWithKey:(NSString *)key_32_byte iv:(NSString *)iv_16_byte
 {
-    return [self AESOperation:kCCDecrypt key:key iv:iv keySize:kCCKeySizeAES256];
+    return [self AESOperation:kCCDecrypt key:key_32_byte iv:iv_16_byte keySize:kCCKeySizeAES256];
 }
-
 
 
 - (instancetype)AESOperation:(CCOperation)operation key:(NSString *)key iv:(NSString *)iv keySize:(int)keySize

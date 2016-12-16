@@ -8,13 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSData (TCCypher)
 
 // for AES
-- (instancetype)AES128EncryptWithKey:(NSString *)key_16 iv:(NSString *)iv_16;
-- (instancetype)AES128DecryptWithKey:(NSString *)key_16 iv:(NSString *)iv_16;
+- (nullable instancetype)AES128EncryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES128DecryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
 
-- (instancetype)AES256EncryptWithKey:(NSString *)key_32 iv:(NSString *)iv_16;
-- (instancetype)AES256DecryptWithKey:(NSString *)key_32 iv:(NSString *)iv_16;
+- (nullable instancetype)AES256EncryptWithKey:(nullable NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES256DecryptWithKey:(nullable NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
 
 @end
+
+NS_ASSUME_NONNULL_END
