@@ -375,7 +375,7 @@ static NSString *_defaultService;
 - (NSString *)stringForKey:(id)key error:(NSError *__autoreleasing *)error
 {
     NSData *data = [self dataForKey:key error:error];
-    if (data) {
+    if (nil != data) {
         NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (string) {
             return string;
@@ -908,7 +908,7 @@ static NSString *_defaultService;
             item[@"key"] = key;
         }
         NSData *data = attributes[(__bridge id)kSecValueData];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSString *string = nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
         if (string) {
             item[@"value"] = string;
         } else {

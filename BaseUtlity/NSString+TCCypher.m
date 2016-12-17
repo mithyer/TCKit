@@ -29,7 +29,7 @@
 - (nullable instancetype)AES128DecryptWithKey:(NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte
 {
     NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] AES128DecryptWithKey:key_16_byte iv:iv_16_byte];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
 }
 
 - (instancetype)AES256EncryptWithKey:(NSString *)key iv:(NSString *)iv
@@ -41,7 +41,7 @@
 - (instancetype)AES256DecryptWithKey:(NSString *)key iv:(NSString *)iv
 {
     NSData *data = [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] AES256DecryptWithKey:key iv:iv];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
 }
 
 - (instancetype)MD5_32
@@ -104,7 +104,7 @@
 - (instancetype)base64Decode
 {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
 }
 
 

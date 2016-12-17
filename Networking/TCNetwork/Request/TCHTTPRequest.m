@@ -256,7 +256,7 @@
     return [NSString stringWithFormat:@"🌍🌍🌍 %@: %@\n param: %@\n from cache: %@\n response: %@",
             NSStringFromClass(self.class),
             request.URL,
-            [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
+            nil != request.HTTPBody ? [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] : nil,
             self.cachePolicy.isDataFromCache ? @"YES" : @"NO",
             self.responseObject];
 }
