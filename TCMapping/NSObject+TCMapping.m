@@ -291,7 +291,11 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
             case kTCEncodingTypeNSData: { // NSData <- Base64 NSString
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
-                        ret = [[klass alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                        if ([curClass respondsToSelector:@selector(tc_transformDataFromString:)]) {
+                            ret = [curClass tc_transformDataFromString:value];
+                        } else {
+                            ret = [[klass alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                        }
                     }
                 } else if ([value isKindOfClass:NSData.class]) {
                     if ([value isKindOfClass:klass]) {

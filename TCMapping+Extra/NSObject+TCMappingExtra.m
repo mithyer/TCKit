@@ -9,6 +9,7 @@
 #import "NSObject+TCMappingExtra.h"
 #import "UIColor+TCUtilities.h"
 #import "AnimatedGIFImageSerialization.h"
+#import "NSData+TCCypher.h"
 
 
 @implementation NSObject (TCMappingExtra)
@@ -84,6 +85,19 @@
 {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:NSDataBase64DecodingIgnoreUnknownCharacters];
     return [self tc_transformImageFromData:data];
+}
+
+
+#pragma mark - NSData <-> NSString
+
++ (nullable NSData *)tc_transformDataFromString:(NSString *)hex
+{
+    return [NSData dataWithHexString:hex];
+}
+
++ (nullable NSString *)tc_transformHexStringFromData:(NSData *)data
+{
+    return data.hexStringRepresentation;
 }
 
 @end

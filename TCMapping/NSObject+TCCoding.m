@@ -125,6 +125,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         if (kTCPersisentStylePlist == style) {
             return obj;
         }
+        
+        if ([klass respondsToSelector:@selector(tc_transformHexStringFromData:)]) {
+            return [klass tc_transformHexStringFromData:(NSData *)obj];
+        }
         return [(NSData *)obj base64EncodedStringWithOptions:kNilOptions];
         
     } else if ([obj isKindOfClass:UIColor.class]) { // -> string

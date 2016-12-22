@@ -91,13 +91,13 @@
 
 - (BOOL)isPureNumber
 {
-    NSString *string = [self stringByTrimmingCharactersInSet:[NSCharacterSet decimalDigitCharacterSet]];
+    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
     return string.length < 1;
 }
 
 - (BOOL)isValidIDCardNumberOfChina
 {
-    NSString *code = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *code = [self stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
     NSUInteger length = code.length;
     if (length != 15 && length != 18) {
         return NO;
@@ -119,15 +119,15 @@
     }
     
     // 地区合法性
-    NSArray *areaCodes = @[@"11", @"12", @"13",@"14", @"15",
-                           @"21", @"22", @"23",
-                           @"31", @"32", @"33", @"34", @"35", @"36", @"37",
-                           @"41", @"42", @"43", @"44", @"45", @"46",
-                           @"50", @"51", @"52", @"53", @"54",
-                           @"61", @"62", @"63", @"64", @"65",
-                           @"71",
-                           @"81", @"82",
-                           @"91"];
+    NSArray *const areaCodes = @[@"11", @"12", @"13",@"14", @"15",
+                                 @"21", @"22", @"23",
+                                 @"31", @"32", @"33", @"34", @"35", @"36", @"37",
+                                 @"41", @"42", @"43", @"44", @"45", @"46",
+                                 @"50", @"51", @"52", @"53", @"54",
+                                 @"61", @"62", @"63", @"64", @"65",
+                                 @"71",
+                                 @"81", @"82",
+                                 @"91"];
     
     NSString *area = [code substringToIndex:2];
     if (![areaCodes containsObject:area]) {

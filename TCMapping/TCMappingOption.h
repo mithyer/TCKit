@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable UIColor *)tc_transformColorFromHex:(uint32_t)hex;
 + (nullable NSString *)tc_transformHexStringFromColor:(UIColor *)color;
 
+// NSData <-> NSString
++ (nullable NSData *)tc_transformDataFromString:(NSString *)hex;
++ (nullable NSString *)tc_transformHexStringFromData:(NSData *)data;
+
 @end
 
 
