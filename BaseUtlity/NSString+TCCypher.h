@@ -13,11 +13,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (TCCypher)
 
 // for AES
-- (nullable instancetype)AES128EncryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES128DecryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES128EncryptBase64WithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES128DecryptBase64WithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
 
-- (nullable instancetype)AES256EncryptWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES256DecryptWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES256EncryptBase64WithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES256DecryptBase64WithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+
+- (nullable instancetype)AES128EncryptHexWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES128DecryptHexWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
+
+- (nullable instancetype)AES256EncryptHexWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+- (nullable instancetype)AES256DecryptHexWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
 
 // for MD5
 - (nullable instancetype)MD5_32;
