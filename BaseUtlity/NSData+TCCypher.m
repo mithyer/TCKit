@@ -91,6 +91,19 @@ void rc4_crypt(
 @implementation NSData (TCCypher)
 
 
+#pragma mark - Base64
+
+- (instancetype)base64Encode
+{
+    return  [self base64EncodedDataWithOptions:kNilOptions];
+}
+
+- (instancetype)base64Decode
+{
+    return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+}
+
+
 #pragma mark - AESCrypt
 
 - (instancetype)AES128EncryptWithKey:(NSString *)key_16_byte iv:(NSString *)iv_16_byte

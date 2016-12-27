@@ -12,7 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (TCCypher)
 
-// for AES
+
+// Base64
+- (instancetype)base64Encode;
+- (instancetype)base64Decode;
+
+
+// AES
 - (nullable instancetype)AES128EncryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
 - (nullable instancetype)AES128DecryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
 
