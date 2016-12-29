@@ -71,7 +71,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 
 
 @property (nonatomic, assign) BOOL shouldMappingNSNull; // mapping NSNull -> nil or not
-@property (nonatomic, assign) BOOL emptyDictionaryToNSNull; // mapping {} -> NSNull
+@property (nonatomic, assign) BOOL mappingEmptyDictionaryToNSNull; // mapping {} -> NSNull
 
 
 @property (nonatomic, copy) void (^setUpDateFormatter)(SEL property, NSDateFormatter *fmter); // for time string -> NSDate
@@ -93,6 +93,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
  @brief	format: @{@"propertyName": @"coding key" or NSNull.null for ignore"}
  */
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameNSCodingMapping;
+@property (nonatomic, assign) BOOL codingEmptyDataToNil; // default: YES
 
 
 #pragma mark - TCNSCopying

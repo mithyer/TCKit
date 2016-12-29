@@ -16,6 +16,7 @@
     self = [super init];
     if (self) {
         _autoMapUntilRoot = YES;
+        _codingEmptyDataToNil = YES;
     }
     return self;
 }

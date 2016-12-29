@@ -710,7 +710,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         NSObject *rawValue = value;
         
         TCEncodingType type = tc_typeForInfo(meta->_info);
-        BOOL emptyDicToNSNull = option.emptyDictionaryToNSNull;
+        BOOL emptyDicToNSNull = option.mappingEmptyDictionaryToNSNull;
         
         if ([rawValue isKindOfClass:NSDictionary.class]) {
             __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
