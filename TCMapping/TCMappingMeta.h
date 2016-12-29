@@ -30,6 +30,7 @@ typedef NS_ENUM (uint8_t, TCEncodingType) {
     kTCEncodingTypeNSArray,
     kTCEncodingTypeNSDictionary,
     kTCEncodingTypeNSSet,
+    kTCEncodingTypeNSOrderedSet,
     kTCEncodingTypeNSHashTable,
     kTCEncodingTypeNSData,
     kTCEncodingTypeNSNull,

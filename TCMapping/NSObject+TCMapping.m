@@ -695,6 +695,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         
         if ([value isKindOfClass:NSSet.class]) {
             value = ((NSSet *)value).allObjects;
+        } else if ([value isKindOfClass:NSOrderedSet.class]) {
+            value = ((NSOrderedSet *)value).array;
         } else if ([value isKindOfClass:NSHashTable.class]) {
             value = ((NSHashTable *)value).setRepresentation.allObjects;
         } else if ([value isKindOfClass:NSMapTable.class]) {
@@ -779,8 +781,10 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                             if (![value isKindOfClass:meta->_typeClass]) {
                                 value = [meta->_typeClass arrayWithArray:valueArry];
                             }
-                        } else { // NSSet
+                        } else if (type == kTCEncodingTypeNSSet){
                             value = [meta->_typeClass setWithArray:valueArry];
+                        } else if (type == kTCEncodingTypeNSOrderedSet){
+                            value = [meta->_typeClass orderedSetWithArray:valueArry];
                         }
                     }
                 }

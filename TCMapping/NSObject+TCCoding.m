@@ -77,6 +77,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return obj;
     }
     
+    if ([obj isMemberOfClass:NSObject.class] || [obj isMemberOfClass:NSProxy.class]) {
+        return nil;
+    }
+    
     if ([obj isKindOfClass:NSDictionary.class]) {
         if (kTCPersisentStyleJSON == style && [NSJSONSerialization isValidJSONObject:obj]) {
             return obj;
@@ -111,6 +115,9 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         
     } else if ([obj isKindOfClass:NSSet.class]) { // -> array
         return codingObject(((NSSet *)obj).allObjects, style, klass);
+        
+    } else if ([obj isKindOfClass:NSOrderedSet.class]) { // -> array
+        return codingObject(((NSOrderedSet *)obj).array, style, klass);
         
     } else if ([obj isKindOfClass:NSURL.class]) { // -> string
         return ((NSURL *)obj).absoluteString;

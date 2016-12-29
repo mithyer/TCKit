@@ -134,6 +134,8 @@ NS_INLINE TCEncodingType typeForNSType(Class typeClass)
         return kTCEncodingTypeNSValue;
     } else if ([typeClass isSubclassOfClass:NSSet.class]) {
         return kTCEncodingTypeNSSet;
+    } else if ([typeClass isSubclassOfClass:NSOrderedSet.class]) {
+        return kTCEncodingTypeNSOrderedSet;
     } else if ([typeClass isSubclassOfClass:NSHashTable.class]) {
         return kTCEncodingTypeNSHashTable;
     } else if ([typeClass isSubclassOfClass:NSData.class]) {
@@ -327,10 +329,16 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
 }
 
 
-NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass, BOOL untilRoot)
+NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass, BOOL autoMapUntilRoot)
 {
     if (Nil == klass || Nil == class_getSuperclass(klass)) {
         return nil;
+    }
+    
+    BOOL untilRoot = autoMapUntilRoot;
+    TCMappingOption *opt = [klass respondsToSelector:@selector(tc_mappingOption)] ? [klass tc_mappingOption] : nil;
+    if (nil != opt) {
+        untilRoot = opt.autoMapUntilRoot;
     }
     
     static NSRecursiveLock *s_recursiveLock = nil;
