@@ -54,30 +54,30 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 /**
  @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameMapping;
 
 /**
  @brief	format: @{@"propertyName": @"object'class name or Class or `TCTypeMappingBlock`, or yyyy-MM-dd...(-> NSDate)"}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, Class/* Class/TCTypeMappingBlock/yyyy-MM-dd... */> *typeMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, Class/* Class\TCTypeMappingBlock\yyyy-MM-dd... */> *typeMapping;
 
-@property (nonatomic, strong) NSDictionary<NSString *, id/* TCValueMappingBlock */> *undefineMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, id/* TCValueMappingBlock */> *undefineMapping;
 
 /**
  @brief	format: @{@"primaryKey1": @"value", @"primaryKey2": NSNull.null}
  NSNull.null will be replace with an exact value while mapping.
  */
-@property (nonatomic, strong) NSDictionary<NSString *, id> *primaryKey;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, id> *primaryKey;
 
 
 @property (nonatomic, assign) BOOL shouldMappingNSNull; // mapping NSNull -> nil or not
 @property (nonatomic, assign) BOOL mappingEmptyDictionaryToNSNull; // mapping {} -> NSNull
 
 
-@property (nonatomic, copy) void (^setUpDateFormatter)(SEL property, NSDateFormatter *fmter); // for time string -> NSDate
-@property (nonatomic, copy) NSTimeInterval (^secondSince1970)(SEL property, NSTimeInterval timestamp, BOOL *ignoreReturn);
+@property (nullable, nonatomic, copy) void (^setUpDateFormatter)(SEL property, NSDateFormatter *fmter); // for time string -> NSDate
+@property (nullable, nonatomic, copy) NSTimeInterval (^secondSince1970)(SEL property, NSTimeInterval timestamp, BOOL *ignoreReturn);
 
-@property (nonatomic, copy) BOOL (^mappingValidate)(id obj);
+@property (nullable, nonatomic, copy) BOOL (^mappingValidate)(id obj);
 
 @property (nonatomic, assign) BOOL ignoreUndefineMapping;
 
@@ -92,8 +92,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 /**
  @brief	format: @{@"propertyName": @"coding key" or NSNull.null for ignore"}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameNSCodingMapping;
-@property (nonatomic, assign) BOOL codingEmptyDataToNil; // default: YES
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameNSCodingMapping;
 
 
 #pragma mark - TCNSCopying
@@ -106,8 +105,9 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 /**
  @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
  */
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *nameCodingMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameCodingMapping;
 @property (nonatomic, assign) BOOL shouldCodingNSNull; // ignore output NSNull or not
+@property (nonatomic, assign) BOOL codingEmptyDataToNil; // default: YES
 
 
 // TODO: hash, equal  ignore

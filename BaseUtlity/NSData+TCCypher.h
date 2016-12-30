@@ -87,4 +87,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface NSData (TCHelper)
+
+- (NSRange)rangeOfString:(NSString *)strToFind encoding:(NSStringEncoding)encoding options:(NSDataSearchOptions)mask range:(NSRange * _Nullable)searchRange;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -326,3 +326,44 @@ static uint8_t nibbleFromChar(unichar c) {
 }
 
 @end
+
+
+@implementation NSData (TCHelper)
+
+- (NSRange)rangeOfString:(NSString *)strToFind encoding:(NSStringEncoding)encoding options:(NSDataSearchOptions)mask range:(NSRange * _Nullable)searchRange
+{
+    NSParameterAssert(strToFind);
+    if (nil == strToFind) {
+        return NSMakeRange(NSNotFound, 0);
+    }
+    
+    if (0 == encoding) {
+        encoding = NSASCIIStringEncoding;
+    }
+    
+    NSData *keyData = [strToFind dataUsingEncoding:encoding];
+    if (nil == keyData || self.length < keyData.length) {
+        return NSMakeRange(NSNotFound, 0);
+    }
+
+    NSRange range;
+    if (NULL != searchRange) {
+        if (searchRange->location == NSNotFound) {
+            searchRange->location = 0;
+        }
+        
+        if (searchRange->length < 1 || searchRange->length > self.length) {
+            searchRange->length = self.length;
+        }
+        
+        range = *searchRange;
+    } else {
+        range.location = 0;
+        range.length = self.length;
+    }
+
+    return [self rangeOfData:keyData options:mask range:range];
+}
+
+@end
+

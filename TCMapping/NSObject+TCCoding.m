@@ -36,7 +36,7 @@ NS_INLINE NSDateFormatter *tcISODateFormatter(void) {
     dispatch_once(&onceToken, ^{
         formatter = [[NSDateFormatter alloc] init];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     });
     return formatter;
 }
