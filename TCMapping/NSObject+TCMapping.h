@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TCMappingIgnore; // unavailable for `Class`
 
-
 @interface NSObject (TCMapping) <TCMappingOption>
 
 
@@ -52,8 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSMutableArray * __nullable)tc_mappingWithArray:(NSArray *)arry context:(id<TCMappingPersistentContext> __nullable)context;
 
 + (instancetype __nullable)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic;
-+ (instancetype __nullable)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption *)option;
-+ (instancetype __nullable)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic context:(id<TCMappingPersistentContext>)context;
++ (instancetype __nullable)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption * __nullable)option;
++ (instancetype __nullable)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic context:(id<TCMappingPersistentContext> __nullable)context;
 
 - (void)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic;
 - (void)tc_mappingWithDictionary:(NSDictionary<NSString *, id> *)dic option:(TCMappingOption *)option;

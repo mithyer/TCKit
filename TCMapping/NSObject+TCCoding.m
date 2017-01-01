@@ -65,7 +65,7 @@ NS_INLINE NSString *mappingForNSValue(NSValue *value)
     return nil;
 }
 
-static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class klass)
+static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class klass, TCMappingOption *option)
 {
     if (nil == obj ||
         obj == (id)kCFNull ||
@@ -82,7 +82,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
     }
     
     __unsafe_unretained Class curClass = obj.class;
-    TCMappingOption *opt = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil;
+    TCMappingOption *opt = option ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
     BOOL emptyNil = nil != opt ? opt.codingEmptyDataToNil : YES;
     
     if ([obj isKindOfClass:NSDictionary.class]) {
@@ -99,7 +99,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             if (strKey.length < 1) {
                 continue;
             }
-            NSObject *value = codingObject(((NSDictionary *)obj)[key], style, klass);
+            NSObject *value = codingObject(((NSDictionary *)obj)[key], style, klass, nil);
             if (nil != value) {
                 dic[strKey] = value;
             }
@@ -118,7 +118,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         
         NSMutableArray *arry = NSMutableArray.array;
         for (id value in (NSArray *)obj) {
-            NSObject *jsonValue = codingObject(value, style, klass);
+            NSObject *jsonValue = codingObject(value, style, klass, option);
             if (nil != jsonValue) {
                 [arry addObject:jsonValue];
             }
@@ -126,10 +126,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return emptyNil ? (arry.count > 0 ? arry : nil) : arry;
         
     } else if ([obj isKindOfClass:NSSet.class]) { // -> array
-        return codingObject(((NSSet *)obj).allObjects, style, klass);
+        return codingObject(((NSSet *)obj).allObjects, style, klass, option);
         
     } else if ([obj isKindOfClass:NSOrderedSet.class]) { // -> array
-        return codingObject(((NSOrderedSet *)obj).array, style, klass);
+        return codingObject(((NSOrderedSet *)obj).array, style, klass, option);
         
     } else if ([obj isKindOfClass:NSURL.class]) { // -> string
         return ((NSURL *)obj).absoluteString;
@@ -163,7 +163,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         
     } else if ([obj isKindOfClass:UIImage.class]) { // -> data
         if ([klass respondsToSelector:@selector(tc_transformDataFromImage:)]) {
-            return codingObject([klass tc_transformDataFromImage:(UIImage *)obj], style, klass);
+            return codingObject([klass tc_transformDataFromImage:(UIImage *)obj], style, klass, nil);
         }
         return nil;
         
@@ -197,7 +197,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
                 value = (typeof(value))kCFNull;
             }
             if (nil != value) {
-                value = codingObject(value, style, curClass);
+                value = codingObject(value, style, curClass, nil);
             }
             
             if (nil != value) {
@@ -216,7 +216,12 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_JSONObject
 {
-    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, self.class);
+    return [self tc_JSONObjectWithOption:nil];
+}
+
+- (id)tc_JSONObjectWithOption:(TCMappingOption * __nullable)option
+{
+    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, self.class, option);
     if (nil == obj || [obj isKindOfClass:NSArray.class] || [obj isKindOfClass:NSDictionary.class]) {
         return obj;
     }
@@ -248,11 +253,12 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
     return [self.tc_JSONString writeToFile:path atomically:useAuxiliaryFile encoding:NSUTF8StringEncoding error:NULL];
 }
 
+
 #pragma mark - TCPlistMapping
 
 - (id)tc_plistObject
 {
-    NSObject *obj = codingObject(self, kTCPersisentStylePlist, self.class);
+    NSObject *obj = codingObject(self, kTCPersisentStylePlist, self.class, nil);
     if (nil == obj ||
         [obj isKindOfClass:NSString.class] ||
         [obj isKindOfClass:NSNumber.class] ||
