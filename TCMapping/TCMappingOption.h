@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// TODO: add property callback
 @protocol TCMappingTransform <NSObject>
 
 @optional
@@ -52,9 +53,9 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 #pragma mark - TCMapping
 
 /**
- @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
+ @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore or TCMappingOption}
  */
-@property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, id> *nameMapping;
 
 /**
  @brief	format: @{@"propertyName": @"object'class name or Class or `TCTypeMappingBlock`, or yyyy-MM-dd...(-> NSDate)"}
@@ -90,7 +91,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 #pragma mark - TCNSCoding
 
 /**
- @brief	format: @{@"propertyName": @"coding key" or NSNull.null for ignore"}
+ @brief	format: @{@"propertyName": @"coding key" or NSNull.null for ignore}
  */
 @property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameNSCodingMapping;
 
@@ -103,9 +104,9 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 #pragma mark - TCCoding
 
 /**
- @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore}
+ @brief	format: @{@"propertyName": @"json'propertyName" or NSNull.null for ignore or TCMappingOption}
  */
-@property (nullable, nonatomic, strong) NSDictionary<NSString *, NSString *> *nameCodingMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, id> *nameCodingMapping;
 @property (nonatomic, assign) BOOL shouldCodingNSNull; // ignore output NSNull or not
 @property (nonatomic, assign) BOOL codingEmptyDataToNil; // default: YES
 

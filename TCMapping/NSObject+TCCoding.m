@@ -65,7 +65,7 @@ NS_INLINE NSString *mappingForNSValue(NSValue *value)
     return nil;
 }
 
-static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class klass, TCMappingOption *option)
+static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class parentKlass, TCMappingOption *option)
 {
     if (nil == obj ||
         obj == (id)kCFNull ||
@@ -99,7 +99,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             if (strKey.length < 1) {
                 continue;
             }
-            NSObject *value = codingObject(((NSDictionary *)obj)[key], style, klass, nil);
+            NSObject *value = codingObject(((NSDictionary *)obj)[key], style, parentKlass, nil);
             if (nil != value) {
                 dic[strKey] = value;
             }
@@ -118,7 +118,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         
         NSMutableArray *arry = NSMutableArray.array;
         for (id value in (NSArray *)obj) {
-            NSObject *jsonValue = codingObject(value, style, klass, option);
+            NSObject *jsonValue = codingObject(value, style, parentKlass, option);
             if (nil != jsonValue) {
                 [arry addObject:jsonValue];
             }
@@ -126,10 +126,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return emptyNil ? (arry.count > 0 ? arry : nil) : arry;
         
     } else if ([obj isKindOfClass:NSSet.class]) { // -> array
-        return codingObject(((NSSet *)obj).allObjects, style, klass, option);
+        return codingObject(((NSSet *)obj).allObjects, style, parentKlass, option);
         
     } else if ([obj isKindOfClass:NSOrderedSet.class]) { // -> array
-        return codingObject(((NSOrderedSet *)obj).array, style, klass, option);
+        return codingObject(((NSOrderedSet *)obj).array, style, parentKlass, option);
         
     } else if ([obj isKindOfClass:NSURL.class]) { // -> string
         return ((NSURL *)obj).absoluteString;
@@ -149,21 +149,21 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             return obj;
         }
         
-        if ([klass respondsToSelector:@selector(tc_transformHexStringFromData:)]) {
-            return [klass tc_transformHexStringFromData:(NSData *)obj];
+        if ([parentKlass respondsToSelector:@selector(tc_transformHexStringFromData:)]) {
+            return [parentKlass tc_transformHexStringFromData:(NSData *)obj];
         }
         return [(NSData *)obj base64EncodedStringWithOptions:kNilOptions];
         
     } else if ([obj isKindOfClass:UIColor.class]) { // -> string
-        if ([klass respondsToSelector:@selector(tc_transformHexStringFromColor:)]) {
+        if ([parentKlass respondsToSelector:@selector(tc_transformHexStringFromColor:)]) {
             UIColor *color = (typeof(color))obj;
-            return [klass tc_transformHexStringFromColor:color];
+            return [parentKlass tc_transformHexStringFromColor:color];
         }
         return nil;
         
     } else if ([obj isKindOfClass:UIImage.class]) { // -> data
-        if ([klass respondsToSelector:@selector(tc_transformDataFromImage:)]) {
-            return codingObject([klass tc_transformDataFromImage:(UIImage *)obj], style, klass, nil);
+        if ([parentKlass respondsToSelector:@selector(tc_transformDataFromImage:)]) {
+            return codingObject([parentKlass tc_transformDataFromImage:(UIImage *)obj], style, parentKlass, nil);
         }
         return nil;
         
@@ -179,7 +179,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
     } else { // user defined class
         BOOL isNSNullValid = opt.shouldCodingNSNull;
         BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-        NSDictionary<NSString *, NSString *> *nameDic = opt.nameCodingMapping;
+        NSDictionary<NSString *, id> *nameDic = opt.nameCodingMapping;
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, autoMapUntilRoot);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
@@ -196,12 +196,18 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             if (nil == value && isNSNullValid) {
                 value = (typeof(value))kCFNull;
             }
-            if (nil != value) {
-                value = codingObject(value, style, curClass, nil);
+            
+            TCMappingOption *propOpt = nil;
+            if ([nameDic[key] isKindOfClass:TCMappingOption.class]) {
+                propOpt = (typeof(propOpt))nameDic[key];
             }
             
             if (nil != value) {
-                dic[nameDic[key] ?: key] = value;
+                value = codingObject(value, style, curClass, propOpt);
+            }
+            
+            if (nil != value) {
+                dic[nil == propOpt ? (nameDic[key] ?: key) : key] = value;
             }
         }
         
@@ -221,7 +227,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_JSONObjectWithOption:(TCMappingOption * __nullable)option
 {
-    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, self.class, option);
+    NSObject *obj = codingObject(self, kTCPersisentStyleJSON, Nil, option);
     if (nil == obj || [obj isKindOfClass:NSArray.class] || [obj isKindOfClass:NSDictionary.class]) {
         return obj;
     }
@@ -258,7 +264,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_plistObject
 {
-    NSObject *obj = codingObject(self, kTCPersisentStylePlist, self.class, nil);
+    NSObject *obj = codingObject(self, kTCPersisentStylePlist, Nil, nil);
     if (nil == obj ||
         [obj isKindOfClass:NSString.class] ||
         [obj isKindOfClass:NSNumber.class] ||

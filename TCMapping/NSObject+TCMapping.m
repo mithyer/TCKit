@@ -79,14 +79,16 @@ NS_INLINE NSDictionary<NSString *, NSString *> *nameMappingDicFor(NSDictionary *
     // filter out readonly property
     NSMutableDictionary *readOnlyInput = inputMappingDic.mutableCopy;
     [readOnlyInput removeObjectsForKeys:sysWritableProperties];
-    NSDictionary *writableInput = inputMappingDic;
+    NSDictionary *writableInput = nil;
     if (readOnlyInput.count > 0) {
-        writableInput = inputMappingDic.mutableCopy;
-        [(NSMutableDictionary *)writableInput removeObjectsForKeys:readOnlyInput.allKeys];
+        NSMutableDictionary *dic = inputMappingDic.mutableCopy;
+        [dic removeObjectsForKeys:readOnlyInput.allKeys];
+        writableInput = dic;
+    } else {
+        writableInput = inputMappingDic;
     }
     
     NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithObjects:sysWritableProperties forKeys:sysWritableProperties];
-    [tmpDic removeObjectsForKeys:writableInput.allKeys];
     [tmpDic addEntriesFromDictionary:writableInput];
     inputMappingDic = tmpDic;
     
@@ -288,7 +290,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                 break;
             }
                 
-            case kTCEncodingTypeNSData: { // NSData <- Base64 NSString
+            case kTCEncodingTypeNSData: { // NSData <- NSString
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
                         if ([curClass respondsToSelector:@selector(tc_transformDataFromString:)]) {
@@ -405,15 +407,15 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                                    Class curClass);
 
 
-static NSArray *mappingArray(NSArray *value, Class arryKlass, id<TCMappingPersistentContext> context, NSString *property, TCMappingOption *option, TCTypeMappingBlock typeBlock)
+static NSArray *mappingArray(NSArray *value, NSString *property, Class curClass, TCMappingOption *option, TCTypeMappingBlock typeBlock, TCMappingOption *childOption, id<TCMappingPersistentContext> context)
 {
+    if (nil == typeBlock) {
+        return nil;
+    }
     NSMutableArray *arry = NSMutableArray.array;
-    TCMappingMeta *meta = nil;
+    
     for (NSDictionary *dic in value) {
-        Class klass = arryKlass;
-        if (nil != typeBlock) {
-            klass = typeBlock(dic);
-        }
+        Class klass = typeBlock(dic);
         
         if (Nil == klass) {
             continue;
@@ -424,21 +426,19 @@ static NSArray *mappingArray(NSArray *value, Class arryKlass, id<TCMappingPersis
             
         } else if ([dic isKindOfClass:NSDictionary.class]) {
             
-            id obj = tc_mappingWithDictionary(dic, nil, context, nil, klass);
+            id obj = tc_mappingWithDictionary(dic, childOption, context, nil, klass);
             if (nil != obj) {
                 [arry addObject:obj];
             }
         } else {
+            TCMappingMeta *meta = [TCMappingMeta metaForNSClass:klass];
             if (nil == meta) {
-                meta = [TCMappingMeta metaForNSClass:klass];
-                if (nil == meta) {
-                    break;
-                }
-                
-                meta->_propertyName =  property;
+                break;
             }
-
-            id obj = valueForBaseTypeOfProperty(dic, meta, option, klass);
+            
+            meta->_propertyName = property;
+            
+            id obj = valueForBaseTypeOfProperty(dic, meta, option, curClass);
             if (nil != obj) {
                 [arry addObject:obj];
             }
@@ -658,22 +658,12 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         return nil;
     }
     
-    NSDictionary *nameDic = opt.nameMapping;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
+    TCMappingOption *option = opt ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
+    BOOL autoMapUntilRoot = option != nil ? option.autoMapUntilRoot : YES;
     __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, autoMapUntilRoot);
-    
-    if (nameDic.count < 1) {
-        NSDictionary *tmpDic = nameDic;
-        if (tmpDic.count < 1) {
-            tmpDic = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption].nameMapping : nil;
-        }
-        nameDic = nameMappingDicFor(tmpDic, metaDic.allKeys);
-    } else {
-        nameDic = nameMappingDicFor(nameDic, metaDic.allKeys);
-    }
+    NSDictionary<NSString *, id> *nameDic = nameMappingDicFor(option.nameMapping, metaDic.allKeys);
     
     NSObject *obj = target;
-    TCMappingOption *option = opt ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
     BOOL isNSNullValid = option.shouldMappingNSNull;
     NSDictionary *typeDic = option.typeMapping;
 
@@ -688,9 +678,20 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             continue;
         }
         
-        NSObject *value = dataDic[nameDic[property]];
+        NSObject *value = nil;
+        id mapProp = nameDic[property];
+        TCMappingOption *propOpt = nil;
+        if ([mapProp isKindOfClass:TCMappingOption.class]) {
+            propOpt = mapProp;
+        } else {
+            value = dataDic[mapProp];
+        }
         if (nil == value) {
             value = dataDic[property];
+        }
+        
+        if (nil == value || ((id)kCFNull == value && !isNSNullValid)) {
+            continue;
         }
         
         if ([value isKindOfClass:NSSet.class]) {
@@ -701,10 +702,6 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             value = ((NSHashTable *)value).setRepresentation.allObjects;
         } else if ([value isKindOfClass:NSMapTable.class]) {
             value = ((NSMapTable *)value).dictionaryRepresentation;
-        }
-        
-        if (nil == value || ((id)kCFNull == value && !isNSNullValid)) {
-            continue;
         }
         
         NSObject *rawValue = value;
@@ -721,8 +718,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     if (Nil != dicItemClass) {
                         NSMutableDictionary *tmpDic = NSMutableDictionary.dictionary;
                         for (id dicKey in valueDic) {
-                            TCMappingOption *childOpt = [dicItemClass respondsToSelector:@selector(tc_mappingOption)] ? [dicItemClass tc_mappingOption] : nil;
-                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], childOpt, context, nil, dicItemClass);
+                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], propOpt, context, nil, dicItemClass);
                             if (nil != tmpValue) {
                                 tmpDic[dicKey] = tmpValue;
                             }
@@ -745,7 +741,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     } else if ([TCMappingMeta isNSTypeForClass:klass]) {
                         value = nil;
                     } else {
-                        value = tc_mappingWithDictionary(valueDic, nil, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
+                        value = tc_mappingWithDictionary(valueDic, propOpt, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
                     }
                 }
             } else {
@@ -773,7 +769,12 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     }
                     
                     if (Nil != arryItemType || nil != typeBlock) {
-                        value = mappingArray(valueArry, arryItemType, context, property, option, typeBlock);
+                        if (nil == typeBlock) {
+                            typeBlock = ^Class (id value){
+                                return arryItemType;
+                            };
+                        }
+                        value = mappingArray(valueArry, property, curClass, option, typeBlock, propOpt, context);
                     }
                     
                     if (nil != value) {
