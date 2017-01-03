@@ -14,6 +14,8 @@
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIColor.h>
 
+#import "TCMappingOption.h"
+
 
 static Class NSBlockClass(void)
 {
