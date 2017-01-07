@@ -75,7 +75,8 @@
             break;
     }
     
-    return textRect;
+    UIEdgeInsets insets = self.contentEdgeInsets;
+    return UIEdgeInsetsInsetRect(textRect, insets);
 }
 
 - (void)tc_drawTextInRect:(CGRect)rect
@@ -83,8 +84,7 @@
     CGRect fixRect = rect;
     UIEdgeInsets edge = self.contentEdgeInsets;
     if (self.textVerticalAlignment != kTCTextVerticalAlignmentDefault || !UIEdgeInsetsEqualToEdgeInsets(edge, UIEdgeInsetsZero)) {
-        CGRect actualRect = [self textRectForBounds:rect limitedToNumberOfLines:self.numberOfLines];
-        fixRect = UIEdgeInsetsInsetRect(actualRect, edge);
+        fixRect = [self textRectForBounds:rect limitedToNumberOfLines:self.numberOfLines];
     }
     [self tc_drawTextInRect:fixRect];
 }

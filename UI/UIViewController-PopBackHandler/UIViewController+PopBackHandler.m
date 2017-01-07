@@ -30,7 +30,18 @@
     if ([vc respondsToSelector:@selector(tc_navigationWillPopBackController)]) {
         [vc tc_navigationWillPopBackController];
     }
-    return [self tc_popViewControllerAnimated:animated];
+    UIViewController *ctrler = [self tc_popViewControllerAnimated:animated];
+    
+    vc = self.topViewController;
+    if (self.interactivePopGestureRecognizer.enabled && [vc isKindOfClass:UITableViewController.class]) {
+        UITableViewController *tableCtrler = (typeof(tableCtrler))vc;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (tableCtrler.clearsSelectionOnViewWillAppear && nil != tableCtrler.tableView.indexPathForSelectedRow) {
+                [tableCtrler.tableView deselectRowAtIndexPath:tableCtrler.tableView.indexPathForSelectedRow animated:animated];
+            }
+        });
+    }
+    return ctrler;
 }
 
 - (nullable NSArray<__kindof UIViewController *> *)tc_popToViewController:(UIViewController *)viewController animated:(BOOL)animated
