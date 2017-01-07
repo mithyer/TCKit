@@ -17,6 +17,7 @@
 #import "TCAlertController.h"
 #import "UIWindow+TCHelper.h"
 #import "UIScrollView+TCHelper.h"
+#import "UIImageView+TCHelper.h"
 
 
 #endif /* TCUIKit_h */

@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol TCTextFieldHelperDelegate <NSObject>
 
@@ -22,20 +23,22 @@
 @interface UITextField (TCHelper)
 
 @property (nonatomic, assign) NSInteger tc_maxTextLength;
-@property (nonatomic, weak) id<TCTextFieldHelperDelegate> tc_delegate;
+@property (nullable, nonatomic, weak) id<TCTextFieldHelperDelegate> tc_delegate;
 
 @end
 
 @interface UITextField (InputFormat)
 
-@property (nonatomic, copy) NSString *inputFormat;
-@property (nonatomic, copy) NSString *inputText;
+@property (nullable, nonatomic, copy) NSString *inputFormat;
+@property (nullable, nonatomic, copy) NSString *inputText;
 @property (nonatomic, assign) NSInteger numberOfSepecialCharacters;
 
 - (NSString *)generateFormattedTextInRange:(NSRange)range withString:(NSString *)string;
 - (NSString *)formattedString:(NSString *)string;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
 

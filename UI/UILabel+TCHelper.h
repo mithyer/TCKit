@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, TCTextVerticalAlignment) {
     kTCTextVerticalAlignmentDefault = 0,
     kTCTextVerticalAlignmentTop,
@@ -28,12 +30,14 @@ typedef NS_ENUM(NSUInteger, TCTextVerticalAlignment) {
 
 @property (nonatomic, assign) TCTextVerticalAlignment textVerticalAlignment;
 @property (nonatomic, assign) UIEdgeInsets contentEdgeInsets;
-@property (nonatomic, weak) id<TCLabelHelperDelegate> tc_delegate;
+@property (nullable, nonatomic, weak) id<TCLabelHelperDelegate> tc_delegate;
 @property (nonatomic, assign) BOOL copyEnable;
 
 - (void)showMenu:(CGRect)rect;
 
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

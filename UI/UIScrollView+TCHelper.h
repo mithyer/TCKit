@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIScrollView (TCHelper)
 
-@property (nonatomic, copy) BOOL (^tc_touchesShouldCancelInContentViewBlock)(UIView * view, BOOL (^originalBlock)(UIView *view));
+@property (nullable, nonatomic, copy) BOOL (^tc_touchesShouldCancelInContentViewBlock)(UIView * view, BOOL (^originalBlock)(UIView *view));
 
 - (void)delayContentTouches;
 

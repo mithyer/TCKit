@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
     kTCButtonLayoutStyleDefault = 0,
@@ -49,13 +50,15 @@ typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
 - (void)setLayoutSizeNeedChange:(void(^)(CGSize layoutSize))block;
 
 
-- (UIColor *)backgroundColorForState:(UIControlState)state;
-- (void)setBackgroundColor:(UIColor *)color forState:(UIControlState)state;
+- (UIColor * __nullable)backgroundColorForState:(UIControlState)state;
+- (void)setBackgroundColor:(UIColor * __nullable)color forState:(UIControlState)state;
 
-- (UIColor *)borderColorForState:(UIControlState)state;
-- (void)setBorderColor:(UIColor *)color forState:(UIControlState)state;
+- (UIColor * __nullable)borderColorForState:(UIControlState)state;
+- (void)setBorderColor:(UIColor * __nullable)color forState:(UIControlState)state;
 
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

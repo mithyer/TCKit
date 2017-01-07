@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, TCPopupStyle) {
     kTCPopupStyleCenter,
     kTCPopupStyleFromTop,
@@ -27,9 +29,9 @@ typedef NS_ENUM(NSInteger, TCPopupStyle) {
 @property (nonatomic, assign) BOOL shouldShowCloseBtn; // default: YES, only for TCPopupStyleCenter
 @property (nonatomic, assign) BOOL shouldFlexContainerWidth; // default: NO, only for kTCPopupStyleFromTop
 @property (nonatomic, assign) BOOL allowCustomContainerRect; // default: NO
-@property (nonatomic, copy) void(^dismissdBlock)(void);
+@property (nullable, nonatomic, copy) void(^dismissdBlock)(void);
 
-@property (nonatomic, strong) UIColor *maskBackgroundColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+@property (nullable, nonatomic, strong) UIColor *maskBackgroundColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 
 + (BOOL)anyContainerVisible;
 
@@ -42,8 +44,10 @@ typedef NS_ENUM(NSInteger, TCPopupStyle) {
 
 - (BOOL)isVisible;
 
-- (UIImage *)closeImageForState:(UIControlState)state;
+- (nullable UIImage *)closeImageForState:(UIControlState)state;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
