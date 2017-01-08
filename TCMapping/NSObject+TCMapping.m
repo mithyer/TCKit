@@ -625,10 +625,7 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
         return;
     }
     
-    
-    TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_setter || NULL == meta->_getter) {
@@ -659,8 +656,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     }
     
     TCMappingOption *option = opt ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
-    BOOL autoMapUntilRoot = option != nil ? option.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != opt ? opt.autoMapUntilRoot : YES);
     NSDictionary<NSString *, id> *nameDic = nameMappingDicFor(option.nameMapping, metaDic.allKeys);
     
     NSObject *obj = target;

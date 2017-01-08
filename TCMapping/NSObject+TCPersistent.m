@@ -24,8 +24,7 @@
     
     TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
     NSDictionary *nameMapping = opt.nameNSCodingMapping;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         TCEncodingType type = tc_typeForInfo(meta->_info);
@@ -81,8 +80,7 @@
     
     TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
     NSDictionary *nameMapping = opt.nameNSCodingMapping;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (tc_ignorePersistentForInfo(meta->_info) || NULL == meta->_setter) {
@@ -119,8 +117,7 @@
     
     TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
     NSArray<NSString *> *ignoreList = opt.nameCopyIgnore;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_setter || NULL == meta->_getter || tc_ignoreCopyingForInfo(meta->_info) || [ignoreList containsObject:key]) {
@@ -148,9 +145,7 @@
     }
     
     NSUInteger value = 0;
-    TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_getter || meta->_getter == _cmd || meta->_getter == @selector(hash)) {
@@ -186,9 +181,7 @@
         return NO;
     }
     
-    TCMappingOption *opt = [self.class respondsToSelector:@selector(tc_mappingOption)] ? [self.class tc_mappingOption] : nil;
-    BOOL autoMapUntilRoot = opt != nil ? opt.autoMapUntilRoot : YES;
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, autoMapUntilRoot);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_getter) {

@@ -337,12 +337,6 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         return nil;
     }
     
-    BOOL untilRoot = autoMapUntilRoot;
-    TCMappingOption *opt = [klass respondsToSelector:@selector(tc_mappingOption)] ? [klass tc_mappingOption] : nil;
-    if (nil != opt) {
-        untilRoot = opt.autoMapUntilRoot;
-    }
-    
     static NSRecursiveLock *s_recursiveLock = nil;
     static NSMapTable<Class, NSMutableDictionary<NSString *, TCMappingMeta *> *> *s_propertyByClass = nil;
     static NSArray<NSString *> *s_sysProps = nil;
@@ -363,6 +357,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     
     
     [s_recursiveLock lock];
+    
     NSMutableDictionary<NSString *, TCMappingMeta *> *propertyNames = [s_propertyByClass objectForKey:klass];
     if (nil != propertyNames) {
         [s_recursiveLock unlock];
@@ -380,6 +375,14 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
         }
     }
     free(properties);
+    
+    
+    BOOL untilRoot = autoMapUntilRoot;
+    // autoMapUntilRoot 默认为 YES， 所以不能直接继承父类的值
+    TCMappingOption *opt = ([klass methodForSelector:@selector(tc_mappingOption)] != [class_getSuperclass(klass) methodForSelector:@selector(tc_mappingOption)]) ? [klass tc_mappingOption] : nil;
+    if (nil != opt) {
+        untilRoot = opt.autoMapUntilRoot;
+    }
     
     if (untilRoot) {
         [propertyNames addEntriesFromDictionary:tc_propertiesUntilRootClass(class_getSuperclass(klass), untilRoot)];
