@@ -26,6 +26,9 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 
 + (BOOL)tc_swizzle:(SEL)aSelector;
 
++ (BOOL)currentClassRespondToSelector:(SEL)sel;
++ (BOOL)currentClassInstanceRespondToSelector:(SEL)sel;
+
 
 // Selector Utilities
 - (NSInvocation *)invocationWithSelectorAndArguments:(SEL)selector, ...;

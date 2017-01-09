@@ -65,7 +65,7 @@ NS_INLINE NSString *mappingForNSValue(NSValue *value)
     return nil;
 }
 
-static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class parentKlass, TCMappingOption *option, NSMutableArray *recordFlag)
+static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class parentKlass, TCMappingOption *option, NSHashTable *recordFlag)
 {
     if (nil == obj ||
         obj == (id)kCFNull ||
@@ -182,7 +182,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != option ? option.autoMapUntilRoot : YES);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
-        NSMutableArray *record = recordFlag ?: NSMutableArray.array;
+        NSHashTable *record = recordFlag ?: [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality capacity:5];
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
@@ -193,10 +193,9 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             }
             
             NSObject *value = [obj valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:!isNSNullValid];
-            if (value == obj || NSNotFound != [record indexOfObjectIdenticalTo:value]) {
+            if (value == obj || [record containsObject:value]) {
                 continue;
             }
-            
             
             if (nil == value && isNSNullValid) {
                 value = (typeof(value))kCFNull;

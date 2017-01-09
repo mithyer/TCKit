@@ -87,6 +87,27 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
     return tcSwizzleMethod(input, nil, NULL, NULL);
 }
 
++ (BOOL)currentClassRespondToSelector:(SEL)sel
+{
+    NSParameterAssert(sel);
+    
+    if (NULL == sel || ![self respondsToSelector:sel]) {
+        return NO;
+    }
+    
+    return [self methodForSelector:sel] != [class_getSuperclass(self) methodForSelector:sel];
+}
+
++ (BOOL)currentClassInstanceRespondToSelector:(SEL)sel
+{
+    NSParameterAssert(sel);
+    
+    if (NULL == sel || ![self instancesRespondToSelector:sel]) {
+        return NO;
+    }
+    
+    return [self instanceMethodForSelector:sel] != [class_getSuperclass(self) instanceMethodForSelector:sel];
+}
 
 #pragma mark - Selectors
 

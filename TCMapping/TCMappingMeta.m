@@ -15,6 +15,7 @@
 #import <UIKit/UIColor.h>
 
 #import "TCMappingOption.h"
+#import "NSObject+TCUtilities.h"
 
 
 static Class NSBlockClass(void)
@@ -378,8 +379,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
     
     
     BOOL untilRoot = autoMapUntilRoot;
-    // autoMapUntilRoot 默认为 YES， 所以不能直接继承父类的值
-    TCMappingOption *opt = ([klass methodForSelector:@selector(tc_mappingOption)] != [class_getSuperclass(klass) methodForSelector:@selector(tc_mappingOption)]) ? [klass tc_mappingOption] : nil;
+    // autoMapUntilRoot default to YES， can't inherit from super class
+    TCMappingOption *opt = [klass currentClassRespondToSelector:@selector(tc_mappingOption)] ? [klass tc_mappingOption] : nil;
     if (nil != opt) {
         untilRoot = opt.autoMapUntilRoot;
     }

@@ -6,6 +6,8 @@
 //  Copyright © 2017年 dake. All rights reserved.
 //
 
+#if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
+
 #import "UIImageView+TCHelper.h"
 
 @implementation UIImageView (TCHelper)
@@ -28,3 +30,5 @@
 }
 
 @end
+
+#endif
