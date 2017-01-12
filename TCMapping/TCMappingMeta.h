@@ -156,6 +156,8 @@ NS_INLINE BOOL tc_isNoClassObj(TCEncodingType type)
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSDateFormatter *tcISODateFormatter(void);
+
 @interface TCMappingMeta : NSObject
 {
 @public

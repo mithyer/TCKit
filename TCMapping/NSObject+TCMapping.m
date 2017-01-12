@@ -255,8 +255,14 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         ret = [fmt dateFromString:value];
                         fmt.timeZone = nil;
                         fmt.dateFormat = nil;
+                    } else if ([(NSString *)value rangeOfString:@"T"].location != NSNotFound) {
+                        ret = [tcISODateFormatter() dateFromString:value];
+                    } else {
+                        goto DATE_NUMBER;
                     }
-                } else if ([value isKindOfClass:NSNumber.class]) { // NSDate <- timestamp
+                } else if ([value isKindOfClass:NSNumber.class])
+                    DATE_NUMBER:
+                { // NSDate <- timestamp
                     NSTimeInterval timestamp = ((NSNumber *)value).doubleValue;
                     BOOL ignore = timestamp <= 0;
                     if (!ignore && nil != option.secondSince1970) {

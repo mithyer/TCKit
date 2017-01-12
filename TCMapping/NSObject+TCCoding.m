@@ -20,27 +20,6 @@ typedef NS_ENUM(NSInteger, TCPersisentStyle) {
 };
 
 
-/**
- @brief	Get ISO date formatter.
- 
- ISO8601 format example:
- 2010-07-09T16:13:30+12:00
- 2011-01-11T11:11:11+0000
- 2011-01-26T19:06:43Z
- 
- length: 20/24/25
- */
-NS_INLINE NSDateFormatter *tcISODateFormatter(void) {
-    static NSDateFormatter *formatter = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        formatter = [[NSDateFormatter alloc] init];
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    });
-    return formatter;
-}
-
 NS_INLINE NSString *mappingForNSValue(NSValue *value)
 {
     const char *type = value.objCType;
