@@ -448,8 +448,7 @@ static char const kHeaderClassKey;
             return YES;
         }
         return NO;
-    }
-    else {
+    } else {
         self.reloading = NO;
         [self loadMoreViewDataSource];
         return YES;
