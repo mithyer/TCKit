@@ -11,6 +11,29 @@
 
 @implementation NSURL (TCHelper)
 
+- (nullable NSString *)fixedFileExtension
+{
+    if (self.pathExtension.length < 1) {
+        return nil;
+    }
+    
+    // xx.tar.gz
+    NSString *ext = self.lastPathComponent;
+    NSInteger const begin = [ext rangeOfString:@"."].location;
+    if (begin == NSNotFound) {
+        return nil;
+    }
+    ext = [ext substringFromIndex:begin + 1];
+    
+    // xx.jpg?i=xx&j=oo
+    NSInteger const loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;_-( )="]].location;
+    if (loc != NSNotFound) {
+        ext = [ext substringToIndex:loc];
+    }
+    
+    return ext.length < 1 ? nil : ext;
+}
+
 - (NSCharacterSet *)urlComponentAllowedCharacters
 {
     static NSCharacterSet *set = nil;
