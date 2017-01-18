@@ -13,20 +13,26 @@
 
 - (nullable NSString *)fixedFileExtension
 {
-    if (self.pathExtension.length < 1) {
-        return nil;
+    NSString *ext = nil;
+    NSString *query = self.query;
+    if (query.length > 0) {
+        if (self.pathExtension.length < 1) {
+            ext = query;
+        }
+    } else {
+        ext = self.lastPathComponent;
     }
     
     // xx.tar.gz
-    NSString *ext = self.lastPathComponent;
     NSInteger const begin = [ext rangeOfString:@"."].location;
     if (begin == NSNotFound) {
-        return nil;
+        return ext;
     }
+    
     ext = [ext substringFromIndex:begin + 1];
     
-    // xx.jpg?i=xx&j=oo
-    NSInteger const loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;_-( )="]].location;
+    // /Img/?img=1472541690-6672-2065-1.jpg&img_size=, self.pathExtension 为空
+    NSInteger const loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;-( )="]].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
     }
