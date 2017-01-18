@@ -537,7 +537,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 }
 
 // Return a dictionary with class/selectors entries, all the way up to NSObject
-- (NSDictionary *)selectors
+- (NSDictionary *)tc_selectors
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	[dict setObject:[self.class getSelectorListForClass] forKey:NSStringFromClass(self.class)];
@@ -561,7 +561,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 }
 
 // Return a dictionary with class/selectors entries, all the way up to NSObject
-- (NSDictionary *)properties
+- (NSDictionary *)tc_properties
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	[dict setObject:[self.class getPropertyListForClass] forKey:NSStringFromClass(self.class)];
@@ -585,7 +585,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 }
 
 // Return a dictionary with class/selectors entries, all the way up to NSObject
-- (NSDictionary *)ivars
+- (NSDictionary *)tc_ivars
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	[dict setObject:[self.class getIvarListForClass] forKey:NSStringFromClass(self.class)];
@@ -609,7 +609,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 }
 
 // Return a dictionary with class/selectors entries, all the way up to NSObject
-- (NSDictionary *)protocols
+- (NSDictionary *)tc_protocols
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 	[dict setObject:[self.class getProtocolListForClass] forKey:NSStringFromClass(self.class)];
@@ -623,7 +623,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 - (BOOL)hasProperty:(NSString *)propertyName
 {
 	NSMutableSet *set = [NSMutableSet set];
-	NSDictionary *dict = self.properties;
+	NSDictionary *dict = self.tc_properties;
     for (NSArray *properties in dict.allValues) {
 		[set addObjectsFromArray:properties];
     }
@@ -633,7 +633,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 - (BOOL)hasIvar:(NSString *)ivarName
 {
 	NSMutableSet *set = [NSMutableSet set];
-	NSDictionary *dict = self.ivars;
+	NSDictionary *dict = self.tc_ivars;
     for (NSArray *ivars in dict.allValues) {
 		[set addObjectsFromArray:ivars];
     }
@@ -794,7 +794,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
     
     [dump appendFormat:@"%@ ", [[self.superclasses valueForKey:@"description"] componentsJoinedByString:@" : "]];
     
-    NSDictionary *protocols = self.protocols;
+    NSDictionary *protocols = self.tc_protocols;
     NSMutableSet *protocolSet = [NSMutableSet set];
     for (NSString *key in protocols.allKeys) {
         [protocolSet addObjectsFromArray:protocols[key]];

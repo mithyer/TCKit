@@ -58,10 +58,10 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 #ifdef DEBUG
 
 // Access to object essentials for run-time checks. Stored by class in dictionary.
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *selectors;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *properties;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *ivars;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *protocols;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *tc_selectors;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *tc_properties;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *tc_ivars;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSArray<NSString *> *> *tc_protocols;
 
 
 // Return all superclasses of object

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSString (TCHelper)
 
 #ifndef TARGET_IS_EXTENSION
@@ -16,7 +18,7 @@
 
 #endif
 
-- (NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
+- (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
 
 
 #pragma mark - pattern
@@ -30,3 +32,5 @@
 - (BOOL)isValidIDCardNumberOfChina;
 
 @end
+
+NS_ASSUME_NONNULL_END

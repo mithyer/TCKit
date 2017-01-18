@@ -8,13 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSObject (TCHelper)
 
-@property (nonatomic, copy) NSString *humanDescription;
+@property (nullable, nonatomic, copy) NSString *humanDescription;
 
 // file system
-+ (NSString *)defaultPersistentDirectoryInDomain:(NSString *)domain;
-+ (NSString *)defaultCacheDirectoryInDomain:(NSString *)domain;
-+ (NSString *)defaultTmpDirectoryInDomain:(NSString *)domain;
++ (nullable NSString *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain;
++ (nullable NSString *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain;
++ (nullable NSString *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain;
 
 @end
+
+NS_ASSUME_NONNULL_END

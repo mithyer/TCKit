@@ -10,17 +10,22 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIWindow (TCHelper)
 
-+ (UIViewController *)keyWindowTopController;
++ (nullable UIViewController *)keyWindowTopController;
 
-- (UIViewController *)topMostViewController;
+- (nullable UIViewController *)topMostViewController;
 
 #ifdef __IPHONE_7_0
-- (UIViewController *)viewControllerForStatusBarStyle;
-- (UIViewController *)viewControllerForStatusBarHidden;
+- (nullable UIViewController *)viewControllerForStatusBarStyle;
+- (nullable UIViewController *)viewControllerForStatusBarHidden;
 #endif
 
 @end
 
+NS_ASSUME_NONNULL_END
+
 #endif
+

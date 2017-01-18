@@ -11,9 +11,9 @@
 #import <UIKit/UIKit.h>
 
 
-extern NSString *const kTCUIApplicationDelegateChangedNotification;
-
 NS_ASSUME_NONNULL_BEGIN
+
+extern NSString *const kTCUIApplicationDelegateChangedNotification;
 
 @interface UIApplication (TCHelper)
 

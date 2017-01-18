@@ -33,7 +33,7 @@
         }
     }
     
-    return [UIImage imageNamed:launchImage];
+    return nil != launchImage ? [UIImage imageNamed:launchImage] : nil;
 }
 
 - (instancetype)fitToScreenScale

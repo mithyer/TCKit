@@ -89,6 +89,8 @@ typedef NS_ENUM(NSInteger, TCDeviceScreen) {
 };
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIDevice (TCHardware)
 
 - (NSString *)platform;
@@ -103,12 +105,14 @@ typedef NS_ENUM(NSInteger, TCDeviceScreen) {
 - (NSUInteger)totalMemory;
 - (NSUInteger)userMemory;
 
-- (NSNumber *)totalDiskSpace;
-- (NSNumber *)freeDiskSpace;
+- (nullable NSNumber *)totalDiskSpace;
+- (nullable NSNumber *)freeDiskSpace;
 
-- (NSString *)macaddress;
+- (nullable NSString *)macaddress;
 
 - (BOOL)hasRetinaDisplay;
 - (TCDeviceFamily)deviceFamily;
 
 @end
+
+NS_ASSUME_NONNULL_END

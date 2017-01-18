@@ -8,16 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIImage (TCHelper)
 
 // main bundle
-+ (instancetype)imageWithContentsOfName:(NSString *)name;
-+ (instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *)bundle;
++ (nullable instancetype)imageWithContentsOfName:(NSString *)name;
++ (nullable instancetype)imageWithContentsOfName:(NSString *)name inBundle:(NSBundle *__nullable)bundle;
 
-+ (instancetype)launchImage;
++ (nullable instancetype)launchImage;
 
 - (instancetype)fitToScreenScale;
 
 
 
 @end
+
+NS_ASSUME_NONNULL_END

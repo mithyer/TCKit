@@ -95,7 +95,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     char *answer = malloc(size);
     sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
     
-    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+    NSString *results = @(answer);
 
     free(answer);
     return results;
@@ -167,14 +167,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 - (NSNumber *)totalDiskSpace
 {
-    NSDictionary *fattributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
-    return [fattributes objectForKey:NSFileSystemSize];
+    NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
+    return fattributes[NSFileSystemSize];
 }
 
 - (NSNumber *)freeDiskSpace
 {
-    NSDictionary *fattributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
-    return [fattributes objectForKey:NSFileSystemFreeSize];
+    NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
+    return fattributes[NSFileSystemFreeSize];
 }
 
 
