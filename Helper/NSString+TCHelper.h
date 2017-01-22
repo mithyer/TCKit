@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
-
+- (nullable NSString *)fixedFileExtension;
 
 #pragma mark - pattern
 

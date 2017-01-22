@@ -63,6 +63,33 @@
     return returnDictionary;
 }
 
+- (nullable NSString *)fixedFileExtension
+{
+    NSString *ext = self.lastPathComponent;
+
+    // xx.tar.gz
+    NSInteger const begin = [ext rangeOfString:@"."].location;
+    if (begin == NSNotFound) {
+        return ext;
+    }
+    
+    ext = [ext substringFromIndex:begin + 1];
+    
+    // /Img/?img=1472541690-6672-2065-1.jpg&img_size=, self.pathExtension 为空
+    NSInteger const loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;-( )="]].location;
+    if (loc != NSNotFound) {
+        ext = [ext substringToIndex:loc];
+    }
+    
+    NSArray *exts = [ext componentsSeparatedByString:@"."];
+    if (exts.count > 2) {
+        exts = [exts subarrayWithRange:NSMakeRange(exts.count - 2, 2)];
+        ext = [exts componentsJoinedByString:@"."];
+    }
+    
+    return ext.length < 1 ? nil : ext;
+}
+
 
 #pragma mark - pattern
 
