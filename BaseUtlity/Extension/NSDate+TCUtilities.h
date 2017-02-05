@@ -86,6 +86,8 @@ extern NSInteger D_YEAR;
 - (instancetype)dateBySubtractingMinutes:(NSInteger)dMinutes;
 
 // Date extremes
+- (instancetype)dateAtStartOfYear;
+- (instancetype)dateAtStartOfMonth;
 - (instancetype)dateAtStartOfDay;
 - (instancetype)dateAtEndOfDay;
 

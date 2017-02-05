@@ -396,6 +396,27 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
 
 #pragma mark - Extremes
 
+- (instancetype)dateAtStartOfYear
+{
+    NSDateComponents *components = [self.class.currentCalendar components:kComponentFlags fromDate:self];
+    components.month = 1;
+    components.day = 1;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    return [self.class.currentCalendar dateFromComponents:components];
+}
+
+- (instancetype)dateAtStartOfMonth
+{
+    NSDateComponents *components = [self.class.currentCalendar components:kComponentFlags fromDate:self];
+    components.day = 1;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    return [self.class.currentCalendar dateFromComponents:components];
+}
+
 - (instancetype)dateAtStartOfDay
 {
 	NSDateComponents *components = [self.class.currentCalendar components:kComponentFlags fromDate:self];
