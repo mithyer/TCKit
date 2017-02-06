@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 去除标点符号, 空白符, 换行符, 空格
 - (NSString *)clearSymbolAndWhiteString;
 
+- (BOOL)isInteger;
 - (BOOL)isPureNumber;
 - (BOOL)isValidIDCardNumberOfChina;
 

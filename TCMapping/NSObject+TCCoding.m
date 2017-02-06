@@ -60,8 +60,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return nil;
     }
     
-    __unsafe_unretained Class curClass = obj.class;
-    TCMappingOption *opt = option ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
+    TCMappingOption *opt = option ?: ([parentKlass respondsToSelector:@selector(tc_mappingOption)] ? [parentKlass tc_mappingOption] : nil);
     BOOL emptyNil = nil != opt ? opt.codingEmptyDataToNil : YES;
     
     if ([obj isKindOfClass:NSDictionary.class]) {
@@ -117,7 +116,8 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         if (kTCPersisentStylePlist == style) {
             return obj;
         }
-        return [tcISODateFormatter() stringFromDate:(NSDate *)obj];
+        
+        return opt.codingNSDateToIntSeconds ? @((time_t)(((NSDate *)obj).timeIntervalSince1970)) :  [tcISODateFormatter() stringFromDate:(NSDate *)obj];
         
     } else if ([obj isKindOfClass:NSData.class]) { // -> Base64 string
         if (emptyNil && ((NSData *)obj).length < 1) {
@@ -156,6 +156,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return NSStringFromClass((Class)obj);
         
     } else { // user defined class
+        
+        __unsafe_unretained Class curClass = obj.class;
+        TCMappingOption *opt = option ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
+        
         BOOL isNSNullValid = opt.shouldCodingNSNull;
         NSDictionary<NSString *, id> *nameDic = opt.nameCodingMapping;
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != option ? option.autoMapUntilRoot : YES);

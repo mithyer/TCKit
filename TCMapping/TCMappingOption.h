@@ -109,6 +109,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 @property (nullable, nonatomic, strong) NSDictionary<NSString *, id> *nameCodingMapping;
 @property (nonatomic, assign) BOOL shouldCodingNSNull; // ignore output NSNull or not
 @property (nonatomic, assign) BOOL codingEmptyDataToNil; // default: YES
+@property (nonatomic, assign) BOOL codingNSDateToIntSeconds; // default: NO
 
 
 // TODO: hash, equal  ignore

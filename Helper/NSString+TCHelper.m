@@ -119,6 +119,12 @@
 - (BOOL)isPureNumber
 {
     NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
+    return string.length < 1 || [string isEqualToString:@"."];
+}
+
+- (BOOL)isInteger
+{
+    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
     return string.length < 1;
 }
 
