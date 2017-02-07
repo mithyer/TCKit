@@ -115,7 +115,7 @@
 
 - (AFSecurityPolicy *)securityPolicy
 {
-    return _requestManager.securityPolicy;
+    return [AFSecurityPolicy defaultPolicy];
 }
 
 - (AFSecurityPolicy *)innerSecurityPolicy
