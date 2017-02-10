@@ -20,6 +20,9 @@
 {
 @private
     AFHTTPSessionManager *_requestManager;
+    AFJSONRequestSerializer *_jsonSerializer;
+    AFHTTPRequestSerializer *_httpSerializer;
+    
     NSMapTable<id, NSMapTable<id<NSCoding>, id<TCHTTPRequest>> *> *_requestPool;
     NSRecursiveLock *_poolLock;
     
@@ -30,6 +33,7 @@
     
     AFSecurityPolicy *_securityPolicy;
     NSCache *_memCache;
+
 }
 
 + (instancetype)defaultCenter
@@ -271,6 +275,25 @@
             [self generateTaskFor:request polling:YES];
             return YES;
         }
+        
+        BOOL rawJSON = kTCHTTPMethodPostJSON == request.method;
+        if (rawJSON) {
+            if (requestMgr.requestSerializer != _jsonSerializer) {
+                if (nil == _jsonSerializer) {
+                    _jsonSerializer = AFJSONRequestSerializer.serializer;
+                }
+                _httpSerializer = requestMgr.requestSerializer;
+                requestMgr.requestSerializer = _jsonSerializer;
+            }
+        } else {
+            if (requestMgr.requestSerializer != _httpSerializer) {
+                if (nil == _httpSerializer) {
+                    _httpSerializer = AFHTTPRequestSerializer.serializer;
+                }
+                requestMgr.requestSerializer = _httpSerializer;
+            }
+        }
+        
         requestMgr.requestSerializer.timeoutInterval = MAX(self.timeoutInterval, request.timeoutInterval);
         
         // if api need server username and password
@@ -288,10 +311,6 @@
         }
         
         [self generateTaskFor:request polling:NO];
-        
-        for (NSString *httpHeaderField in headerFieldValueDic) {
-            [requestMgr.requestSerializer setValue:nil forHTTPHeaderField:httpHeaderField];
-        }
     }
     
     return YES;
@@ -349,7 +368,7 @@
             [task tc_makePersistentResumeCapable];
             task.tc_resumeIdentifier = request.streamPolicy.downloadIdentifier;
             task.tc_resumeCacheDirectory = request.streamPolicy.downloadResumeCacheDirectory;
-            [self addTask:task toRequest:request];
+            [wSelf addTask:task toRequest:request];
         } forPolicy:request.streamPolicy];
         
     } else {
@@ -393,6 +412,13 @@
         return;
     }
     
+    // if api need add custom value to HTTPHeaderField
+    NSDictionary *headerFieldValueDic = self.customHeaderValue;
+    for (NSString *httpHeaderField in headerFieldValueDic) {
+        NSString *value = headerFieldValueDic[httpHeaderField];
+        [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
+    }
+    
     NSURL *url = [self buildRequestUrlForRequest:request];
     NSParameterAssert(url);
     
@@ -410,15 +436,6 @@
             
         case kTCHTTPMethodPost:
         case kTCHTTPMethodPostJSON: {
-            
-            BOOL rawJSON = kTCHTTPMethodPostJSON == request.method;
-            
-            typeof(requestMgr.requestSerializer) serializer = nil;
-            if (rawJSON && ![requestMgr.requestSerializer isKindOfClass:AFJSONRequestSerializer.class]) {
-                serializer = requestMgr.requestSerializer;
-                requestMgr.requestSerializer = AFJSONRequestSerializer.serializer;
-            }
-            
             if (nil != request.streamPolicy.constructingBodyBlock) {
                 task = [requestMgr POST:url.absoluteString parameters:param constructingBodyWithBlock:request.streamPolicy.constructingBodyBlock progress:^(NSProgress * _Nonnull uploadProgress) {
                     request.streamPolicy.progress = uploadProgress;
@@ -429,11 +446,6 @@
                     request.streamPolicy.progress = uploadProgress;
                 } success:successBlock failure:failureBlock];
             }
-            
-            if (nil != serializer) {
-                requestMgr.requestSerializer = serializer;
-            }
-            
             break;
         }
             
@@ -491,6 +503,11 @@
 
 - (void)addTask:(NSURLSessionTask *)task toRequest:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request
 {
+    AFHTTPSessionManager *requestMgr = self.requestManager;
+    for (NSString *httpHeaderField in requestMgr.requestSerializer.HTTPRequestHeaders) {
+        [requestMgr.requestSerializer setValue:nil forHTTPHeaderField:httpHeaderField];
+    }
+    
     if (nil != task) {
         request.rawResponseObject = nil;
         request.requestTask = task;
@@ -585,10 +602,6 @@
         [_requestPool removeObjectForKey:observer];
         [map.dictionaryRepresentation.allValues makeObjectsPerformSelector:@selector(cancel)];
     }
-    
-//#ifdef DEBUG
-//    NSLog(@"||||------===> request pools: %zd", _requestPool.count);
-//#endif
     
     [_poolLock unlock];
 }
