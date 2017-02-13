@@ -70,7 +70,7 @@
     // xx.tar.gz
     NSInteger const begin = [ext rangeOfString:@"."].location;
     if (begin == NSNotFound) {
-        return ext;
+        return [self hasSuffix:@"/"] ? nil : ext;
     }
     
     ext = [ext substringFromIndex:begin + 1];

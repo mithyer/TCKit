@@ -17,7 +17,7 @@
     if (query.length > 0 && self.pathExtension.length < 1) {
         return query.fixedFileExtension;
     } else {
-        return self.lastPathComponent.fixedFileExtension;
+        return self.fixedFileExtension;
     }
 }
 
