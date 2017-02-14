@@ -105,6 +105,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)totalMemory;
 - (NSUInteger)userMemory;
 
+- (unsigned long long)appUsedMemory;
+- (unsigned long long)appFreeMemory;
+
 - (nullable NSNumber *)totalDiskSpace;
 - (nullable NSNumber *)freeDiskSpace;
 
