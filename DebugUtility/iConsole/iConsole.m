@@ -457,8 +457,9 @@ static void exceptionHandler(NSException *exception)
         self.inputPlaceholderString = @"Enter command...";
         self.logSubmissionEmail = nil;
         
-        self.backgroundColor = UIColor.blackColor;
-        self.textColor = UIColor.whiteColor;
+        self.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.9f];
+        self.textColor = RGB(59, 252, 51);//UIColor.whiteColor;
+        
         
         [[NSUserDefaults standardUserDefaults] synchronize];
         self.log = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"iConsoleLog"]];
@@ -486,6 +487,11 @@ static void exceptionHandler(NSException *exception)
     return self;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -504,11 +510,11 @@ static void exceptionHandler(NSException *exception)
     [self setConsoleText];
     [self.view addSubview:_consoleView];
     
-    self.actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_actionButton setTitle:@"⚙" forState:UIControlStateNormal];
     [_actionButton setTitleColor:_textColor forState:UIControlStateNormal];
     [_actionButton setTitleColor:[_textColor colorWithAlphaComponent:0.5f] forState:UIControlStateHighlighted];
-    _actionButton.titleLabel.font = [_actionButton.titleLabel.font fontWithSize:ACTION_BUTTON_WIDTH];
+//    _actionButton.titleLabel.font = [_actionButton.titleLabel.font fontWithSize:ACTION_BUTTON_WIDTH * 0.5];
     _actionButton.frame = CGRectMake(self.view.frame.size.width - ACTION_BUTTON_WIDTH - 5,
                                      self.view.frame.size.height - EDITFIELD_HEIGHT - 5,
                                      ACTION_BUTTON_WIDTH, EDITFIELD_HEIGHT);
@@ -529,6 +535,7 @@ static void exceptionHandler(NSException *exception)
     _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _inputField.autocorrectionType = UITextAutocorrectionTypeNo;
     _inputField.returnKeyType = UIReturnKeyDone;
+    _inputField.keyboardType = UIKeyboardTypeURL;
     _inputField.enablesReturnKeyAutomatically = NO;
     _inputField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _inputField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
