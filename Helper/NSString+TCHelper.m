@@ -67,16 +67,32 @@
 {
     NSString *ext = self.lastPathComponent;
 
+    BOOL findeDot = NO;
     // xx.tar.gz
-    NSInteger const begin = [ext rangeOfString:@"."].location;
-    if (begin == NSNotFound) {
-        return [self hasSuffix:@"/"] ? nil : ext;
+    NSInteger begin = [ext rangeOfString:@"."].location;
+    findeDot = begin != NSNotFound;
+    if (!findeDot) {
+        begin = [ext rangeOfString:@"?"].location;
+        if (begin == NSNotFound) {
+            return [self hasSuffix:@"/"] ? nil : ext;
+        } else {
+           ext = [ext substringFromIndex:begin + 1]; 
+        }
+    } else {
+        ext = [ext substringFromIndex:begin + 1];
     }
-    
-    ext = [ext substringFromIndex:begin + 1];
-    
-    // /Img/?img=1472541690-6672-2065-1.jpg&img_size=, self.pathExtension 为空
-    NSInteger const loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;-( )="]].location;
+
+    if (!findeDot) {
+        // /Img/?img=1472541690-6672-2065-1.jpg&img_size=, self.pathExtension 为空
+        NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location;
+        if (loc != NSNotFound) {
+            ext = [ext substringFromIndex:loc];
+        } else {
+            return nil;
+        }
+    } 
+
+    NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(="]].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
     }

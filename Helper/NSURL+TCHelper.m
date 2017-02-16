@@ -13,12 +13,7 @@
 
 - (nullable NSString *)fixedFileExtension
 {
-    NSString *query = self.query;
-    if (query.length > 0 && self.pathExtension.length < 1) {
-        return query.fixedFileExtension;
-    } else {
-        return self.absoluteString.fixedFileExtension;
-    }
+    return self.absoluteString.fixedFileExtension;
 }
 
 - (NSCharacterSet *)urlComponentAllowedCharacters
