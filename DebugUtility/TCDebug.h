@@ -20,27 +20,35 @@
 
 // info
 #define DLog_i(fmt, ...) \
+@autoreleasepool { \
 [NSClassFromString(@"iConsole") info:@"%@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__]
+__PRETTY_FUNCTION__,## __VA_ARGS__]; \
+}
 
 // warning
 #define DLog_w(fmt, ...) \
+@autoreleasepool { \
 [NSClassFromString(@"iConsole") warn:@"%@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
  __LINE__, \
- __PRETTY_FUNCTION__,## __VA_ARGS__]
+ __PRETTY_FUNCTION__,## __VA_ARGS__]; \
+}
 
 // error
 #define DLog_e(fmt, ...) \
+@autoreleasepool { \
 [NSClassFromString(@"iConsole") error:@"%@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__]
+__PRETTY_FUNCTION__,## __VA_ARGS__]; \
+}
 
 // crash
 #define DLog_c(fmt, ...) \
+@autoreleasepool { \
 [NSClassFromString(@"iConsole") crash:@"%@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__]
+__PRETTY_FUNCTION__,## __VA_ARGS__]; \
+}
 
 #define DLog DLog_i
 #define RLog DLog
@@ -51,7 +59,9 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 #ifndef NSLog
 #define NSLog(...) \
-[NSClassFromString(@"iConsole") info:__VA_ARGS__]
+@autoreleasepool { \
+[NSClassFromString(@"iConsole") info:__VA_ARGS__]; \
+}
 
 #endif
 
@@ -67,9 +77,11 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 #ifndef TC_IOS_PUBLISH
 
 #define RLog(fmt, ...) \
+@autoreleasepool { \
 [NSClassFromString(@"iConsole") info:@"%@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__]
+__PRETTY_FUNCTION__,## __VA_ARGS__]; \
+}
 
 #ifdef NSLog
 #undef NSLog
@@ -77,7 +89,9 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 #ifndef NSLog
 #define NSLog(...) \
-[NSClassFromString(@"iConsole") info:__VA_ARGS__]
+@autoreleasepool { \
+[NSClassFromString(@"iConsole") info:__VA_ARGS__]; \
+}
 #endif
 
 #else // TC_IOS_PUBLISH
@@ -100,27 +114,35 @@ __PRETTY_FUNCTION__,## __VA_ARGS__]
 
 // info
 #define DLog_i(fmt, ...) \
+@autoreleasepool { \
 NSLog(@"INFO: %@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__)
+__PRETTY_FUNCTION__,## __VA_ARGS__); \
+}
 
 // warning
 #define DLog_w(fmt, ...) \
+@autoreleasepool { \
 NSLog(@"🚸WARNING: %@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__)
+__PRETTY_FUNCTION__,## __VA_ARGS__); \
+}
 
 // error
 #define DLog_e(fmt, ...) \
+@autoreleasepool { \
 NSLog(@"‼️ERROR: %@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__)
+__PRETTY_FUNCTION__,## __VA_ARGS__); \
+}
 
 // crash
 #define DLog_c(fmt, ...) \
+@autoreleasepool { \
 NSLog(@"❌CRASH: %@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__)
+__PRETTY_FUNCTION__,## __VA_ARGS__); \
+}
 
 #define DLog DLog_i
 #define RLog DLog
@@ -137,9 +159,11 @@ __PRETTY_FUNCTION__,## __VA_ARGS__)
 #ifndef TC_IOS_PUBLISH
 
 #define RLog(fmt, ...) \
+@autoreleasepool { \
 NSLog(@"⛔️⛔️⛔️INFO: %@(%d)\n%s: " fmt , @(__FILE__).lastPathComponent, \
 __LINE__, \
-__PRETTY_FUNCTION__,## __VA_ARGS__)
+__PRETTY_FUNCTION__,## __VA_ARGS__); \
+}
 
 //#ifdef NSLog
 //#undef NSLog
