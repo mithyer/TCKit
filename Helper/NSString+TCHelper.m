@@ -97,10 +97,14 @@
         ext = [ext substringToIndex:loc];
     }
     
-    NSArray *exts = [ext componentsSeparatedByString:@"."];
+    NSArray<NSString *> *exts = [ext componentsSeparatedByString:@"."];
     if (exts.count > 2) {
         exts = [exts subarrayWithRange:NSMakeRange(exts.count - 2, 2)];
-        ext = [exts componentsJoinedByString:@"."];
+        if (exts.firstObject.isPureAlphabet) {
+            ext = [exts componentsJoinedByString:@"."];
+        } else {
+            ext = exts.lastObject;
+        }
     }
     
     return ext.length < 1 ? nil : ext;
@@ -141,6 +145,12 @@
 - (BOOL)isInteger
 {
     NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
+    return string.length < 1;
+}
+
+- (BOOL)isPureAlphabet
+{
+    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.letterCharacterSet];
     return string.length < 1;
 }
 

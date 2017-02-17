@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isInteger;
 - (BOOL)isPureNumber;
+- (BOOL)isPureAlphabet;
 - (BOOL)isValidIDCardNumberOfChina;
 
 @end
