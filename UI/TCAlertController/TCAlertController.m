@@ -172,6 +172,12 @@
     return [self initActionSheetWithTitle:title presentCtrler:viewCtrler cancelAction:cancelAction destructiveAction:destructiveAction otherActions:arry];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
+- (UIPopoverPresentationController *)popoverPresentationController
+{
+    return ((UIAlertController *)_alertView).popoverPresentationController;
+}
+#endif
 
 - (void)addAction:(TCAlertAction *)action
 {

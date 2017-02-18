@@ -22,38 +22,44 @@ typedef NS_ENUM(NSInteger, TCAlertControllerStyle) {
 #endif
 };
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface TCAlertController : NSObject
 
 @property (nonatomic, assign) TCAlertControllerStyle preferredStyle;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
+@property (nullable, nonatomic, readonly) UIPopoverPresentationController *popoverPresentationController NS_AVAILABLE_IOS(8_0);
+#endif
 
-- (instancetype)initAlertViewWithTitle:(NSString *)title
-                               message:(NSString *)message
-                         presentCtrler:(UIViewController *)viewCtrler
-                          cancelAction:(TCAlertAction *)cancelAction
-                           otherAction:(TCAlertAction *)otherAction, ... NS_REQUIRES_NIL_TERMINATION;
+- (instancetype)initAlertViewWithTitle:(NSString *__nullable)title
+                               message:(NSString *__nullable)message
+                         presentCtrler:(UIViewController *__nullable)viewCtrler
+                          cancelAction:(TCAlertAction *__nullable)cancelAction
+                           otherAction:(TCAlertAction *__nullable)otherAction, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (instancetype)initActionSheetWithTitle:(NSString *)title
-                           presentCtrler:(UIViewController *)viewCtrler
-                            cancelAction:(TCAlertAction *)cancelAction
-                       destructiveAction:(TCAlertAction *)destructiveAction
-                             otherAction:(TCAlertAction *)otherAction, ... NS_REQUIRES_NIL_TERMINATION;
+- (instancetype)initActionSheetWithTitle:(NSString *__nullable)title
+                           presentCtrler:(UIViewController *__nullable)viewCtrler
+                            cancelAction:(TCAlertAction *__nullable)cancelAction
+                       destructiveAction:(TCAlertAction *__nullable)destructiveAction
+                             otherAction:(TCAlertAction *__nullable)otherAction, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (instancetype)initAlertViewWithTitle:(NSString *)title
-                               message:(NSString *)message
-                         presentCtrler:(UIViewController *)viewCtrler
-                          cancelAction:(TCAlertAction *)cancelAction
-                          otherActions:(NSArray *)otherActions;
+- (instancetype)initAlertViewWithTitle:(NSString *__nullable)title
+                               message:(NSString *__nullable)message
+                         presentCtrler:(UIViewController *__nullable)viewCtrler
+                          cancelAction:(TCAlertAction *__nullable)cancelAction
+                          otherActions:(NSArray *__nullable)otherActions;
 
-- (instancetype)initActionSheetWithTitle:(NSString *)title
-                           presentCtrler:(UIViewController *)viewCtrler
-                            cancelAction:(TCAlertAction *)cancelAction
-                       destructiveAction:(TCAlertAction *)destructiveAction
-                            otherActions:(NSArray *)otherActions;
+- (instancetype)initActionSheetWithTitle:(NSString *__nullable)title
+                           presentCtrler:(UIViewController *__nullable)viewCtrler
+                            cancelAction:(TCAlertAction *__nullable)cancelAction
+                       destructiveAction:(TCAlertAction *__nullable)destructiveAction
+                            otherActions:(NSArray *__nullable)otherActions;
 
 - (void)addAction:(TCAlertAction *)action;
 - (void)show;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

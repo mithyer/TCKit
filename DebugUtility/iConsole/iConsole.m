@@ -155,7 +155,7 @@ static void exceptionHandler(NSException *exception)
 #endif // TC_IOS_DEBUG
     
     __weak typeof(self) wSelf = self;
-    [[[TCAlertController alloc] initActionSheetWithTitle:title
+    TCAlertController *alert = [[TCAlertController alloc] initActionSheetWithTitle:title
                                            presentCtrler:self
                                             cancelAction:[TCAlertAction cancelActionWithTitle:@"Cancel" handler:nil]
                                        destructiveAction:[TCAlertAction destructiveActionWithTitle:@"Clear Log" handler:^(TCAlertAction *action) {
@@ -165,7 +165,11 @@ static void exceptionHandler(NSException *exception)
         if ([wSelf.delegate respondsToSelector:@selector(debugPanelTapped:)]) {
             [wSelf.delegate debugPanelTapped:wSelf];
         }
-    }], nil] show];
+    }], nil];
+                                
+    
+    alert.popoverPresentationController.sourceView = _actionButton;
+    [alert show];
 }
 
 - (CGAffineTransform)viewTransform
@@ -230,8 +234,13 @@ static void exceptionHandler(NSException *exception)
         
         [self findAndResignFirstResponder:[self mainWindow]];
         
-        [iConsole sharedConsole].view.frame = [self offscreenFrame];
-        [[self mainWindow] addSubview:[iConsole sharedConsole].view];
+        self.view.frame = [self offscreenFrame];
+        
+        UIWindow *window = self.mainWindow;
+        
+        [window.rootViewController addChildViewController:self];
+        [window.rootViewController.view addSubview:self.view];
+        [self didMoveToParentViewController:window.rootViewController];
         
         _animating = YES;
         [UIView beginAnimations:nil context:nil];
@@ -260,7 +269,7 @@ static void exceptionHandler(NSException *exception)
         [UIView setAnimationDuration:0.4];
         [UIView setAnimationDelegate:self];
         [UIView setAnimationDidStopSelector:@selector(consoleHidden)];
-        [iConsole sharedConsole].view.frame = [self offscreenFrame];
+        self.view.frame = [self offscreenFrame];
         [UIView commitAnimations];
     }
 }
@@ -268,7 +277,9 @@ static void exceptionHandler(NSException *exception)
 - (void)consoleHidden
 {
     _animating = NO;
-    [[iConsole sharedConsole].view removeFromSuperview];
+    [self willMoveToParentViewController:nil];
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 - (void)rotateView:(NSNotification *)notification
@@ -382,8 +393,8 @@ static void exceptionHandler(NSException *exception)
     }
 }
 
-#pragma mark -
-#pragma mark UITextFieldDelegate methods
+
+#pragma mark - UITextFieldDelegate
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
