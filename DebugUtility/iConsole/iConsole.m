@@ -469,7 +469,7 @@ static void exceptionHandler(NSException *exception)
         self.logSubmissionEmail = nil;
         
         self.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.9f];
-        self.textColor = RGB(59, 252, 51);//UIColor.whiteColor;
+        self.textColor = [UIColor colorWithRed:59/255.0f green:252/255.0f blue:51/255.0f alpha:255/255.0f];
         
         
         [[NSUserDefaults standardUserDefaults] synchronize];
