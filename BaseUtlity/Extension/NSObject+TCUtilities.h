@@ -22,7 +22,7 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 
 @interface NSObject (TCUtilities)
 
-@property (nonatomic, strong) id tcUserInfo;
+@property (nullable, nonatomic, strong) id tcUserInfo;
 
 + (BOOL)tc_swizzle:(SEL)aSelector;
 

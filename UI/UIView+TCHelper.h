@@ -16,6 +16,8 @@
 
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets;
 
+- (nullable UIViewController *)nearestController;
+
 @end
 
 #endif

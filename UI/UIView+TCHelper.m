@@ -47,6 +47,17 @@ static char const kAlignmentRectInsetsKey;
 //    itemView.layer.mask = maskLayer;
 //}
 
+- (UIViewController *)nearestController
+{
+    UIResponder *responder = self.nextResponder;
+
+    if ([responder isKindOfClass:UIViewController.class]) {
+        return (UIViewController *)responder;
+    }
+    
+    return ((UIView *)responder).nearestController;
+}
+
 @end
 
 #endif
