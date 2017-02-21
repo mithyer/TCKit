@@ -540,6 +540,14 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
                                                         options:kNilOptions
                                                           error:error];
     
+    if ([dic isKindOfClass:NSDictionary.class] && [self isSubclassOfClass:NSDictionary.class]) {
+        if ([self isSubclassOfClass:NSMutableDictionary.class]) {
+            __unsafe_unretained Class klass = self;
+            return [klass dictionaryWithDictionary:dic];
+        }
+        return dic;
+    }
+    
     return [self tc_mappingWithDictionary:dic];
 }
 
@@ -554,6 +562,11 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     NSArray *arry = [NSJSONSerialization JSONObjectWithData:data
                                                     options:kNilOptions
                                                       error:error];
+    
+    if ([arry isKindOfClass:NSArray.class] && [self isSubclassOfClass:NSArray.class]) {
+        __unsafe_unretained Class klass = self;
+        return [klass arrayWithArray:arry];
+    }
     
     return [self tc_mappingWithArray:arry];
 }
