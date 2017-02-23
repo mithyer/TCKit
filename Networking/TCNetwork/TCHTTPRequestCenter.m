@@ -683,20 +683,25 @@
     dispatch_block_t block = ^{
         request.state = kTCRequestFinished;
         
-        BOOL isValid = success;
         id<TCHTTPRespValidator> validator = request.responseValidator;
         if (nil != validator) {
-            if (isValid) {
-                if ([validator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
-                    isValid = [validator validateHTTPResponse:request.responseObject fromCache:NO forRequest:request];
-                }
+            
+            BOOL isValid = success;
+            if ([validator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:error:)]) {
+                isValid = [validator validateHTTPResponse:request.responseObject fromCache:NO forRequest:request error:error];
             } else {
-                [validator reset];
-                validator.error = error;
+                if (isValid) {
+                    if ([validator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
+                        isValid = [validator validateHTTPResponse:request.responseObject fromCache:NO forRequest:request];
+                    }
+                } else {
+                    [validator reset];
+                    validator.error = error;
+                }
             }
+            
+            [request requestResponded:isValid clean:YES];
         }
-        
-        [request requestResponded:isValid clean:YES];
     };
     
     if (NSThread.isMainThread) {

@@ -87,9 +87,13 @@
     if (cacheState == kTCCachedRespValid || (force && cacheState != kTCCachedRespNone)) {
         __weak typeof(self) wSelf = self;
         [self.requestAgent cachedResponseForRequest:self result:^(id response) {
-            if (nil != response && nil != wSelf.responseValidator &&
-                [wSelf.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
-                [wSelf.responseValidator validateHTTPResponse:response fromCache:YES forRequest:self];
+            if (nil != response && nil != wSelf.responseValidator) {
+                
+                if ([wSelf.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:error:)]) {
+                    [wSelf.responseValidator validateHTTPResponse:response fromCache:YES forRequest:self error:nil];
+                } else if ([wSelf.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
+                    [wSelf.responseValidator validateHTTPResponse:response fromCache:YES forRequest:self];
+                }
             }
             
             result(response, cacheState);
@@ -104,8 +108,13 @@
 - (void)cacheRequestCallbackWithoutFiring:(BOOL)notFire
 {
     BOOL isValid = YES;
-    if (nil != self.responseValidator && [self.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
-        isValid = [self.responseValidator validateHTTPResponse:self.responseObject fromCache:YES forRequest:self];
+    if (nil != self.responseValidator) {
+        
+        if ([self.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:error:)]) {
+            isValid = [self.responseValidator validateHTTPResponse:self.responseObject fromCache:YES forRequest:self error:nil];
+        } else if ([self.responseValidator respondsToSelector:@selector(validateHTTPResponse:fromCache:forRequest:)]) {
+            isValid = [self.responseValidator validateHTTPResponse:self.responseObject fromCache:YES forRequest:self];
+        }
     }
     
     if (notFire || isValid) {
