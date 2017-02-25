@@ -67,14 +67,13 @@
 {
     NSString *ext = self.lastPathComponent;
 
-    BOOL findeDot = NO;
     // xx.tar.gz
     NSInteger begin = [ext rangeOfString:@"."].location;
-    findeDot = begin != NSNotFound;
+    BOOL findeDot = begin != NSNotFound;
     if (!findeDot) {
-        begin = [ext rangeOfString:@"?"].location;
+        begin = [self rangeOfString:@"?"].location;
         if (begin == NSNotFound) {
-            return [self hasSuffix:@"/"] ? nil : ext;
+            return nil;
         } else {
            ext = [ext substringFromIndex:begin + 1]; 
         }
