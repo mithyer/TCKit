@@ -70,15 +70,15 @@
     // xx.tar.gz
     NSInteger begin = [ext rangeOfString:@"."].location;
     BOOL findeDot = begin != NSNotFound;
-    if (!findeDot) {
+    if (findeDot) {
+        ext = [ext substringFromIndex:begin + 1];
+    } else {
         begin = [self rangeOfString:@"?"].location;
         if (begin == NSNotFound) {
             return nil;
         } else {
-           ext = [ext substringFromIndex:begin + 1]; 
+            ext = [self substringFromIndex:begin + 1];
         }
-    } else {
-        ext = [ext substringFromIndex:begin + 1];
     }
 
     if (!findeDot) {
