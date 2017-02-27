@@ -110,4 +110,7 @@ extern size_t TC_FixedWidth(size_t width);
 
 
 
+- (UIImage *)blurImage;
+- (UIImage *)blurImageWithMinSideSize:(size_t)minSize;
+
 @end

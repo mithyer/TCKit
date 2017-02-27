@@ -12,6 +12,7 @@
 
 #import <ImageIO/ImageIO.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <Accelerate/Accelerate.h>
 
 #if ! __has_feature(objc_arc)
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
@@ -482,6 +483,118 @@ size_t TC_FixedWidth(size_t width)
     }
     
     return data;
+}
+
+- (UIImage *)blurImage
+{
+    size_t w = CGImageGetWidth(self.CGImage);
+    size_t h = CGImageGetHeight(self.CGImage);
+    return [self blurImageWithMinSideSize:MIN(w, h) * 0.5f];
+}
+
+- (UIImage *)blurImageWithMinSideSize:(size_t)minSize
+{
+    if (minSize <= 0) {
+        return nil;
+    }
+    
+    CGImageRef img = self.CGImage;
+    size_t w = CGImageGetWidth(img);
+    size_t h = CGImageGetHeight(img);
+    
+    // scale image to smaller
+    vImage_Buffer saBuffer;
+    if (w > h) {
+        saBuffer.height = minSize;
+        saBuffer.width = (size_t)(minSize * w * 1.0f / h);
+    } else {
+        saBuffer.width = minSize;
+        saBuffer.height = (size_t)(minSize * h * 1.0f / w);
+    }
+    saBuffer.rowBytes = saBuffer.width * 4;
+    saBuffer.data = malloc(saBuffer.rowBytes * saBuffer.height);
+    if (saBuffer.data == NULL) {
+        return nil;
+    }
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef contextRef = CGBitmapContextCreate(saBuffer.data,
+                                                    saBuffer.width,
+                                                    saBuffer.height,
+                                                    8,
+                                                    saBuffer.rowBytes,
+                                                    colorSpace,
+                                                    [UIImage defaultBitMapOrder]);
+    CGContextDrawImage(contextRef, CGRectMake(0, 0, saBuffer.width, saBuffer.height), img);
+    CGContextRelease(contextRef);
+    
+    
+    // fill the top and bottom
+    
+    vImage_Buffer inBuffer;
+    if (saBuffer.width > saBuffer.height) {
+        inBuffer.width = saBuffer.width;
+        inBuffer.height = saBuffer.height / 0.75f;
+    } else {
+        if (saBuffer.height * 0.75f - saBuffer.width < 0) {
+            inBuffer.height = saBuffer.height;
+            inBuffer.width = saBuffer.width;
+        } else {
+            inBuffer.height = saBuffer.height;
+            inBuffer.width = saBuffer.height * 0.75f;
+        }
+    }
+    inBuffer.rowBytes = inBuffer.width * 4;
+    inBuffer.data = malloc(inBuffer.rowBytes * inBuffer.height);
+    if (inBuffer.data == NULL) {
+        CGColorSpaceRelease(colorSpace);
+        return nil;
+    }
+    
+    vImageScale_ARGB8888(&saBuffer, &inBuffer, NULL, kvImageEdgeExtend);
+    free(saBuffer.data), saBuffer.data = NULL;
+    
+    // create vImage_Buffer for output
+    vImage_Buffer outBuffer = inBuffer;
+    outBuffer.data = malloc(outBuffer.rowBytes * outBuffer.height);
+    if (outBuffer.data == NULL) {
+        CGColorSpaceRelease(colorSpace);
+        return nil;
+    }
+    
+    // perform convolution
+    static CGFloat const blur = 1.f;
+    uint32_t boxSize = (uint32_t)(blur * 40);
+    boxSize = boxSize - (boxSize % 2) + 1;
+    
+    vImage_Error error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend)
+    ?: vImageBoxConvolve_ARGB8888(&outBuffer, &inBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend)
+    ?: vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
+    
+    free(inBuffer.data), inBuffer.data = NULL;
+    if (error) {
+        CGColorSpaceRelease(colorSpace);
+        return nil;
+    }
+    
+    CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
+                                             outBuffer.width,
+                                             outBuffer.height,
+                                             8,
+                                             outBuffer.rowBytes,
+                                             colorSpace,
+                                             [UIImage defaultBitMapOrder]);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
+    CGContextRelease(ctx);
+    free(outBuffer.data);
+    
+    UIImage *returnImage = [UIImage imageWithCGImage:imageRef scale:1.0f orientation:self.imageOrientation];
+    CGImageRelease(imageRef);
+    
+
+    return returnImage;
 }
 
 @end
