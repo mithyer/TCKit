@@ -717,7 +717,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             value = ((NSHashTable *)value).setRepresentation.allObjects;
         } else if ([value isKindOfClass:NSMapTable.class]) {
             value = ((NSMapTable *)value).dictionaryRepresentation;
-        }
+        } 
         
         NSObject *rawValue = value;
         
@@ -767,7 +767,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             __unsafe_unretained NSArray *valueArry = (typeof(valueArry))rawValue;
             
             if (valueArry.count > 0) {
-                if (Nil == meta->_typeClass || (type != kTCEncodingTypeNSArray && type != kTCEncodingTypeNSSet)) {
+                if (Nil == meta->_typeClass || (type != kTCEncodingTypeNSArray && type != kTCEncodingTypeNSSet && type != kTCEncodingTypeNSOrderedSet)) {
                     value = nil;
                     
                 } else {
