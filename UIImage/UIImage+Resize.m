@@ -489,7 +489,7 @@ size_t TC_FixedWidth(size_t width)
 {
     size_t w = CGImageGetWidth(self.CGImage);
     size_t h = CGImageGetHeight(self.CGImage);
-    return [self blurImageWithMinSideSize:MIN(w, h) * 0.5f];
+    return [self blurImageWithMinSideSize:(size_t)(MIN(w, h) * 0.5f)];
 }
 
 - (UIImage *)blurImageWithMinSideSize:(size_t)minSize
@@ -534,14 +534,14 @@ size_t TC_FixedWidth(size_t width)
     vImage_Buffer inBuffer;
     if (saBuffer.width > saBuffer.height) {
         inBuffer.width = saBuffer.width;
-        inBuffer.height = saBuffer.height / 0.75f;
+        inBuffer.height = (typeof(inBuffer.height))(saBuffer.height / 0.75f);
     } else {
         if (saBuffer.height * 0.75f - saBuffer.width < 0) {
             inBuffer.height = saBuffer.height;
             inBuffer.width = saBuffer.width;
         } else {
             inBuffer.height = saBuffer.height;
-            inBuffer.width = saBuffer.height * 0.75f;
+            inBuffer.width = (typeof(inBuffer.width))(saBuffer.height * 0.75f);
         }
     }
     inBuffer.rowBytes = inBuffer.width * 4;
