@@ -722,7 +722,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         NSObject *rawValue = value;
         
         TCEncodingType type = tc_typeForInfo(meta->_info);
-        BOOL emptyDicToNSNull = option.mappingEmptyDictionaryToNSNull;
+        BOOL emptyCollectionToNSNull = option.mappingEmptyCollectionToNSNull;
         
         if ([rawValue isKindOfClass:NSDictionary.class]) {
             __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
@@ -760,7 +760,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     }
                 }
             } else {
-                value = emptyDicToNSNull ? (id)kCFNull : nil;
+                value = emptyCollectionToNSNull ? (id)kCFNull : nil;
             }
             
         } else if ([rawValue isKindOfClass:NSArray.class]) {
@@ -804,6 +804,8 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         }
                     }
                 }
+            } else {
+                value = emptyCollectionToNSNull ? (id)kCFNull : nil;
             }
             
         } else if (rawValue != (id)kCFNull) {
