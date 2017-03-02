@@ -54,7 +54,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 
 #pragma mark - Custom value in HTTP Head
 
-@property (nonatomic, strong, nullable) NSDictionary<NSString *, NSString *> *customHeaderValue;
+- (nullable NSDictionary<NSString *, NSString *> *)customHeaderValueForRequest:(id<TCHTTPRequest>)request;
 
 /**
  Sets the "Authorization" HTTP header set in request objects made by the HTTP client to a basic authentication value with Base64-encoded username and password. 

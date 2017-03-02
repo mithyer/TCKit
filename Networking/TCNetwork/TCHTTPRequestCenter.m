@@ -87,6 +87,11 @@
     return self.requestManager.session.configuration;
 }
 
+- (nullable NSDictionary<NSString *, NSString *> *)customHeaderValueForRequest:(id<TCHTTPRequest>)request
+{
+    return nil;
+}
+
 
 - (NSCache *)memCache
 {
@@ -235,7 +240,8 @@
         return NO;
     }
     
-    NSDictionary *headerFieldValueDic = self.customHeaderValue;
+#ifdef DEBUG
+    NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
     for (NSString *httpHeaderField in headerFieldValueDic) {
         NSString *value = headerFieldValueDic[httpHeaderField];
         if (![httpHeaderField isKindOfClass:NSString.class] || ![value isKindOfClass:NSString.class]) {
@@ -249,6 +255,7 @@
             return NO;
         }
     }
+#endif // DEBUG
     
     return YES;
 }
@@ -304,7 +311,7 @@
         }
         
         // if api need add custom value to HTTPHeaderField
-        NSDictionary *headerFieldValueDic = self.customHeaderValue;
+        NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
         for (NSString *httpHeaderField in headerFieldValueDic) {
             NSString *value = headerFieldValueDic[httpHeaderField];
             [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
@@ -413,7 +420,7 @@
     }
     
     // if api need add custom value to HTTPHeaderField
-    NSDictionary *headerFieldValueDic = self.customHeaderValue;
+    NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
     for (NSString *httpHeaderField in headerFieldValueDic) {
         NSString *value = headerFieldValueDic[httpHeaderField];
         [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
