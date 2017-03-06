@@ -828,11 +828,11 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             }
         }
         
-        if (value == (id)kCFNull && !isNSNullValid) {
+        if (value == (id)kCFNull) {
             value = nil;
         }
         
-        if (nil == obj) {
+        if (nil == obj && nil != value) {
             if (nil == context || ![context respondsToSelector:@selector(instanceForPrimaryKey:class:)]) {
                 obj = [[curClass alloc] init];
             } else {
