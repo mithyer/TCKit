@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// FIXME: WTF
+
 @interface UITextField (InputFormat)
 
 @property (nullable, nonatomic, copy) NSString *inputFormat;

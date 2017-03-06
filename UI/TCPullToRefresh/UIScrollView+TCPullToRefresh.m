@@ -57,8 +57,8 @@
 #pragma mark - UIScrollView+TCPullToRefresh
 
 
-static NSInteger const kHeaderTag = 1024 + 2;
-static NSInteger const kFooterTag = 1024 + 3;
+static NSInteger const kHeaderTag = 84211 + 2;
+static NSInteger const kFooterTag = 84211 + 3;
 
 static char const kPullRefreshDelegateKey;
 static char const kLoadTypeKey;
@@ -148,7 +148,10 @@ static char const kHeaderClassKey;
 - (UIView *)refreshHeaderView
 {
     UIView *view = [self viewWithTag:kHeaderTag];
-    return self == view ? nil : view;
+    if ([view conformsToProtocol:@protocol(TCRefreshHeaderInterface)]) {
+        return view;
+    }
+    return nil;
 }
 
 
