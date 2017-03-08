@@ -26,10 +26,12 @@
 - (nullable UIViewController *)tc_popViewControllerAnimated:(BOOL)animated
 {
     UIViewController *vc = self.topViewController;
-    [vc.view endEditing:YES];
     if ([vc respondsToSelector:@selector(tc_navigationWillPopBackController)]) {
         [vc tc_navigationWillPopBackController];
     }
+    
+    [vc.view endEditing:YES];
+    
     UIViewController *ctrler = [self tc_popViewControllerAnimated:animated];
     
     vc = self.topViewController;
