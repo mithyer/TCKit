@@ -35,15 +35,7 @@
 #ifndef TC_IOS_PUBLISH
 
 #import <UIKit/UIKit.h>
-
-
 #import <Availability.h>
-#undef weak_delegate
-#if __has_feature(objc_arc_weak)
-#define weak_delegate weak
-#else
-#define weak_delegate unsafe_unretained
-#endif
 
 
 #define ICONSOLE_ADD_EXCEPTION_HANDLER 1 //add automatic crash logging
@@ -85,7 +77,7 @@ iConsoleLogLevel;
 @property (nonatomic, assign) BOOL saveLogToDisk;
 @property (nonatomic, assign) NSUInteger maxLogItems;
 @property (nonatomic, assign) iConsoleLogLevel logLevel;
-@property (nonatomic, weak_delegate) id<iConsoleDelegate> delegate;
+@property (nonatomic, weak) id<iConsoleDelegate> delegate;
 
 //console activation
 

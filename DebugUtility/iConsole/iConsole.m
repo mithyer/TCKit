@@ -90,7 +90,7 @@ static void exceptionHandler(NSException *exception)
     if ([app.delegate respondsToSelector:@selector(window)]) {
         return app.delegate.window;
     } else {
-        return [app keyWindow];
+        return app.keyWindow;
     }
 }
 
@@ -452,6 +452,11 @@ static void exceptionHandler(NSException *exception)
         
 #if ICONSOLE_ADD_EXCEPTION_HANDLER
         NSSetUncaughtExceptionHandler(&exceptionHandler);
+#endif
+        
+        
+#if defined(TC_IOS_RELEASE) || !(defined(TC_IOS_DEBUG) || defined(TC_IOS_PUBLISH))
+        _isProductionEnv = YES;
 #endif
         
         _enabled = YES;
