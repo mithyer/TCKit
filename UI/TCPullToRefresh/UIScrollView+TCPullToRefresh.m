@@ -367,6 +367,7 @@ static char const kHeaderClassKey;
     self.loadType = kTCRefreshPages;
     
     if (animated && nil != self.refreshHeaderView && self.refreshEnabled) {
+        self.refreshHeaderView.contentInset = self.contentInset;
         [self.refreshHeaderView showRefreshView:self];
     }
 }
