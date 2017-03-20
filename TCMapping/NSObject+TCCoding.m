@@ -276,7 +276,8 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_JSONObject
 {
-    return [NSJSONSerialization JSONObjectWithData:[self dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:NULL];
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    return nil != data ? [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:NULL] : nil;
 }
 
 @end
