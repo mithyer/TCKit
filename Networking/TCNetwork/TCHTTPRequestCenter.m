@@ -511,7 +511,7 @@
 - (void)addTask:(NSURLSessionTask *)task toRequest:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request
 {
     AFHTTPSessionManager *requestMgr = self.requestManager;
-    for (NSString *httpHeaderField in requestMgr.requestSerializer.HTTPRequestHeaders) {
+    for (NSString *httpHeaderField in [self customHeaderValueForRequest:request]) {
         [requestMgr.requestSerializer setValue:nil forHTTPHeaderField:httpHeaderField];
     }
     

@@ -253,9 +253,10 @@
 - (NSString *)description
 {
     NSURLRequest *request = self.requestTask.originalRequest;
-    return [NSString stringWithFormat:@"🌍🌍🌍 %@: %@\n param: %@\n from cache: %@\n response: %@",
+    return [NSString stringWithFormat:@"🌍🌍🌍 %@: %@\nhead:%@\nparam: %@\nfrom cache: %@\nresponse: %@",
             NSStringFromClass(self.class),
             request.URL,
+            request.allHTTPHeaderFields,
             nil != request.HTTPBody ? [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] : nil,
             self.cachePolicy.isDataFromCache ? @"YES" : @"NO",
             self.responseObject];
