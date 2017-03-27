@@ -110,6 +110,8 @@
         } else if (exts[1].length < 1) {
             return exts[0];
         }
+    } else if (ext.isInteger && ![ext isEqualToString:@"323"]) { // text/h323
+        return nil;
     }
     
     return ext.length < 1 ? nil : ext;
