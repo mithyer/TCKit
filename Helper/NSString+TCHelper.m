@@ -91,7 +91,7 @@
         }
     } 
 
-    NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(="]].location;
+    NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(=?"]].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
     }
@@ -103,6 +103,12 @@
             ext = [exts componentsJoinedByString:@"."];
         } else {
             ext = exts.lastObject;
+        }
+    } else if (exts.count == 2) {
+        if (exts[0].length < 1) {
+            return nil;
+        } else if (exts[1].length < 1) {
+            return exts[0];
         }
     }
     
