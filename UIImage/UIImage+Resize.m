@@ -196,9 +196,12 @@ size_t TC_FixedWidth(size_t width)
     
     BOOL horizon = self.size.width / self.size.height >= 1.0f;
 
-    CGFloat scale = [UIScreen mainScreen].scale;
+    CGFloat scale = UIScreen.mainScreen.scale;
     CGSize dstSize = CGSizeMake(size.width * scale, size.height * scale);
     UIImage *img = [self scaleToMinSize:horizon ? dstSize.height : dstSize.width pixelAlign:NO];
+    if (nil == img) {
+        return nil;
+    }
     
     CGSize pixelSize = img.pixelSize;
     CGFloat width = pixelSize.width;
@@ -218,6 +221,7 @@ size_t TC_FixedWidth(size_t width)
         y = 0;
     }
     
+    scale = img.scale;
     return [img cropInRect:CGRectMake(x / scale, y / scale, width / scale, height / scale)];
 }
 
