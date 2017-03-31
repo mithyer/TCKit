@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSDictionary<NSString *, NSArray<NSNumber *> *> *errorFilter;
 
-- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache;
+- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request;
 
 @end
 

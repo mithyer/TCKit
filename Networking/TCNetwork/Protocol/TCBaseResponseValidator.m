@@ -22,7 +22,7 @@
     return nil;
 }
 
-- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache
+- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request
 {
     self.success = nil != obj;
     self.data = obj;
