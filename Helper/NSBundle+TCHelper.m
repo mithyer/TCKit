@@ -10,7 +10,7 @@
 
 @implementation NSBundle (TCHelper)
 
-+ (NSBundle *)hostMainBundle
++ (instancetype)hostMainBundle
 {
     static NSBundle *s_bundle = nil;
     static dispatch_once_t onceToken;
@@ -18,7 +18,10 @@
         s_bundle = NSBundle.mainBundle;
         if ([s_bundle.bundleURL.pathExtension isEqualToString:@"appex"]) {
             NSURL *url = s_bundle.bundleURL.URLByDeletingLastPathComponent.URLByDeletingLastPathComponent;
-            s_bundle = [NSBundle bundleWithURL:url];
+            NSBundle *bundle = [NSBundle bundleWithURL:url];
+            if (nil != bundle) {
+                s_bundle = bundle;
+            }
         }
     });
     return s_bundle;

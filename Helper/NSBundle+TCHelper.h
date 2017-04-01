@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSBundle (TCHelper)
 
-+ (NSBundle *)hostMainBundle;
++ (instancetype)hostMainBundle;
 + (BOOL)isHostMainBundle;
 
 @end
