@@ -429,7 +429,7 @@
     NSURL *url = [self buildRequestUrlForRequest:request];
     NSParameterAssert(url);
     
-    NSDictionary *param = request.parameters;
+    id param = request.parameters;
     if (!request.ignoreParamFilter && [self.urlFilter respondsToSelector:@selector(filteredParamForParam:)]) {
         param = [self.urlFilter filteredParamForParam:param];
     }

@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
     kTCHTTPMethodUnknown = 0,
     
     kTCHTTPMethodGet,
-    kTCHTTPMethodPost,
+    kTCHTTPMethodPost, // form-data, url-encoded
     kTCHTTPMethodPostJSON, // application/json
     kTCHTTPMethodHead,
     kTCHTTPMethodPut,
@@ -84,7 +84,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 @property (nonatomic, copy) NSString *baseUrl; // "http://eet/oo/"
 
 // Auto convert to query string, if requestMethod is GET
-@property (nonatomic, strong) NSDictionary<NSString *, id> *parameters;
+@property (nonatomic, strong) id parameters;
 @property (nonatomic, assign) NSTimeInterval timeoutInterval; // default: 30s
 @property (nonatomic, assign) TCHTTPMethod method;
 

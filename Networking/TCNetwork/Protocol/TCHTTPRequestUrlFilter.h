@@ -12,9 +12,9 @@
 
 @optional
 + (NSString *)filteredUrlForUrl:(NSString *)url;
-+ (NSDictionary *)filteredParamForParam:(NSDictionary *)param;
++ (id/* NSDictionary or NSArray */)filteredParamForParam:(id/* NSDictionary or NSArray */)param;
 
 - (NSString *)filteredUrlForUrl:(NSString *)url;
-- (NSDictionary *)filteredParamForParam:(NSDictionary *)param;
+- (id/* NSDictionary or NSArray */)filteredParamForParam:(id/* NSDictionary or NSArray */)param;
 
 @end
