@@ -28,7 +28,7 @@
 
 @interface UITextView (Placeholder)
 
-@property (nonatomic, readonly) UILabel *placeholderLabel;
+@property (nonatomic, retain, readonly) UILabel *placeholderLabel;
 
 @property (nonatomic, strong) NSString *placeholder;
 @property (nonatomic, strong) UIColor *placeholderColor;

@@ -177,12 +177,14 @@
 
     [self insertSubview:self.placeholderLabel atIndex:0];
 
-    self.placeholderLabel.font = self.font;
+    if (nil == self.placeholderLabel.font) {
+        self.placeholderLabel.font = self.font;
+    }
     self.placeholderLabel.textAlignment = self.textAlignment;
 
     // `NSTextContainer` is available since iOS 7
-    CGFloat lineFragmentPadding;
-    UIEdgeInsets textContainerInset;
+    CGFloat lineFragmentPadding = 0;
+    UIEdgeInsets textContainerInset = UIEdgeInsetsZero;
 
 #pragma deploymate push "ignored-api-availability"
     // iOS 7+
