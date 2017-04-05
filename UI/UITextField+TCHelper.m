@@ -53,7 +53,6 @@
 
 @implementation UITextField (TCHelper)
 
-
 - (id<TCTextFieldHelperDelegate>)tc_delegate
 {
     return [self bk_associatedValueForKey:_cmd];
@@ -254,7 +253,6 @@ static char const kNumberOfSepecialCharactersKey;
     return [NSString stringWithUTF8String:(const char *)outputString];
     
 }
-
 
 @end
 

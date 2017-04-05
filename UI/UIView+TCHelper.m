@@ -22,7 +22,7 @@ static char const kAlignmentRectInsetsKey;
     [self tc_swizzle:@selector(alignmentRectInsets)];
 }
 
-+ (CGFloat)pointWithPixel:(CGFloat)pixel
++ (CGFloat)pointWithPixel:(NSUInteger)pixel
 {
     return pixel / UIScreen.mainScreen.scale;
 }

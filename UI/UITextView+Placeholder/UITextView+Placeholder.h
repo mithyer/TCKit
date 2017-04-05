@@ -26,15 +26,36 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UITextView (Placeholder)
 
-@property (nonatomic, retain, readonly) UILabel *placeholderLabel;
+@property (nullable, nonatomic, retain, readonly) UILabel *placeholderLabel;
 
-@property (nonatomic, strong) NSString *placeholder;
-@property (nonatomic, strong) UIColor *placeholderColor;
+@property (nullable, nonatomic, strong) NSString *placeholder;
+@property (nullable, nonatomic, strong) UIColor *placeholderColor;
 
 + (UIColor *)defaultPlaceholderColor;
 
 @end
+
+
+
+@protocol TCTextViewHelperDelegate <NSObject>
+
+@optional
+- (void)tc_textViewValueChanged:(UITextView *)sender;
+
+@end
+
+
+@interface UITextView (TCHelper)
+
+@property (nonatomic, assign) NSInteger tc_maxTextLength;
+@property (nullable, nonatomic, weak) id<TCTextViewHelperDelegate> tc_delegate;
+
+@end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -18,6 +18,6 @@
 #import "UIWindow+TCHelper.h"
 #import "UIScrollView+TCHelper.h"
 #import "UIImageView+TCHelper.h"
-
+#import "UITextView+Placeholder.h"
 
 #endif /* TCUIKit_h */

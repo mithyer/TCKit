@@ -12,7 +12,7 @@
 
 @interface UIView (TCHelper)
 
-+ (CGFloat)pointWithPixel:(CGFloat)pixel;
++ (CGFloat)pointWithPixel:(NSUInteger)pixel;
 
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets;
 

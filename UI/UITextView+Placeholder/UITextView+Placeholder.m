@@ -26,6 +26,7 @@
 
 #import <objc/runtime.h>
 #import "UITextView+Placeholder.h"
+#import "NSObject+TCUtilities.h"
 
 @implementation UITextView (Placeholder)
 
@@ -230,6 +231,94 @@
     return YES;
 }
 #endif
+
+@end
+
+
+
+@interface TCTextViewTarget : NSObject
+
+- (void)textViewEditChanged:(NSNotification *)note;
+
+@end
+
+
+@implementation TCTextViewTarget
+
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)textViewEditChanged:(NSNotification *)note
+{
+    UITextView *textView = note.object;
+    NSString *toBeString = textView.text;
+    UITextRange *selectedRange = textView.markedTextRange;
+    // check highlight selection position
+    UITextPosition *position = nil;
+    if (nil != selectedRange) {
+        position = [textView positionFromPosition:selectedRange.start offset:0];
+    }
+    // no highlight selection
+    if (nil == position) {
+        NSInteger maxLength = textView.tc_maxTextLength;
+        
+        if (maxLength >= 0 && toBeString.length > maxLength) {
+            NSRange range = [toBeString rangeOfComposedCharacterSequenceAtIndex:maxLength];
+            textView.text = [toBeString substringToIndex:range.location == NSNotFound ? maxLength : range.location];
+        }
+    } else {
+    }
+    
+    id<TCTextViewHelperDelegate> tc_delegate = textView.tc_delegate;
+    if (nil != tc_delegate && [tc_delegate respondsToSelector:@selector(tc_textViewValueChanged:)]) {
+        [tc_delegate tc_textViewValueChanged:textView];
+    }
+}
+
+@end
+
+
+@implementation UITextView (TCHelper)
+
+- (id<TCTextViewHelperDelegate>)tc_delegate
+{
+    return [self bk_associatedValueForKey:_cmd];
+}
+
+- (void)setTc_delegate:(id<TCTextViewHelperDelegate>)tc_delegate
+{
+    [self bk_weaklyAssociateValue:tc_delegate withKey:@selector(tc_delegate)];
+
+    
+    TCTextViewTarget *target = objc_getAssociatedObject(self, @selector(setTc_maxTextLength:));
+    if (nil == target) {
+        target = [[TCTextViewTarget alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:target selector:@selector(textViewEditChanged:) name:UITextViewTextDidChangeNotification object:self];
+        objc_setAssociatedObject(self, @selector(setTc_maxTextLength:), target, OBJC_ASSOCIATION_RETAIN);
+    }
+}
+
+
+- (NSInteger)tc_maxTextLength
+{
+    NSNumber *value = objc_getAssociatedObject(self, _cmd);
+    return nil == value ? -1 : value.integerValue;
+}
+
+- (void)setTc_maxTextLength:(NSInteger)tc_maxTextLength
+{
+    objc_setAssociatedObject(self, @selector(tc_maxTextLength), @(tc_maxTextLength), OBJC_ASSOCIATION_RETAIN);
+    
+    TCTextViewTarget *target = objc_getAssociatedObject(self, _cmd);
+    if (nil == target) {
+        target = [[TCTextViewTarget alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:target selector:@selector(textViewEditChanged:) name:UITextViewTextDidChangeNotification object:self];
+        objc_setAssociatedObject(self, _cmd, target, OBJC_ASSOCIATION_RETAIN);
+    }
+}
 
 @end
 
