@@ -19,6 +19,7 @@
 
 @dynamic isCancelled;
 @synthesize batchRequests = _batchRequests;
+@synthesize continueAfterSubRequestFailed = _continueAfterSubRequestFailed;
 
 
 + (instancetype)requestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests
@@ -128,11 +129,12 @@
 - (void)processRequest:(id<TCHTTPRequest>)request success:(BOOL)success
 {
     self.finishDic[@((NSUInteger)request)] = @(success);
-    if (success) {
-        if (self.allRequestFinished) {
+    if (success || self.continueAfterSubRequestFailed) {
+        BOOL allSuccess = NO;
+        if ([self allRequestFinished:&allSuccess]) {
             // called in next runloop to avoid resultBlock = nil of sub request;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self requestCallback:YES];
+                [self requestCallback:allSuccess];
             });
         }
     } else {
@@ -147,16 +149,26 @@
     [self requestResponded:isValid clean:YES];
 }
 
-- (BOOL)allRequestFinished
+- (BOOL)allRequestFinished:(BOOL *)success
 {
+    BOOL suc = NO;
     BOOL finished = YES;
     for (TCHTTPRequest *request in self.batchRequests) {
         NSNumber *res = self.finishDic[@((NSUInteger)request)];
-        if (nil == res || !res.boolValue) {
+        if (nil == res) {
             finished = NO;
             break;
         }
+        
+        suc = suc && res.boolValue;
     }
+    
+    suc = suc && finished;
+    
+    if (NULL != success) {
+        *success = suc;
+    }
+    
     return finished;
 }
 

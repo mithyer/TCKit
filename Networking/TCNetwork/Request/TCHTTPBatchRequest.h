@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPBatchRequest : TCHTTPRequest
 
 @property (nonatomic, copy) NSArray<id<TCHTTPRequest>> *batchRequests;
+@property (nonatomic, assign) BOOL continueAfterSubRequestFailed;
 
 + (instancetype)requestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 - (instancetype)initWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;

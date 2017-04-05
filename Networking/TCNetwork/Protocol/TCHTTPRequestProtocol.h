@@ -137,6 +137,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 #pragma mark - Batch
 
 @property (nonatomic, copy, readonly) NSArray<id<TCHTTPRequest>> *batchRequests;
+@property (nonatomic, assign) BOOL continueAfterSubRequestFailed;
 
 @end
 
