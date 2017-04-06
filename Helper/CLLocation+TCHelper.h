@@ -8,6 +8,8 @@
 
 #import <CoreLocation/CoreLocation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CLLocation (TCHelper)
 
 /**
@@ -83,3 +85,5 @@
 + (CLLocationCoordinate2D)precision100mFloor:(CLLocationCoordinate2D)location;
 
 @end
+
+NS_ASSUME_NONNULL_END

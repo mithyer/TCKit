@@ -8,26 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSTimer (TCHelper)
 
 @property (nonatomic, assign) NSUInteger executeCount;
 @property (nonatomic, assign, readonly) NSUInteger index;
 
-@property (nonatomic, copy) void (^executeBlock)(NSTimer *timer);
-@property (nonatomic, copy) void (^completeBlock)(NSTimer *timer);
+@property (nullable, nonatomic, copy) void (^executeBlock)(NSTimer *timer);
+@property (nullable, nonatomic, copy) void (^completeBlock)(NSTimer *timer);
 
 + (instancetype)scheduledTimerWithTimeInterval:(NSTimeInterval)timeInterval
-                                  executeBlock:(void (^)(NSTimer *timer))executeBlock
-                                 completeBlock:(void (^)(NSTimer *timer))completeBlock
+                                  executeBlock:(void (^__nullable)(NSTimer *timer))executeBlock
+                                 completeBlock:(void (^__nullable)(NSTimer *timer))completeBlock
                                   executeCount:(NSUInteger)executeCount;
 
 + (instancetype)timerWithTimeInterval:(NSTimeInterval)timeInterval
-                         executeBlock:(void (^)(NSTimer *timer))executeBlock
-                        completeBlock:(void (^)(NSTimer *timer))completeBlock
+                         executeBlock:(void (^__nullable)(NSTimer *timer))executeBlock
+                        completeBlock:(void (^__nullable)(NSTimer *timer))completeBlock
                          executeCount:(NSUInteger)executeCount;
 
 - (void)tc_invalidate;
 
-
-
 @end
+
+
+NS_ASSUME_NONNULL_END

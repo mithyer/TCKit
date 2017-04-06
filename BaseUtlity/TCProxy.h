@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TCProxy : NSProxy
 
 @property (nonatomic, weak) id origin;
@@ -17,3 +19,5 @@
 - (instancetype)initWithOrigin:(id)origin target:(id)target;
 
 @end
+
+NS_ASSUME_NONNULL_END

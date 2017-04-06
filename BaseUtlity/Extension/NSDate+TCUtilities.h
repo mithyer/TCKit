@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSInteger D_MINUTE;
 extern NSInteger D_HOUR;
 extern NSInteger D_DAY;
@@ -114,3 +116,5 @@ extern NSInteger D_YEAR;
 @property (nonatomic, readonly) NSInteger year;
 
 @end
+
+NS_ASSUME_NONNULL_END

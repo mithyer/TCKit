@@ -44,6 +44,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Color Space
 extern CGColorSpaceRef tcDeviceRGBSpace(void);
 extern CGColorSpaceRef tcDeviceGraySpace(void);
@@ -54,7 +56,7 @@ extern UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat percent);
 @interface UIColor (TCUtilities)
 
 #pragma mark - Color Wheel
-+ (UIImage *)colorWheelOfSize:(CGFloat)side border:(BOOL)yorn;
++ (nullable UIImage *)colorWheelOfSize:(CGFloat)side border:(BOOL)yorn;
 
 #pragma mark - Color Space
 + (NSString *)colorSpaceString:(CGColorSpaceModel)model;
@@ -65,10 +67,10 @@ extern UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat percent);
 @property (nonatomic, readonly) BOOL usesRGBColorspace;
 
 #pragma mark - Color Conversion
-+ (void)hue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)v toRed:(CGFloat *)pR green:(CGFloat *)pG blue:(CGFloat *)pB;
-+ (void)red:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b toHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV;
-extern void tcRGB2YUV_f(CGFloat r, CGFloat g, CGFloat b, CGFloat *y, CGFloat *u, CGFloat *v);
-extern void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloat *b);
++ (void)hue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)v toRed:(CGFloat *__nullable)pR green:(CGFloat *__nullable)pG blue:(CGFloat *__nullable)pB;
++ (void)red:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b toHue:(CGFloat *__nullable)pH saturation:(CGFloat *__nullable)pS brightness:(CGFloat *__nullable)pV;
+extern void tcRGB2YUV_f(CGFloat r, CGFloat g, CGFloat b, CGFloat *__nullable y, CGFloat *__nullable u, CGFloat *__nullable v);
+extern void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *__nullable r, CGFloat *__nullable g, CGFloat *__nullable b);
 
 //  public domain functions by Darel Rex Finley, 2006
 extern void tcRGBtoHSP(CGFloat  R, CGFloat  G, CGFloat  B, CGFloat *H, CGFloat *S, CGFloat *P);
@@ -89,7 +91,7 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 @property (nonatomic, readonly) CGFloat premultipliedBlue;
 
 + (UIColor *)colorWithCyan:(CGFloat)c magenta:(CGFloat)m yellow:(CGFloat)y black:(CGFloat)k;
-- (void)toC:(CGFloat *)cyan toM:(CGFloat *)magenta toY:(CGFloat *)yellow toK:(CGFloat *)black;
+- (void)toC:(CGFloat *__nullable)cyan toM:(CGFloat *__nullable)magenta toY:(CGFloat *__nullable)yellow toK:(CGFloat *__nullable)black;
 @property (nonatomic, readonly) CGFloat cyanChannel;
 @property (nonatomic, readonly) CGFloat magentaChannel;
 @property (nonatomic, readonly) CGFloat yellowChannel;
@@ -117,7 +119,7 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 @property (nonatomic, readonly) uint32_t argbHex;
 
 // @[@(r), @(g), @(b), @(a)]
-- (NSArray<NSNumber *> *)arrayFromRGBAComponents;
+- (nullable NSArray<NSNumber *> *)arrayFromRGBAComponents;
 
 // Return a grey-scale representation of the color
 - (instancetype)colorByLuminanceMapping;
@@ -153,22 +155,22 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 
 #pragma mark - Math
 // Arithmetic operations on the color
-- (instancetype)colorByMultiplyingByRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (instancetype)colorByAddingRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (instancetype)colorByLighteningToRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (instancetype)colorByDarkeningToRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (nullable instancetype)colorByMultiplyingByRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (nullable instancetype)colorByAddingRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (nullable instancetype)colorByLighteningToRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (nullable instancetype)colorByDarkeningToRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 
-- (instancetype)colorByMultiplyingBy:(CGFloat)f;
-- (instancetype)colorByAdding:(CGFloat)f;
-- (instancetype)colorByLighteningTo:(CGFloat)f;
-- (instancetype)colorByDarkeningTo:(CGFloat)f;
+- (nullable instancetype)colorByMultiplyingBy:(CGFloat)f;
+- (nullable instancetype)colorByAdding:(CGFloat)f;
+- (nullable instancetype)colorByLighteningTo:(CGFloat)f;
+- (nullable instancetype)colorByDarkeningTo:(CGFloat)f;
 
-- (instancetype)colorByMultiplyingByColor:(UIColor *)color;
-- (instancetype)colorByAddingColor:(UIColor *)color;
-- (instancetype)colorByLighteningToColor:(UIColor *)color;
-- (instancetype)colorByDarkeningToColor:(UIColor *)color;
+- (nullable instancetype)colorByMultiplyingByColor:(UIColor *)color;
+- (nullable instancetype)colorByAddingColor:(UIColor *)color;
+- (nullable instancetype)colorByLighteningToColor:(UIColor *)color;
+- (nullable instancetype)colorByDarkeningToColor:(UIColor *)color;
 
-- (instancetype)colorByInterpolatingToColor:(UIColor *)color byFraction:(CGFloat)fraction;
+- (nullable instancetype)colorByInterpolatingToColor:(UIColor *)color byFraction:(CGFloat)fraction;
 
 - (instancetype)colorWithBrightness:(CGFloat)brightness;
 - (instancetype)colorWithSaturation:(CGFloat)saturation;
@@ -184,22 +186,22 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 
 #pragma mark - Strings
 // String support
-@property (nonatomic, readonly) NSString *stringValue;
+@property (nullable, nonatomic, readonly) NSString *stringValue;
 // "12345FE8"
-@property (nonatomic, readonly) NSString *rgbaHexStringValue;
-@property (nonatomic, readonly) NSString *argbHexStringValue;
+@property (nullable, nonatomic, readonly) NSString *rgbaHexStringValue;
+@property (nullable, nonatomic, readonly) NSString *argbHexStringValue;
 @property (nonatomic, readonly) NSString *valueString;
 // {r, g, b, a} --> {0.3, 1, 0.5, 1}
-+ (instancetype)colorWithString:(NSString *)string;
++ (nullable instancetype)colorWithString:(NSString *)string;
 // "0x65ce00" or "#0x65ce00" or "0x65ce00" or "#0x65ce00"
-+ (instancetype)colorWithRGBHexString:(NSString *)stringToConvert;
-+ (instancetype)colorWithRGBHex:(uint32_t)hex;
++ (nullable instancetype)colorWithRGBHexString:(NSString *)stringToConvert;
++ (nullable instancetype)colorWithRGBHex:(uint32_t)hex;
 
 // "0xff65ce00" or "#0xff65ce00" or "ff65ce00" or "#ff65ce00"
-+ (instancetype)colorWithARGBHexString:(NSString *)stringToConvert;
-+ (instancetype)colorWithRGBAHexString:(NSString *)stringToConvert;
-+ (instancetype)colorWithARGBHex:(uint32_t)hex;
-+ (instancetype)colorWithRGBAHex:(uint32_t)hex;
++ (nullable instancetype)colorWithARGBHexString:(NSString *)stringToConvert;
++ (nullable instancetype)colorWithRGBAHexString:(NSString *)stringToConvert;
++ (nullable instancetype)colorWithARGBHex:(uint32_t)hex;
++ (nullable instancetype)colorWithRGBAHex:(uint32_t)hex;
 
 #pragma mark - Temperature
 // Temperature support -- preliminary
@@ -217,7 +219,7 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 
 @interface UIImage (UIColor_Expanded)
 
-@property (nonatomic, readonly) CGColorSpaceRef colorSpace;
+@property (nullable, nonatomic, readonly) CGColorSpaceRef colorSpace;
 @property (nonatomic, readonly) CGColorSpaceModel colorSpaceModel;
 @property (nonatomic, readonly) NSString *colorSpaceString;
 
@@ -250,3 +252,6 @@ NS_INLINE UIColor *ARGBHex(uint32_t hex)
 {
     return [UIColor colorWithARGBHex:hex];
 }
+
+
+NS_ASSUME_NONNULL_END

@@ -6,12 +6,12 @@
 
 #import <Foundation/Foundation.h>
 
-
-typedef id (^MapBlock)(id object);
-typedef BOOL (^TestingBlock)(id object);
-
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSArray<ObjectType> (TCUtilities)
+
+typedef id _Nullable (^MapBlock)(ObjectType object);
+typedef BOOL (^TestingBlock)(ObjectType object);
 
 // Utility
 @property (nonatomic, strong, readonly) NSArray<ObjectType> *reversed;
@@ -22,7 +22,7 @@ typedef BOOL (^TestingBlock)(id object);
 // Setification
 @property (nonatomic, strong, readonly) NSArray<ObjectType> *uniqueElements;
 
-- (id)topObject;
+- (ObjectType)topObject;
 
 - (instancetype)unionWithArray:(NSArray<ObjectType> *)anArray;
 - (instancetype)intersectionWithArray:(NSArray<ObjectType> *)anArray;
@@ -30,9 +30,9 @@ typedef BOOL (^TestingBlock)(id object);
 
 
 // Lisp
-- (instancetype)map:(MapBlock)aBlock;
-- (instancetype)collect:(TestingBlock)aBlock;
-- (instancetype)reject:(TestingBlock)aBlock;
+- (nullable instancetype)map:(MapBlock)aBlock;
+- (nullable instancetype)collect:(TestingBlock)aBlock;
+- (nullable instancetype)reject:(TestingBlock)aBlock;
 
 @end
 
@@ -42,12 +42,13 @@ typedef BOOL (^TestingBlock)(id object);
 
 @end
 
-@interface NSMutableArray (TC_StackAndQueueExtensions)
+@interface NSMutableArray<ObjectType> (TC_StackAndQueueExtensions)
 
-- (id)popObject;
-- (id)pullObject;
-- (instancetype)pushObject:(id)object;
-- (instancetype)pushObjects:(id)object, ...;
+- (nullable ObjectType)popObject;
+- (nullable ObjectType)pullObject;
+- (instancetype)pushObject:(ObjectType)object;
+- (instancetype)pushObjects:(ObjectType)object, ...;
 
 @end
 
+NS_ASSUME_NONNULL_END
