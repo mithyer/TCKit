@@ -51,7 +51,7 @@
 
 - (instancetype)uniqueElements
 {
-    return [NSOrderedSet orderedSetWithArray:self].array.copy;
+    return [NSOrderedSet orderedSetWithArray:self].array;
 }
 
 - (instancetype)unionWithArray:(NSArray *)anArray
