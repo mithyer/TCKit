@@ -22,11 +22,11 @@
     return nil;
 }
 
-- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request
+- (BOOL)validateHTTPResponse:(id)obj fromCache:(BOOL)fromCache forRequest:(id<TCHTTPRequest>)request error:(NSError *)error
 {
-    self.success = nil != obj;
+    self.success = nil == error && nil != obj;
     self.data = obj;
-    self.error = nil;
+    self.error = error;
     
     return self.success;
 }
