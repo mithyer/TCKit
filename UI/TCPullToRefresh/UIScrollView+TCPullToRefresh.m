@@ -376,6 +376,9 @@ static char const kHeaderClassKey;
 {
     if (self.reloading) {
         if (nil != self.refreshHeaderView && self.refreshEnabled) {
+            UIEdgeInsets contentInset = self.contentInset;
+            contentInset.top = 0;
+            self.refreshHeaderView.contentInset = contentInset;
             [self.refreshHeaderView tcRefreshScrollViewDataSourceDidFinishedLoading:self];
         }
     }
@@ -412,8 +415,7 @@ static char const kHeaderClassKey;
             block();
         }
         [self doneLoadingViewData];
-    }
-    else if (kTCLoadNextPage == self.loadType) {
+    } else if (kTCLoadNextPage == self.loadType) {
         if (nil != block) {
             block();
         }
