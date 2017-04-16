@@ -39,6 +39,8 @@ typedef BOOL (^TestingBlock)(ObjectType object);
 @interface NSMutableArray<ObjectType> (TCUtilities)
 - (instancetype)reverse;
 //- (NSMutableArray *) scramble;
+- (void)replaceObjectIdenticalTo:(id)obj withObject:(id)anObject;
+
 
 @end
 

@@ -146,6 +146,17 @@
     return self;
 }
 
+- (void)replaceObjectIdenticalTo:(id)obj withObject:(id)anObject
+{
+    NSIndexSet *indexes = [self indexesOfObjectsPassingTest:^BOOL(id  _Nonnull value, NSUInteger idx, BOOL * _Nonnull stop) {
+        return obj == value;
+    }];
+    
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+        [self replaceObjectAtIndex:idx withObject:anObject];
+    }];
+}
+
 //// Make sure to run srandom([NSDate.date timeIntervalSince1970]); or similar somewhere in your program
 //- (NSMutableArray *) scramble
 //{
