@@ -7,7 +7,7 @@
 //
 
 
-#if !defined(TC_IOS_DEBUG) && (defined(DEBUG) || defined(_DEBUG) || defined(__DEBUG))
+#if !defined(TC_IOS_DEBUG) && !defined(TC_IOS_RELEASE) && !defined(TC_IOS_PUBLISH) && (defined(DEBUG) || defined(_DEBUG) || defined(__DEBUG))
 #define TC_IOS_DEBUG
 #endif
 
