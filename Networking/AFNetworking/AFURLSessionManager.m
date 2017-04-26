@@ -984,6 +984,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
                 }
             } else {
                 disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                NSLog(@"%@ SSL failed", challenge.protectionSpace.host);
             }
         } else {
             disposition = NSURLSessionAuthChallengePerformDefaultHandling;
