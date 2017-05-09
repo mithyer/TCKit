@@ -186,6 +186,7 @@
             reqMngr = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:_sessionConfig];
             reqMngr.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
             AFSecurityPolicy *policy = self.innerSecurityPolicy;
+            _httpSerializer = reqMngr.requestSerializer;
             if (nil != policy) {
                 reqMngr.securityPolicy = policy;
             }
@@ -288,12 +289,13 @@
             if (requestMgr.requestSerializer != _jsonSerializer) {
                 if (nil == _jsonSerializer) {
                     _jsonSerializer = AFJSONRequestSerializer.serializer;
+                    _jsonSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
                 }
                 _httpSerializer = requestMgr.requestSerializer;
                 requestMgr.requestSerializer = _jsonSerializer;
             }
         } else {
-            if (requestMgr.requestSerializer != _httpSerializer) {
+            if (![requestMgr.requestSerializer isMemberOfClass:AFHTTPRequestSerializer.class]) {
                 if (nil == _httpSerializer) {
                     _httpSerializer = AFHTTPRequestSerializer.serializer;
                 }
