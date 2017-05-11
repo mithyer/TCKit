@@ -97,7 +97,7 @@
         return 0;
     }
     
-    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.resourceSpecifier error:NULL];
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
         for (NSString *fileName in subPath) {
@@ -106,7 +106,7 @@
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:url.resourceSpecifier error:NULL].fileSize;
+    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path error:NULL].fileSize;
 }
 
 @end

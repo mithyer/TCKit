@@ -249,7 +249,7 @@
     typeof(request) req = request;
     if (SYSTEM_VERSION_LESS_THAN(@"9.0") && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") &&
         nil != req.URL && [req.URL.scheme hasPrefix:@"file"] &&
-        ![req.URL.resourceSpecifier hasPrefix:NSTemporaryDirectory()]) {
+        ![req.URL.path hasPrefix:NSTemporaryDirectory()]) {
     
         _LocalURLFixer *fixer = objc_getAssociatedObject(self, _cmd);
         if (nil != fixer && ![fixer.orgUrl isEqual:req.URL]) {
