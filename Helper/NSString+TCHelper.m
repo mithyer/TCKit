@@ -106,9 +106,11 @@
         }
     } else if (exts.count == 2) {
         if (exts[0].length < 1) {
-            return nil;
+            return exts[1];
         } else if (exts[1].length < 1) {
             return exts[0];
+        } else if (!exts[0].isPureAlphabet) {
+            return exts[1];
         }
     } else if (ext.isInteger && ![ext isEqualToString:@"323"]) { // text/h323
         return nil;
