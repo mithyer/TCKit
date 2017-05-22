@@ -56,6 +56,7 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
         s_fmt = [[NSDateFormatter alloc] init];
         s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
     });
+    s_fmt.timeZone = NSTimeZone.localTimeZone;
     
     return s_fmt;
 }
