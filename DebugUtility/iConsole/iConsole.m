@@ -84,6 +84,11 @@ static void exceptionHandler(NSException *exception)
 
 #pragma mark -
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 - (UIWindow *)mainWindow
 {
     UIApplication *app = [UIApplication sharedApplication];
@@ -238,13 +243,17 @@ static void exceptionHandler(NSException *exception)
         
         UIWindow *window = self.mainWindow;
         
-        [window.rootViewController addChildViewController:self];
-        [window.rootViewController.view addSubview:self.view];
-        [self didMoveToParentViewController:window.rootViewController];
+        UIViewController *parentCtrler = window.rootViewController;
+        if (nil != parentCtrler.presentedViewController) {
+            parentCtrler = parentCtrler.presentedViewController;
+        }
+        [parentCtrler addChildViewController:self];
+        [parentCtrler.view addSubview:self.view];
+        [self didMoveToParentViewController:parentCtrler];
         
         _animating = YES;
         [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.4];
+        [UIView setAnimationDuration:0.4f];
         [UIView setAnimationDelegate:self];
         [UIView setAnimationDidStopSelector:@selector(consoleShown)];
         [iConsole sharedConsole].view.frame = [self onscreenFrame];
@@ -503,11 +512,6 @@ static void exceptionHandler(NSException *exception)
     return self;
 }
 
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -522,29 +526,15 @@ static void exceptionHandler(NSException *exception)
     _consoleView.backgroundColor = UIColor.clearColor;
     _consoleView.editable = NO;
     _consoleView.scrollsToTop = YES;
-    _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self setConsoleText];
     [self.view addSubview:_consoleView];
-    
-    _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_actionButton setTitle:@"⚙" forState:UIControlStateNormal];
-    [_actionButton setTitleColor:_textColor forState:UIControlStateNormal];
-    [_actionButton setTitleColor:[_textColor colorWithAlphaComponent:0.5f] forState:UIControlStateHighlighted];
-//    _actionButton.titleLabel.font = [_actionButton.titleLabel.font fontWithSize:ACTION_BUTTON_WIDTH * 0.5];
-    _actionButton.frame = CGRectMake(self.view.frame.size.width - ACTION_BUTTON_WIDTH - 5,
-                                     self.view.frame.size.height - EDITFIELD_HEIGHT - 5,
-                                     ACTION_BUTTON_WIDTH, EDITFIELD_HEIGHT);
-    [_actionButton addTarget:self action:@selector(infoAction) forControlEvents:UIControlEventTouchUpInside];
-    _actionButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-    [self.view addSubview:_actionButton];
-    
-    [self.consoleView scrollRangeToVisible:NSMakeRange(self.consoleView.text.length, 0)];
 }
 
 - (void)setUpInputView
 {
-    _inputField = [[UITextField alloc] initWithFrame:CGRectMake(5, self.view.frame.size.height - EDITFIELD_HEIGHT - 5,
-                                                                self.view.frame.size.width - 15 - ACTION_BUTTON_WIDTH,
+    _inputField = [[UITextField alloc] initWithFrame:CGRectMake(10, self.view.frame.size.height - EDITFIELD_HEIGHT - 5,
+                                                                self.view.frame.size.width - 20,
                                                                 EDITFIELD_HEIGHT)];
     _inputField.borderStyle = UITextBorderStyleRoundedRect;
     _inputField.font = [UIFont fontWithName:@"Courier" size:12];
@@ -562,6 +552,18 @@ static void exceptionHandler(NSException *exception)
     frame.size.height -= EDITFIELD_HEIGHT + 10;
     _consoleView.frame = frame;
     [self.view addSubview:_inputField];
+    
+    
+    _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_actionButton setTitle:@"⚙" forState:UIControlStateNormal];
+    [_actionButton setTitleColor:_textColor forState:UIControlStateNormal];
+    [_actionButton setTitleColor:[_textColor colorWithAlphaComponent:0.5f] forState:UIControlStateHighlighted];
+    _actionButton.frame = CGRectMake(0, 0, ACTION_BUTTON_WIDTH, EDITFIELD_HEIGHT);
+    [_actionButton addTarget:self action:@selector(infoAction) forControlEvents:UIControlEventTouchUpInside];
+    _inputField.rightViewMode = UITextFieldViewModeAlways;
+    _inputField.rightView = _actionButton;
+    
+    [self.consoleView scrollRangeToVisible:NSMakeRange(self.consoleView.text.length, 0)];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
