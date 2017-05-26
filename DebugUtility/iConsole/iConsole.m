@@ -54,7 +54,7 @@
 
 
 #define EDITFIELD_HEIGHT 28
-#define ACTION_BUTTON_WIDTH 28
+#define ACTION_BUTTON_WIDTH 44
 
 
 @interface iConsole () <UITextFieldDelegate>
@@ -77,7 +77,6 @@ static void exceptionHandler(NSException *exception)
     [iConsole crash:@"%@", exception];
     [[iConsole sharedConsole] saveSettings];
 }
-
 
 
 @implementation iConsole
@@ -243,13 +242,24 @@ static void exceptionHandler(NSException *exception)
         
         UIWindow *window = self.mainWindow;
         
+        UIViewController *ctrler = self;//self.navigationController;
+//        if (nil == ctrler) {
+//            ctrler = [[UINavigationController alloc] initWithRootViewController:self];
+//            self.navigationController.navigationBar.translucent = YES;
+//            self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+////            self.navigationController.navigationBar.hidden = YES;
+//
+//            UIImage *bgImg = [[UIImage alloc] init];//[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(8, 8)];
+//            [self.navigationController.navigationBar setBackgroundImage:bgImg forBarMetrics:UIBarMetricsDefault];
+//        }
+        
         UIViewController *parentCtrler = window.rootViewController;
         if (nil != parentCtrler.presentedViewController) {
             parentCtrler = parentCtrler.presentedViewController;
         }
-        [parentCtrler addChildViewController:self];
-        [parentCtrler.view addSubview:self.view];
-        [self didMoveToParentViewController:parentCtrler];
+        [parentCtrler addChildViewController:ctrler];
+        [parentCtrler.view addSubview:ctrler.view];
+        [ctrler didMoveToParentViewController:parentCtrler];
         
         _animating = YES;
         [UIView beginAnimations:nil context:nil];
@@ -391,7 +401,7 @@ static void exceptionHandler(NSException *exception)
 
 - (void)logOnMainThread:(NSString *)message
 {
-    if ([_log count] > _maxLogItems) {
+    if (_log.count > _maxLogItems) {
         [_log removeObjectsInRange:NSMakeRange(0, _maxLogItems-20)];
     }
     
@@ -520,13 +530,15 @@ static void exceptionHandler(NSException *exception)
     self.view.backgroundColor = _backgroundColor;
     self.view.autoresizesSubviews = YES;
     
-    _consoleView = [[UITextView alloc] initWithFrame:self.view.bounds];
+    CGRect frame = self.view.bounds;
+    frame.size.height -= EDITFIELD_HEIGHT;
+    _consoleView = [[UITextView alloc] initWithFrame:frame];
     _consoleView.font = [UIFont fontWithName:@"Courier" size:12];
     _consoleView.textColor = _textColor;
     _consoleView.backgroundColor = UIColor.clearColor;
     _consoleView.editable = NO;
     _consoleView.scrollsToTop = YES;
-    _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self setConsoleText];
     [self.view addSubview:_consoleView];
 }
@@ -555,6 +567,7 @@ static void exceptionHandler(NSException *exception)
     
     
     _actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _actionButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [_actionButton setTitle:@"⚙" forState:UIControlStateNormal];
     [_actionButton setTitleColor:_textColor forState:UIControlStateNormal];
     [_actionButton setTitleColor:[_textColor colorWithAlphaComponent:0.5f] forState:UIControlStateHighlighted];
