@@ -165,7 +165,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != option ? option.autoMapUntilRoot : YES);
         NSMutableDictionary *dic = NSMutableDictionary.dictionary;
         
-        NSHashTable *record = recordFlag ?: [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality capacity:5];
+        NSHashTable *record = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality capacity:5];
         for (NSString *key in metaDic) {
             __unsafe_unretained TCMappingMeta *meta = metaDic[key];
             if (NULL == meta->_getter ||
@@ -176,7 +176,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             }
             
             NSObject *value = [obj valueForKey:NSStringFromSelector(meta->_getter) meta:meta ignoreNSNull:!isNSNullValid];
-            if (value == obj || [record containsObject:value]) {
+            if (value == obj || [recordFlag containsObject:value]) {
                 continue;
             }
             
@@ -194,7 +194,15 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             }
             
             if (nil != value) {
-                value = codingObject(value, style, curClass, propOpt, record);
+                NSHashTable *tal = nil;
+                if (nil == recordFlag) {
+                    tal = record;
+                } else {
+                    tal = recordFlag.copy;
+                    [tal unionHashTable:record];
+                }
+                
+                value = codingObject(value, style, curClass, propOpt, tal);
             }
             
             if (nil != value) {
