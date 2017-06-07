@@ -25,6 +25,7 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 @property (nullable, nonatomic, strong) id tcUserInfo;
 
 + (BOOL)tc_swizzle:(SEL)aSelector;
++ (BOOL)tc_swizzle:(SEL)aSelector to:(_Nullable SEL)bSelector;
 
 + (BOOL)currentClassRespondToSelector:(SEL)sel;
 + (BOOL)currentClassInstanceRespondToSelector:(SEL)sel;

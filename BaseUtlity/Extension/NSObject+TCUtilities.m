@@ -80,11 +80,15 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
     objc_setAssociatedObject(self, @selector(tcUserInfo), userInfo, OBJC_ASSOCIATION_RETAIN);
 }
 
++ (BOOL)tc_swizzle:(SEL)aSelector to:(SEL)bSelector
+{
+    TCSwizzleInput input = {.klass = self, .srcSel = aSelector, .dstSel = bSelector, .isClassMethod = NULL == class_getInstanceMethod(self, aSelector)};
+    return tcSwizzleMethod(input, nil, NULL, NULL);
+}
 
 + (BOOL)tc_swizzle:(SEL)aSelector
 {
-    TCSwizzleInput input = {.klass = self, .srcSel = aSelector, .isClassMethod = NULL == class_getInstanceMethod(self, aSelector)};
-    return tcSwizzleMethod(input, nil, NULL, NULL);
+    return [self tc_swizzle:aSelector to:NULL];
 }
 
 + (BOOL)currentClassRespondToSelector:(SEL)sel

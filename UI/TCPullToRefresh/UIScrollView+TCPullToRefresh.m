@@ -87,16 +87,16 @@ static char const kHeaderClassKey;
 
 + (void)load
 {
-    [self tc_swizzle:@selector(delegate)];
-    [self tc_swizzle:@selector(setDelegate:)];
+    [self tc_swizzle:@selector(delegate) to:@selector(pullrefresh_delegate)];
+    [self tc_swizzle:@selector(setDelegate:) to:@selector(setPullrefresh_delegate:)];
 }
 
 
 // !!!: fix none weak delegate crash < iOS9
-- (void *)tc_delegate
+- (void *)pullrefresh_delegate
 {
     if (self.listMode == kTCPullRefreshModeNone) {
-        return self.tc_delegate;
+        return self.pullrefresh_delegate;
     } else {
         TCScrollViewDelegateProxy *proxy = objc_getAssociatedObject(self, @selector(delegateProxy));
         if (nil == proxy.target) {
@@ -106,17 +106,17 @@ static char const kHeaderClassKey;
     }
 }
 
-- (void)tc_setDelegate:(id<UIScrollViewDelegate>)delegate
+- (void)setPullrefresh_delegate:(id<UIScrollViewDelegate>)delegate
 {
     if (self.listMode == kTCPullRefreshModeNone) {
-        [self tc_setDelegate:delegate];
+        [self setPullrefresh_delegate:delegate];
         objc_setAssociatedObject(self, @selector(delegateProxy), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     } else {
         if (nil != delegate) {
             self.delegateProxy.target = delegate;
-            [self tc_setDelegate:self.delegateProxy];
+            [self setPullrefresh_delegate:self.delegateProxy];
         } else {
-            [self tc_setDelegate:nil];
+            [self setPullrefresh_delegate:nil];
             objc_setAssociatedObject(self, @selector(delegateProxy), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
     }
@@ -126,12 +126,12 @@ static char const kHeaderClassKey;
 {
     TCScrollViewDelegateProxy *proxy = objc_getAssociatedObject(self, _cmd);
     if (nil == proxy) {
-        if (nil != self.tc_delegate) {
-            proxy = [TCScrollViewDelegateProxy proxyWithTarget:self.tc_delegate];
+        if (nil != self.pullrefresh_delegate) {
+            proxy = [TCScrollViewDelegateProxy proxyWithTarget:self.pullrefresh_delegate];
             objc_setAssociatedObject(self, _cmd, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
     } else if (nil == proxy.target) {
-        [self tc_setDelegate:nil];
+        [self setPullrefresh_delegate:nil];
         objc_setAssociatedObject(self, _cmd, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
@@ -245,7 +245,7 @@ static char const kHeaderClassKey;
     objc_setAssociatedObject(self, &kListModeKey, @(listMode), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (listMode != kTCPullRefreshModeNone && nil != self.delegateProxy) {
-        [self tc_setDelegate:self.delegateProxy];
+        [self setPullrefresh_delegate:self.delegateProxy];
     }
     
     switch ((NSInteger)listMode) {
