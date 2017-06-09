@@ -31,7 +31,7 @@
 {
     NSString *str = self.stringByRemovingPercentEncoding;
     if (nil == str) {
-        return nil;
+        str = self;
     }
     // Explode based on outter glue
     NSArray<NSString *> *firstExplode = [str componentsSeparatedByString:outterGlue];
@@ -48,9 +48,17 @@
             
             NSString *value = nil;
             if (secondExplode.count == 2) {
-                value = secondExplode[1].stringByRemovingPercentEncoding;
+                value = secondExplode[1];
+                NSString *str = value.stringByRemovingPercentEncoding;
+                if (nil != str) {
+                    value = str;
+                }
             } else {
-                value = [firstExplode[i] substringFromIndex:secondExplode[0].length].stringByRemovingPercentEncoding;
+                value = [firstExplode[i] substringFromIndex:secondExplode[0].length];
+                NSString *str = value.stringByRemovingPercentEncoding;
+                if (nil != str) {
+                    value = str;
+                }
             }
             if (nil == value) {
                 continue;
