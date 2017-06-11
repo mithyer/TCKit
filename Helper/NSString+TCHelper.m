@@ -107,7 +107,7 @@
     NSArray<NSString *> *exts = [ext componentsSeparatedByString:@"."];
     if (exts.count > 2) {
         exts = [exts subarrayWithRange:NSMakeRange(exts.count - 2, 2)];
-        if (exts.firstObject.isPureAlphabet) {
+        if ([exts.firstObject isEqualToString:@"tar"]/*exts.firstObject.isPureAlphabet*/) {
             ext = [exts componentsJoinedByString:@"."];
         } else {
             ext = exts.lastObject;
