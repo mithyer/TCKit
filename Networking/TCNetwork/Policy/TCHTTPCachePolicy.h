@@ -42,7 +42,7 @@ extern NSInteger const kTCHTTPRequestCacheNeverExpired;
 
 
 - (NSString *)cacheFileName;
-- (NSString *)cacheFilePath;
+- (nullable NSString *)cacheFilePath;
 - (BOOL)shouldWriteToCache;
 
 @end

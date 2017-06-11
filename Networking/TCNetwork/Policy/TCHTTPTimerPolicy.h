@@ -42,7 +42,7 @@ extern NSTimeInterval kTCHTTPTimerIntervalEnd;
 + (instancetype)pollingPolicyWithIntervals:(NSTimeInterval (^)(TCHTTPTimerPolicy *policy, NSUInteger index))intervalFunc;
 
 // for delay
-+ (instancetype)delayPolicyWithInterval:(NSTimeInterval)interval;
++ (nullable instancetype)delayPolicyWithInterval:(NSTimeInterval)interval;
 
 // for retry
 + (instancetype)retryPolicyWithIntervals:(NSTimeInterval (^)(TCHTTPTimerPolicy *policy, NSUInteger index))intervalFunc;

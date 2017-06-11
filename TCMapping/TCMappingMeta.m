@@ -228,11 +228,15 @@ static TCMappingMeta *metaForProperty(objc_property_t property, Class klass, NSA
                         typeName = @(value);
                         info |= kTCEncodingTypeId;
                         
-                    } else if (len == 2 && value[1] == '?') {
-                        typeClass = NSBlockClass();
-                        typeName = NSStringFromClass(typeClass);
-                        info |= kTCEncodingTypeBlock;
-                        
+                    } else if (len == 2) {
+                        if (value[1] == '?') {
+                            typeClass = NSBlockClass();
+                            typeName = NSStringFromClass(typeClass);
+                            info |= kTCEncodingTypeBlock;
+                        } else {
+                            typeName = @(value);
+                            info |= kTCEncodingTypeId;
+                        }
                     } else {
                         char mutableValue[len - 2];
                         strcpy(mutableValue, value + 2);

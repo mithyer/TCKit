@@ -37,8 +37,8 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 - (const char *)returnTypeForSelector:(SEL)selector;
 
 // Request return value from performing selector
-- (id)objectByPerformingSelectorWithArguments:(SEL)selector, ...;
-- (__autoreleasing id)objectByPerformingSelector:(SEL)selector withObject:(_Nullable id)object1 andObject:(_Nullable id)object2;
+- (nullable id)objectByPerformingSelectorWithArguments:(SEL)selector, ...;
+- (nullable __autoreleasing id)objectByPerformingSelector:(SEL)selector withObject:(_Nullable id)object1 andObject:(_Nullable id)object2;
 - (id)objectByPerformingSelector:(SEL)selector withObject:(_Nullable id)object1;
 - (id)objectByPerformingSelector:(SEL)selector;
 
@@ -81,7 +81,7 @@ extern BOOL tcSwizzleMethod(TCSwizzleInput input, _Nullable id block, _Nullable 
 + (BOOL)classExists:(NSString *)className;
 
 // Choose the first selector that the object responds to
-- (SEL)chooseSelector:(SEL)aSelector, ...;
+- (nullable SEL)chooseSelector:(SEL)aSelector, ...;
 
 #endif
 

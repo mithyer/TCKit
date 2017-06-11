@@ -29,12 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
  SEL -> string
  
  */
-- (id/*NSArray or NSDictionary*/)tc_JSONObject;
-- (NSData *)tc_JSONData;
-- (NSString *)tc_JSONString;
+- (nullable id/*NSArray or NSDictionary*/)tc_JSONObject;
+- (nullable NSData *)tc_JSONData;
+- (nullable NSString *)tc_JSONString;
 - (BOOL)tc_writeJSONToFile:(NSString *)path atomically:(BOOL)useAuxiliaryFile;
 
-- (id/*NSArray or NSDictionary*/)tc_JSONObjectWithOption:(TCMappingOption * __nullable)option;
+- (nullable id/*NSArray or NSDictionary*/)tc_JSONObjectWithOption:(TCMappingOption * __nullable)option;
 
 #pragma mark - TCPlistMapping
 
@@ -53,21 +53,21 @@ NS_ASSUME_NONNULL_BEGIN
  return NSData, NSString, NSArray, NSDictionary, NSDate, NSNumber
 
  */
-- (id)tc_plistObject;
+- (nullable id)tc_plistObject;
 
 @end
 
 
 @interface NSString (TCJSONMapping)
 
-- (id)tc_JSONObject;
+- (nullable id)tc_JSONObject;
 
 @end
 
 
 @interface NSData (TCJSONMapping)
 
-- (id)tc_JSONObject;
+- (nullable id)tc_JSONObject;
 
 @end
 

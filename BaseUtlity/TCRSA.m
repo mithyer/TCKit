@@ -95,6 +95,8 @@
             if (nil != _passwd) {
                 options = @{(__bridge NSString *)kSecImportExportPassphrase: _passwd};
                 _passwd = nil;
+            } else {
+                options = @{};
             }
             CFArrayRef items = CFArrayCreate(kCFAllocatorDefault, 0, 0, NULL);
             OSStatus securityError = SecPKCS12Import((__bridge CFDataRef)data, (__bridge CFDictionaryRef)options, &items);

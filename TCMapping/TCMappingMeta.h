@@ -172,14 +172,14 @@ extern NSDateFormatter *tcISODateFormatter(void);
 
 + (BOOL)isNSTypeForClass:(Class)klass;
 + (TCEncodingType)typeForNSClass:(Class)klass;
-+ (instancetype)metaForNSClass:(Class)klass;
++ (nullable instancetype)metaForNSClass:(Class)klass;
 + (BOOL)isBlock:(id)obj;
 
 @end
 
 
 
-extern NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class klass, BOOL untilRoot);
+extern NSDictionary<NSString *, TCMappingMeta *> * _Nullable tc_propertiesUntilRootClass(Class klass, BOOL untilRoot);
 
 
 @protocol TCNSValueSerializer <NSObject>

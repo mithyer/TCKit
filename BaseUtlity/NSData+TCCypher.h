@@ -27,8 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // RC4
 // Utility method for generating keys from string passwords
-+ (NSData *)dataKeyByteCount:(NSInteger)nKeyBytes
-             from7BitString:(NSString *)password;
++ (nullable NSData *)dataKeyByteCount:(NSInteger)nKeyBytes
+                       from7BitString:(NSString *)password;
 // nKeyBytes may be of
 // any length, although if you believe the fiction that
 // making it incredibly easy for the U.S. government to eavesdrop

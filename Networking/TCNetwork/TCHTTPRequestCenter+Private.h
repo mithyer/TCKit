@@ -23,9 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 //
 - (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
 - (id<TCHTTPRequest>)requestWithMethod:(TCHTTPMethod)method cachePolicy:(nullable TCHTTPCachePolicy *)policy apiUrl:(NSString *)apiUrl host:(nullable NSString *)host;
-- (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(nullable TCHTTPCachePolicy *)cachePolicy;
-- (id<TCHTTPRequest>)requestForUploadTo:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy;
-- (id<TCHTTPRequest>)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
+- (nullable id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(nullable TCHTTPCachePolicy *)cachePolicy;
+- (nullable id<TCHTTPRequest>)requestForUploadTo:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy;
+- (nullable id<TCHTTPRequest>)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
 @end
 
