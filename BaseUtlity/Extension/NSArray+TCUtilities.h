@@ -53,4 +53,10 @@ typedef BOOL (^TestingBlock)(ObjectType object);
 
 @end
 
+@interface NSDictionary<KeyType, ObjectType> (TCUtilities)
+
+- (nullable ObjectType)valueForCaseInsensitiveKey:(NSString *)key;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -217,3 +217,23 @@
 }
 
 @end
+
+
+@implementation NSDictionary (TCUtilities)
+
+- (id)valueForCaseInsensitiveKey:(NSString *)key
+{
+    NSParameterAssert(key);
+    if (nil == key) {
+        return nil;
+    }
+    
+    id value = self[key];
+    if (nil == value) {
+        value = self[key.lowercaseString];
+    }
+    
+    return value;
+}
+
+@end
