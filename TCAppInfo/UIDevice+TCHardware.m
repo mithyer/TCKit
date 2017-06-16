@@ -17,6 +17,9 @@
 
 #import <ifaddrs.h>
 
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+
 #import "UIDevice+TCHardware.h"
 
 static NSString *s_device_names[kTCDeviceCount] = {
@@ -365,10 +368,19 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return kTCDeviceFamilyUnknown;
 }
 
+- (BOOL)cellularAccessable
+{
+    CTTelephonyNetworkInfo *ctInfo = [[CTTelephonyNetworkInfo alloc] init];
+    return nil != ctInfo.subscriberCellularProvider && nil != ctInfo.subscriberCellularProvider.carrierName && nil != ctInfo.currentRadioAccessTechnology;
+}
+
+// https://stackoverflow.com/questions/7101206/know-if-ios-device-has-cellular-data-capabilities
 - (BOOL)hasCellular
 {
     static BOOL s_detected = NO;
     static BOOL s_found = NO;
+    
+
     
     if (s_detected) {
         return s_found;

@@ -116,6 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)hasRetinaDisplay;
 - (TCDeviceFamily)deviceFamily;
 - (BOOL)hasCellular;
+- (BOOL)cellularAccessable;
 
 @end
 
