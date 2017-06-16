@@ -15,6 +15,8 @@
 #include <net/if_dl.h>
 #import <mach/mach.h>
 
+#import <ifaddrs.h>
+
 #import "UIDevice+TCHardware.h"
 
 static NSString *s_device_names[kTCDeviceCount] = {
@@ -361,6 +363,41 @@ static NSString *s_device_names[kTCDeviceCount] = {
     if ([platform hasPrefix:@"AppleTV"]) return kTCDeviceFamilyAppleTV;
     
     return kTCDeviceFamilyUnknown;
+}
+
+- (BOOL)hasCellular
+{
+    static BOOL s_detected = NO;
+    static BOOL s_found = NO;
+    
+    if (s_detected) {
+        return s_found;
+    }
+    
+    s_detected = YES;
+    
+    struct ifaddrs *addrs = NULL;
+    struct ifaddrs const *cursor = NULL;
+    
+    if (getifaddrs(&addrs) == 0) {
+        
+        cursor = addrs;
+        while (cursor != NULL) {
+            if (NULL == cursor->ifa_name) {
+                continue;
+            }
+            if (0 == strcmp(cursor->ifa_name, "pdp_ip0")) {
+                s_found = YES;
+                break;
+            }
+            cursor = cursor->ifa_next;
+        }
+        
+        if (NULL != addrs) {
+            freeifaddrs(addrs);
+        }
+    }
+    return s_found;
 }
 
 #pragma mark - MAC addy
