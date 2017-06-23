@@ -76,6 +76,10 @@ NS_INLINE BOOL SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(NSString *v)
     return COMPARE_SYSTEM_VERSION(v) != NSOrderedDescending;
 }
 
+NS_INLINE dispatch_queue_t tc_dispatch_get_current_queue(void)
+{
+    return NSOperationQueue.currentQueue.underlyingQueue;
+}
 
 NS_INLINE void tc_dispatch_main_sync_safe(dispatch_block_t block)
 {
