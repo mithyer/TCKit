@@ -73,11 +73,23 @@
 
 - (nullable NSString *)fixedFileExtension
 {
-    NSString *ext = self.lastPathComponent;
-
+    NSString *ext = nil;
+    if ([self hasPrefix:@"http"]) {
+        NSURL *url = [NSURL URLWithString:self];
+        if (url.path.length < 1) {
+            if (url.query.length < 1) {
+                return nil;
+            }
+        } else {
+            ext = url.path;
+        }
+    } else {
+        ext = self.lastPathComponent;
+    }
+    
     // xx.tar.gz
     NSInteger begin = [ext rangeOfString:@"."].location;
-    BOOL findeDot = begin != NSNotFound;
+    BOOL findeDot = nil != ext && begin != NSNotFound;
     if (findeDot) {
         ext = [ext substringFromIndex:begin + 1];
     } else {
@@ -93,7 +105,7 @@
         // /Img/?img=1472541690-6672-2065-1.jpg&img_size=, self.pathExtension 为空
         NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"."]].location;
         if (loc != NSNotFound) {
-            ext = [ext substringFromIndex:loc];
+            ext = [ext substringFromIndex:loc+1];
         } else {
             return nil;
         }
@@ -102,6 +114,10 @@
     NSInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(=?"]].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
+    }
+    
+    if ([ext isEqualToString:@"."]) {
+        return nil;
     }
     
     NSArray<NSString *> *exts = [ext componentsSeparatedByString:@"."];
