@@ -538,6 +538,7 @@ static void exceptionHandler(NSException *exception)
     _consoleView.backgroundColor = UIColor.clearColor;
     _consoleView.editable = NO;
     _consoleView.scrollsToTop = YES;
+    _consoleView.showsVerticalScrollIndicator = YES;
     _consoleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self setConsoleText];
     [self.view addSubview:_consoleView];
