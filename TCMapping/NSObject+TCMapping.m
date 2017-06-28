@@ -795,12 +795,12 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     if (nil != value) {
                         if (type == kTCEncodingTypeNSArray) {
                             if (![value isKindOfClass:meta->_typeClass]) {
-                                value = [meta->_typeClass arrayWithArray:valueArry];
+                                value = [meta->_typeClass arrayWithArray:(NSArray *)value];
                             }
                         } else if (type == kTCEncodingTypeNSSet){
-                            value = [meta->_typeClass setWithArray:valueArry];
+                            value = [meta->_typeClass setWithArray:(NSArray *)value];
                         } else if (type == kTCEncodingTypeNSOrderedSet){
-                            value = [meta->_typeClass orderedSetWithArray:valueArry];
+                            value = [meta->_typeClass orderedSetWithArray:(NSArray *)value];
                         }
                     }
                 }
