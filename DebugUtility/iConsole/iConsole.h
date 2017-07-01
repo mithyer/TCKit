@@ -112,6 +112,8 @@ iConsoleLogLevel;
 + (void)show;
 + (void)hide;
 
++ (NSArray<NSString *> *)savedLogs;
+
 @end
 
 

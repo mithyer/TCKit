@@ -56,6 +56,8 @@
 #define EDITFIELD_HEIGHT 28
 #define ACTION_BUTTON_WIDTH 44
 
+static NSString *const kSaveKey = @"iConsoleLog";
+
 
 @interface iConsole () <UITextFieldDelegate>
 
@@ -80,6 +82,12 @@ static void exceptionHandler(NSException *exception)
 
 
 @implementation iConsole
+
++ (NSArray *)savedLogs
+{
+    [NSUserDefaults.standardUserDefaults synchronize];
+    return [NSUserDefaults.standardUserDefaults objectForKey:kSaveKey];
+}
 
 #pragma mark -
 
@@ -145,7 +153,7 @@ static void exceptionHandler(NSException *exception)
 - (void)infoAction
 {
     [self findAndResignFirstResponder:[self mainWindow]];
-
+    
 #ifdef TC_IOS_DEBUG
     NSString *title = [@"测试环境 " stringByAppendingString:[[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey]];
 #else
@@ -160,17 +168,21 @@ static void exceptionHandler(NSException *exception)
     
     __weak typeof(self) wSelf = self;
     TCAlertController *alert = [[TCAlertController alloc] initActionSheetWithTitle:title
-                                           presentCtrler:self
-                                            cancelAction:[TCAlertAction cancelActionWithTitle:@"Cancel" handler:nil]
-                                       destructiveAction:[TCAlertAction destructiveActionWithTitle:@"Clear Log" handler:^(TCAlertAction *action) {
-         [iConsole clear];
+                                                                     presentCtrler:self
+                                                                      cancelAction:[TCAlertAction cancelActionWithTitle:@"Cancel" handler:nil]
+                                                                 destructiveAction:[TCAlertAction destructiveActionWithTitle:@"Clear Log" handler:^(TCAlertAction *action) {
+        [iConsole clear];
+        if ([iConsole sharedConsole].saveLogToDisk) {
+            [NSUserDefaults.standardUserDefaults setObject:nil forKey:kSaveKey];
+            [[iConsole sharedConsole] saveSettings];
+        }
     }]
-                                             otherAction:[TCAlertAction defaultActionWithTitle:@"调试信息面板" handler:^(TCAlertAction *action) {
+                                                                       otherAction:[TCAlertAction defaultActionWithTitle:@"调试信息面板" handler:^(TCAlertAction *action) {
         if ([wSelf.delegate respondsToSelector:@selector(debugPanelTapped:)]) {
             [wSelf.delegate debugPanelTapped:wSelf];
         }
     }], nil];
-                                
+    
     
     alert.popoverPresentationController.sourceView = _actionButton;
     [alert show];
@@ -179,7 +191,7 @@ static void exceptionHandler(NSException *exception)
 - (CGAffineTransform)viewTransform
 {
     CGFloat angle = 0;
-
+    
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationPortrait:
             angle = 0;
@@ -197,7 +209,7 @@ static void exceptionHandler(NSException *exception)
         default:
             break;
     }
-
+    
     return CGAffineTransformMakeRotation(angle);
 }
 
@@ -209,7 +221,7 @@ static void exceptionHandler(NSException *exception)
 - (CGRect)offscreenFrame
 {
     CGRect frame = [self onscreenFrame];
-
+    
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationPortrait:
             frame.origin.y = frame.size.height;
@@ -227,7 +239,7 @@ static void exceptionHandler(NSException *exception)
         default:
             break;
     }
-
+    
     return frame;
 }
 
@@ -243,15 +255,15 @@ static void exceptionHandler(NSException *exception)
         UIWindow *window = self.mainWindow;
         
         UIViewController *ctrler = self;//self.navigationController;
-//        if (nil == ctrler) {
-//            ctrler = [[UINavigationController alloc] initWithRootViewController:self];
-//            self.navigationController.navigationBar.translucent = YES;
-//            self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
-////            self.navigationController.navigationBar.hidden = YES;
-//
-//            UIImage *bgImg = [[UIImage alloc] init];//[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(8, 8)];
-//            [self.navigationController.navigationBar setBackgroundImage:bgImg forBarMetrics:UIBarMetricsDefault];
-//        }
+        //        if (nil == ctrler) {
+        //            ctrler = [[UINavigationController alloc] initWithRootViewController:self];
+        //            self.navigationController.navigationBar.translucent = YES;
+        //            self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+        ////            self.navigationController.navigationBar.hidden = YES;
+        //
+        //            UIImage *bgImg = [[UIImage alloc] init];//[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(8, 8)];
+        //            [self.navigationController.navigationBar setBackgroundImage:bgImg forBarMetrics:UIBarMetricsDefault];
+        //        }
         
         UIViewController *parentCtrler = window.rootViewController;
         if (nil != parentCtrler.presentedViewController) {
@@ -317,7 +329,7 @@ static void exceptionHandler(NSException *exception)
 - (void)resizeView:(NSNotification *)notification
 {
     CGRect bounds = [UIScreen mainScreen].bounds;
-
+    
     CGRect frame = [[notification.userInfo valueForKey:UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationPortrait:
@@ -338,7 +350,7 @@ static void exceptionHandler(NSException *exception)
         default:
             break;
     }
-
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDuration:0.35];
@@ -357,7 +369,7 @@ static void exceptionHandler(NSException *exception)
     [UIView setAnimationCurve:curve];
     
     CGRect bounds = [self onscreenFrame];
-
+    
     CGRect frame = [[notification.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationPortrait:
@@ -378,7 +390,7 @@ static void exceptionHandler(NSException *exception)
         default:
             break;
     }
-
+    
     self.view.frame = bounds;
     
     [UIView commitAnimations];
@@ -406,7 +418,7 @@ static void exceptionHandler(NSException *exception)
     }
     
     [_log addObject:[@"> " stringByAppendingString:message]];
-    [[NSUserDefaults standardUserDefaults] setObject:_log forKey:@"iConsoleLog"];
+    [NSUserDefaults.standardUserDefaults setObject:_log forKey:kSaveKey];
     if (self.view.superview) {
         [self setConsoleText];
     }
@@ -481,7 +493,7 @@ static void exceptionHandler(NSException *exception)
         _enabled = YES;
         _logLevel = iConsoleLogLevelInfo;
         _saveLogToDisk = YES;
-        _maxLogItems = 300;
+        _maxLogItems = 150;
         
         _simulatorTouchesToShow = 2;
         _deviceTouchesToShow = 3;
@@ -496,8 +508,8 @@ static void exceptionHandler(NSException *exception)
         self.textColor = [UIColor colorWithRed:59/255.0f green:252/255.0f blue:51/255.0f alpha:255/255.0f];
         
         
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        self.log = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"iConsoleLog"]];
+        [NSUserDefaults.standardUserDefaults synchronize];
+        self.log = [NSMutableArray arrayWithArray:[NSUserDefaults.standardUserDefaults objectForKey:kSaveKey]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(saveSettings)
@@ -711,7 +723,7 @@ static void exceptionHandler(NSException *exception)
                     allRight = NO;
                 }
             }
-
+            
             switch ([UIApplication sharedApplication].statusBarOrientation) {
                 case UIInterfaceOrientationPortrait: {
                     if (allUp) {
