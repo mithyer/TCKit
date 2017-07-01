@@ -113,6 +113,7 @@ iConsoleLogLevel;
 + (void)hide;
 
 + (NSArray<NSString *> *)savedLogs;
++ (void)clearLogs;
 
 @end
 

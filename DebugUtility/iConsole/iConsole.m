@@ -89,6 +89,13 @@ static void exceptionHandler(NSException *exception)
     return [NSUserDefaults.standardUserDefaults objectForKey:kSaveKey];
 }
 
++ (void)clearLogs
+{
+    [NSUserDefaults.standardUserDefaults setObject:nil forKey:kSaveKey];
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+
+
 #pragma mark -
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -173,8 +180,7 @@ static void exceptionHandler(NSException *exception)
                                                                  destructiveAction:[TCAlertAction destructiveActionWithTitle:@"Clear Log" handler:^(TCAlertAction *action) {
         [iConsole clear];
         if ([iConsole sharedConsole].saveLogToDisk) {
-            [NSUserDefaults.standardUserDefaults setObject:nil forKey:kSaveKey];
-            [[iConsole sharedConsole] saveSettings];
+            [iConsole clearLogs];
         }
     }]
                                                                        otherAction:[TCAlertAction defaultActionWithTitle:@"调试信息面板" handler:^(TCAlertAction *action) {
