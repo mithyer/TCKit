@@ -73,9 +73,14 @@
 
 - (nullable NSString *)fixedFileExtension
 {
+    NSString *decodeUrl = self.stringByRemovingPercentEncoding;
+    if (nil == decodeUrl) {
+        decodeUrl = self;
+    }
+    
     NSString *ext = nil;
-    if ([self hasPrefix:@"http"]) {
-        NSURL *url = [NSURL URLWithString:self];
+    if ([decodeUrl hasPrefix:@"http"]) {
+        NSURL *url = [NSURL URLWithString:decodeUrl];
         if (url.path.length < 1) {
             if (url.query.length < 1) {
                 return nil;
@@ -84,7 +89,7 @@
             ext = url.path;
         }
     } else {
-        ext = self.lastPathComponent;
+        ext = decodeUrl.lastPathComponent;
     }
     
     // xx.tar.gz
@@ -93,11 +98,11 @@
     if (findeDot) {
         ext = [ext substringFromIndex:begin + 1];
     } else {
-        begin = [self rangeOfString:@"?"].location;
+        begin = [decodeUrl rangeOfString:@"?"].location;
         if (begin == NSNotFound) {
             return nil;
         } else {
-            ext = [self substringFromIndex:begin + 1];
+            ext = [decodeUrl substringFromIndex:begin + 1];
         }
     }
 
