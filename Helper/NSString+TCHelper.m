@@ -148,6 +148,10 @@
         ext = [ext substringToIndex:loc];
     }
     
+    if (NSNotFound != [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/%"]].location) {
+        return nil;
+    }
+    
     if (ext.isInteger && ![ext isEqualToString:@"323"]) { // text/h323
         return nil;
     }
