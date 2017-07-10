@@ -1,0 +1,6 @@
+framework module TCKitSDK {
+  umbrella header "TCKitSDK.h"
+
+  export *
+  module * { export * }
+}

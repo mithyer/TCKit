@@ -1,0 +1,72 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCFoundation.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "TCFoundation-Swift.h",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCFoundation.framework/Headers/TCFoundation-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCFoundation.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/TCKitSDK.build/Debug-iphoneos/TCFoundation.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCNetwork.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "TCNetwork-Swift.h",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCNetwork.framework/Headers/TCNetwork-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCNetwork.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/TCKitSDK.build/Debug-iphoneos/TCNetwork.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCUIKit.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "TCUIKit-Swift.h",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCUIKit.framework/Headers/TCUIKit-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/Debug-iphoneos/TCUIKit.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/TCKitSDK.build/Debug-iphoneos/TCUIKit.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+framework module TCUIKit {
+  umbrella header "TCUIKit.h"
+
+  export *
+  module * { export * }
+}
