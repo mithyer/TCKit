@@ -28,6 +28,9 @@
 #import "NSString+TCCypher.h"
 #import "NSBundle+TCHelper.h"
 
+#import "NSString+TCHelper.h"
+#import "NSURL+TCHelper.h"
+
 
 
 #define TC_AUTO_COPY_CODING_EQUAL_HASH \
