@@ -15,6 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class AFSecurityPolicy;
+@class AFHTTPSessionManager;
 NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPRequestAgent>
 
 @property (nonatomic, strong) NSURL *baseURL;
@@ -24,7 +25,8 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 @property (nonatomic, strong, nullable) NSSet *acceptableContentTypes;
 
-@property (nonatomic, strong, readonly) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, copy, readonly) NSURLSessionConfiguration *sessionConfiguration;
+@property (nonatomic, strong, readonly) AFHTTPSessionManager *requestManager;
 @property (nonatomic, weak, nullable) id<TCHTTPRequestUrlFilter> urlFilter;
 
 
