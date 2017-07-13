@@ -1,6 +1,0 @@
-framework module TCNetwork {
-  umbrella header "TCNetwork.h"
-
-  export *
-  module * { export * }
-}

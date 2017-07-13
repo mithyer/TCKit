@@ -1,9 +1,0 @@
-dependencies: \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKit/TCUIKit/UI/TCWKWebView/WKWebView+TCWKWebView.m \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKitSDK/build/TCKitSDK.build/Debug-iphonesimulator/TCUIKit.build/module.modulemap \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKit/TCUIKit/UI/TCWKWebView/WKWebView+TCWKWebView.h \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKit/TCUIKit/UI/TCWKWebView/TCWKWebView.h \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKit/TCUIKit/UI/TCWKWebView/UIView+TCWKWebView.h \
-  ../TCKit/TCFoundation/TCDefines.h \
-  /Users/dake423/Documents/PixelCyber/Thor/Vendor/SourceCode/TCKit/TCKit/TCFoundation/BaseUtlity/Extension/NSObject+TCUtilities.h \
-  ../TCKit/TCDebug/TCDebug.h ../TCKit/TCDebug/iConsole/iConsole.h
