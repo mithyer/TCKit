@@ -27,6 +27,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isPureAlphabet;
 - (BOOL)isValidIDCardNumberOfChina;
 
+/**
+ @brief	convert IANA charset name encoding
+ 
+ @param iana [IN] IANA charset name
+ 
+ @return 0, if failed
+ */
++ (NSStringEncoding)encodingForIANACharset:(NSString *)iana;
++ (nullable NSString *)IANACharsetForEncoding:(NSStringEncoding)encoding;
++ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -288,4 +288,72 @@
 }
 
 
+#pragma mark - 
+
++ (NSStringEncoding)encodingForIANACharset:(NSString *)iana
+{
+    NSStringEncoding encoding = 0;
+    if (nil != iana) {
+        CFStringEncoding cfcoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)iana);
+        if (kCFStringEncodingInvalidId != cfcoding) {
+            encoding = CFStringConvertEncodingToNSStringEncoding(cfcoding);
+        }
+    }
+    
+    return encoding;
+}
+
++ (nullable NSString *)IANACharsetForEncoding:(NSStringEncoding)encoding
+{
+    if (0 == encoding) {
+        return nil;
+    }
+    
+    CFStringEncoding cfcoding = CFStringConvertNSStringEncodingToEncoding(encoding);
+    if (kCFStringEncodingInvalidId == cfcoding) {
+        return nil;
+    }
+    
+    return (__bridge_transfer NSString *)CFStringConvertEncodingToIANACharSetName(cfcoding);
+}
+
++ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc
+{
+    if (nil == data) {
+        return nil;
+    }
+    
+    static NSMutableArray<NSNumber *> *s_tryEncodings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_tryEncodings = [NSMutableArray arrayWithArray:@[
+                                                          @(NSUTF8StringEncoding),
+                                                          
+                                                          @(NSJapaneseEUCStringEncoding),
+                                                          @(NSShiftJISStringEncoding),
+                                                          ]];
+        
+        static NSString *const kEds[] = {@"big5hkscs", @"big5", @"gbk", @"gb18030", @"gb2312"};
+        for (NSInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
+            NSStringEncoding ed = [self encodingForIANACharset:kEds[i]];
+            if (0 != ed) {
+                [s_tryEncodings insertObject:@(ed) atIndex:1];
+            }
+        }
+    });
+    
+    NSString *text = nil;
+    for (NSNumber *ed in s_tryEncodings) {
+        text = [[NSString alloc] initWithData:data encoding:ed.unsignedIntegerValue];// [NSString stringWithContentsOfURL:self.URL usedEncoding:NULL error:NULL];
+        if (nil != text) {
+            if (NULL != enc) {
+                *enc = ed.unsignedIntegerValue;
+            }
+            break;
+        }
+    }
+    
+    return text;
+}
+
 @end
