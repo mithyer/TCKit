@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern bool tc_is_ip_addr(char const *host);
+
 @interface NSString (TCHelper)
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
@@ -26,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isPureNumber;
 - (BOOL)isPureAlphabet;
 - (BOOL)isValidIDCardNumberOfChina;
+- (BOOL)isIPAddress;
 
 /**
  @brief	convert IANA charset name encoding

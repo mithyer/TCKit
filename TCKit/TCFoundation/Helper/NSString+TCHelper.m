@@ -8,6 +8,9 @@
 
 #import "NSString+TCHelper.h"
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 @implementation NSString (TCHelper)
 
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
@@ -287,6 +290,27 @@
     return NO;
 }
 
+
+bool tc_is_ip_addr(char const *host)
+{
+    if (NULL == host) {
+        return false;
+    }
+    struct sockaddr_in sin;
+    bzero(&sin, sizeof(sin));
+    if (1 == inet_pton(AF_INET, host, &sin)) {
+        return true;
+    }
+    
+    struct sockaddr_in6 sin6;
+    bzero(&sin6, sizeof(sin6));
+    return 1 == inet_pton(AF_INET6, host, &sin6);
+}
+
+- (BOOL)isIPAddress
+{
+    return tc_is_ip_addr(self.UTF8String);
+}
 
 #pragma mark - 
 
