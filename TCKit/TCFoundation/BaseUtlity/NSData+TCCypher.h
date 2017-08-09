@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * \param uppercase YES to use uppercase letters A-F; NO for lowercase a-f
  */
-- (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase;
+- (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase seperator:(NSString *__nullable)seperator width:(NSUInteger)width;
 
 @end
 

@@ -305,18 +305,17 @@ static uint8_t nibbleFromChar(unichar c) {
 
 - (NSString *)hexStringRepresentation
 {
-    return [self hexStringRepresentationUppercase:NO];
+    return [self hexStringRepresentationUppercase:NO seperator:nil width:0];
 }
 
-- (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase
+- (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase seperator:(NSString *__nullable)seperator width:(NSUInteger)width
 {
     const char *hexTable = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+    const NSUInteger charLength = self.length * 2;
+
     
-    const NSUInteger byteLength = self.length;
-    const NSUInteger charLength = byteLength * 2;
     char *const hexChars = malloc(charLength * sizeof(*hexChars));
     __block char *charPtr = hexChars;
-    
     [self enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
         const uint8_t *bytePtr = bytes;
         for (NSUInteger count = 0; count < byteRange.length; ++count) {
@@ -326,7 +325,21 @@ static uint8_t nibbleFromChar(unichar c) {
         }
     }];
     
-    return [[NSString alloc] initWithBytesNoCopy:hexChars length:charLength encoding:NSASCIIStringEncoding freeWhenDone:YES];
+    NSMutableString *str = [[NSMutableString alloc] initWithBytesNoCopy:hexChars length:charLength encoding:NSASCIIStringEncoding freeWhenDone:YES];
+    
+    NSUInteger sepLen = seperator.length;
+    BOOL sep = sepLen > 0 && width > 0;
+    if (sep) {
+        NSUInteger unitCount = (charLength + width - 1) / width;
+        
+        for (NSUInteger i = 0; i < unitCount; ++i) {
+            NSUInteger index = (i + 1) * width + i * sepLen;
+            [str insertString:seperator atIndex:index];
+        }
+ 
+    }
+    
+    return str;
 }
 
 @end
