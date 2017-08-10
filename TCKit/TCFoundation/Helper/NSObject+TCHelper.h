@@ -16,8 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 // file system
 + (nullable NSString *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain;
++ (nullable NSString *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
+
 + (nullable NSString *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain;
++ (nullable NSString *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
+
 + (nullable NSString *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain;
++ (nullable NSString *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
 
 @end
 
