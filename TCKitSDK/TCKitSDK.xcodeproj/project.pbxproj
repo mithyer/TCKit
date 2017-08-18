@@ -38,6 +38,8 @@
 		B72A5FCA1F1F4093002D900D /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FA91F1F4093002D900D /* AnimatedGIFImageSerialization.m */; };
 		B72A5FCB1F1F4093002D900D /* UIImage+CGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FAB1F1F4093002D900D /* UIImage+CGImage.m */; };
 		B72A5FCC1F1F4093002D900D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FAD1F1F4093002D900D /* UIImage+Resize.m */; };
+		B74028F11F46798300AE681A /* TCProxyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B74028EF1F46798300AE681A /* TCProxyDelegate.h */; };
+		B74028F21F46798300AE681A /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B74028F01F46798300AE681A /* TCProxyDelegate.m */; };
 		B76A7EDD1F134F320010FBD3 /* UIWindow+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7EDC1F134F320010FBD3 /* UIWindow+TCHelper.m */; };
 		B76A7FC21F13568F0010FBD3 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F0C1F13568F0010FBD3 /* AFHTTPSessionManager.m */; };
 		B76A7FC31F13568F0010FBD3 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F0F1F13568F0010FBD3 /* AFNetworkReachabilityManager.m */; };
@@ -129,7 +131,6 @@
 		B76D74CC1F13198800CF77FA /* NSString+TCCypher.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D74861F13198800CF77FA /* NSString+TCCypher.m */; };
 		B76D74CD1F13198800CF77FA /* TCProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D74871F13198800CF77FA /* TCProxy.h */; };
 		B76D74CE1F13198800CF77FA /* TCProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D74881F13198800CF77FA /* TCProxy.m */; };
-		B76D74CF1F13198800CF77FA /* TCProxyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D74891F13198800CF77FA /* TCProxyDelegate.h */; };
 		B76D74D11F13198800CF77FA /* TCRSA.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D748B1F13198800CF77FA /* TCRSA.h */; };
 		B76D74D21F13198800CF77FA /* TCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D748C1F13198800CF77FA /* TCRSA.m */; };
 		B76D74D31F13198800CF77FA /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D748E1F13198800CF77FA /* UICKeyChainStore.h */; };
@@ -206,8 +207,6 @@
 		B76D75751F131D2D00CF77FA /* UIViewController+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D75491F131D2D00CF77FA /* UIViewController+TCHelper.m */; };
 		B76D75761F131D2D00CF77FA /* UIViewController+PopBackHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D754B1F131D2D00CF77FA /* UIViewController+PopBackHandler.h */; };
 		B76D75771F131D2D00CF77FA /* UIViewController+PopBackHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D754C1F131D2D00CF77FA /* UIViewController+PopBackHandler.m */; };
-		B76D757B1F13226100CF77FA /* TCProxyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B76D74891F13198800CF77FA /* TCProxyDelegate.h */; };
-		B76D757C1F13226100CF77FA /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D748A1F13198800CF77FA /* TCProxyDelegate.m */; };
 		B76D75901F1322F200CF77FA /* iConsole.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D758E1F1322F200CF77FA /* iConsole.m */; };
 		B76D76AE1F1323B000CF77FA /* TCNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B76D76A51F1323AF00CF77FA /* TCNetwork.framework */; };
 		B76D76B31F1323B000CF77FA /* TCNetworkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D76B21F1323B000CF77FA /* TCNetworkTests.m */; };
@@ -395,6 +394,8 @@
 		B72A5FAB1F1F4093002D900D /* UIImage+CGImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+CGImage.m"; sourceTree = "<group>"; };
 		B72A5FAC1F1F4093002D900D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		B72A5FAD1F1F4093002D900D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		B74028EF1F46798300AE681A /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
+		B74028F01F46798300AE681A /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 		B76A7EDB1F134F320010FBD3 /* UIWindow+TCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+TCHelper.h"; sourceTree = "<group>"; };
 		B76A7EDC1F134F320010FBD3 /* UIWindow+TCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+TCHelper.m"; sourceTree = "<group>"; };
 		B76A7F0B1F13568F0010FBD3 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -575,8 +576,6 @@
 		B76D74861F13198800CF77FA /* NSString+TCCypher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TCCypher.m"; sourceTree = "<group>"; };
 		B76D74871F13198800CF77FA /* TCProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxy.h; sourceTree = "<group>"; };
 		B76D74881F13198800CF77FA /* TCProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxy.m; sourceTree = "<group>"; };
-		B76D74891F13198800CF77FA /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
-		B76D748A1F13198800CF77FA /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 		B76D748B1F13198800CF77FA /* TCRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCRSA.h; sourceTree = "<group>"; };
 		B76D748C1F13198800CF77FA /* TCRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCRSA.m; sourceTree = "<group>"; };
 		B76D748E1F13198800CF77FA /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
@@ -1432,8 +1431,6 @@
 				B76D74861F13198800CF77FA /* NSString+TCCypher.m */,
 				B76D74871F13198800CF77FA /* TCProxy.h */,
 				B76D74881F13198800CF77FA /* TCProxy.m */,
-				B76D74891F13198800CF77FA /* TCProxyDelegate.h */,
-				B76D748A1F13198800CF77FA /* TCProxyDelegate.m */,
 				B76D748B1F13198800CF77FA /* TCRSA.h */,
 				B76D748C1F13198800CF77FA /* TCRSA.m */,
 				B76D748D1F13198800CF77FA /* UICKeyChainStore */,
@@ -1588,6 +1585,8 @@
 		B76D751E1F131D2D00CF77FA /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B74028EF1F46798300AE681A /* TCProxyDelegate.h */,
+				B74028F01F46798300AE681A /* TCProxyDelegate.m */,
 				B76D752B1F131D2D00CF77FA /* TCPullToRefresh */,
 				B76D752F1F131D2D00CF77FA /* TCWKWebView */,
 				B76D75391F131D2D00CF77FA /* UIButton+TCHelper.h */,
@@ -1866,7 +1865,6 @@
 				B76D74EA1F13198800CF77FA /* NSObject+TCCoding.h in Headers */,
 				B76D74C31F13198800CF77FA /* NSObject+TCUtilities.h in Headers */,
 				B76D74C51F13198800CF77FA /* UIColor+TCUtilities.h in Headers */,
-				B76D74CF1F13198800CF77FA /* TCProxyDelegate.h in Headers */,
 				B76D74F41F13198800CF77FA /* NSManagedObjectContext+TCMapping.h in Headers */,
 				B76D74F21F13198800CF77FA /* TCMappingOption.h in Headers */,
 				B76D74D51F13198800CF77FA /* CLLocation+TCHelper.h in Headers */,
@@ -1893,6 +1891,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B76D754F1F131D2D00CF77FA /* TCUIKit.h in Headers */,
+				B74028F11F46798300AE681A /* TCProxyDelegate.h in Headers */,
 				B76D755D1F131D2D00CF77FA /* TCWKWebView.h in Headers */,
 				B76D75681F131D2D00CF77FA /* UIImageView+TCHelper.h in Headers */,
 				B76D755E1F131D2D00CF77FA /* UIView+TCWKWebView.h in Headers */,
@@ -1905,7 +1904,6 @@
 				B76D756A1F131D2D00CF77FA /* UILabel+TCHelper.h in Headers */,
 				B76D756C1F131D2D00CF77FA /* UIScrollView+TCHelper.h in Headers */,
 				B76D75741F131D2D00CF77FA /* UIViewController+TCHelper.h in Headers */,
-				B76D757B1F13226100CF77FA /* TCProxyDelegate.h in Headers */,
 				B76D755B1F131D2D00CF77FA /* UIScrollView+TCPullToRefresh.h in Headers */,
 				B76D75601F131D2D00CF77FA /* UIWebView+TCWKWebView.h in Headers */,
 				B76D755A1F131D2D00CF77FA /* TCPullToRefresh.h in Headers */,
@@ -2340,12 +2338,12 @@
 				B76D75751F131D2D00CF77FA /* UIViewController+TCHelper.m in Sources */,
 				B76D75731F131D2D00CF77FA /* UIView+TCHelper.m in Sources */,
 				B76D755F1F131D2D00CF77FA /* UIView+TCWKWebView.m in Sources */,
-				B76D757C1F13226100CF77FA /* TCProxyDelegate.m in Sources */,
 				B76D75771F131D2D00CF77FA /* UIViewController+PopBackHandler.m in Sources */,
 				B76D75671F131D2D00CF77FA /* UIButton+TCHelper.m in Sources */,
 				B76D756D1F131D2D00CF77FA /* UIScrollView+TCHelper.m in Sources */,
 				B76D75611F131D2D00CF77FA /* UIWebView+TCWKWebView.m in Sources */,
 				B76D75631F131D2D00CF77FA /* WKWebView+TCWKWebView.m in Sources */,
+				B74028F21F46798300AE681A /* TCProxyDelegate.m in Sources */,
 				B76D756B1F131D2D00CF77FA /* UILabel+TCHelper.m in Sources */,
 				B76D75691F131D2D00CF77FA /* UIImageView+TCHelper.m in Sources */,
 				B76D75711F131D2D00CF77FA /* UITextView+Placeholder.m in Sources */,
@@ -3459,6 +3457,7 @@
 				B72A5F611F1F4066002D900D /* Publish */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Publish;
 		};
 		B76D742E1F1315A400CF77FA /* Build configuration list for PBXProject "TCKitSDK" */ = {
 			isa = XCConfigurationList;
