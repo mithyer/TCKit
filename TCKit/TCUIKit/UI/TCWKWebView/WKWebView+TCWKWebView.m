@@ -27,14 +27,12 @@
 {
     @private
     NSURL *_tmpPath;
-    
 }
 
 - (void)dealloc
 {
     if (nil != _tmpPath) {
         [NSFileManager.defaultManager removeItemAtURL:_tmpPath error:NULL];
-        _tmpPath = nil;
     }
 }
 
@@ -43,7 +41,7 @@
     _orgUrl = url;
     
     if (nil != _tmpPath) {
-        if (![NSFileManager.defaultManager fileExistsAtPath:_tmpPath.absoluteString]) {
+        if (![NSFileManager.defaultManager fileExistsAtPath:_tmpPath.path]) {
             _tmpPath = nil;
         }
     }
@@ -153,10 +151,6 @@
 {
     [self tc_swizzle:@selector(loadRequest:)];
     [self tc_swizzle:@selector(layoutSubviews)];
-    
-    // trigger auto load
-    // FIXME: slow launch
-    [self tc_systemUserAgent];
 }
 
 + (NSString *)tc_systemUserAgent
