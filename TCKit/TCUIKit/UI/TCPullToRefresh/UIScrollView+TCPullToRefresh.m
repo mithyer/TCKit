@@ -410,7 +410,6 @@ static char const kHeaderClassKey;
     self.loadingMore = NO;
 }
 
-// 含"加载更多"功能时, 如果需要reloadData，则reloadData方法必须先于此方法执行
 - (void)loadingDismissWithBlock:(void(^)(void))block
 {
     if (kTCRefreshPages == self.loadType) {
