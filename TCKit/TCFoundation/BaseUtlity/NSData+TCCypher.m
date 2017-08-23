@@ -297,6 +297,7 @@ static uint8_t nibbleFromChar(unichar c) {
     }
     
     if (bytePtr <= bytes) {
+        free(bytes);
         return nil;
     }
     
