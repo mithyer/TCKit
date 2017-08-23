@@ -77,7 +77,6 @@
 		B76A7FE31F13568F0010FBD3 /* NSData+TCCypher.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F621F13568F0010FBD3 /* NSData+TCCypher.m */; };
 		B76A7FE41F13568F0010FBD3 /* NSString+TCCypher.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F641F13568F0010FBD3 /* NSString+TCCypher.m */; };
 		B76A7FE51F13568F0010FBD3 /* TCProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F661F13568F0010FBD3 /* TCProxy.m */; };
-		B76A7FE61F13568F0010FBD3 /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F681F13568F0010FBD3 /* TCProxyDelegate.m */; };
 		B76A7FE71F13568F0010FBD3 /* TCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F6A1F13568F0010FBD3 /* TCRSA.m */; };
 		B76A7FE81F13568F0010FBD3 /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F6D1F13568F0010FBD3 /* UICKeyChainStore.m */; };
 		B76A7FE91F13568F0010FBD3 /* CLLocation+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F701F13568F0010FBD3 /* CLLocation+TCHelper.m */; };
@@ -263,6 +262,7 @@
 		B76D77941F134DA100CF77FA /* UIActionSheet+TCBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778A1F134DA100CF77FA /* UIActionSheet+TCBlocks.m */; };
 		B76D77951F134DA100CF77FA /* UIAlertView+TCBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778C1F134DA100CF77FA /* UIAlertView+TCBlocks.m */; };
 		B76D77961F134DA100CF77FA /* UIApplication+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778E1F134DA100CF77FA /* UIApplication+TCHelper.m */; };
+		B78D7F051F4D8AF00095C8DF /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -477,8 +477,6 @@
 		B76A7F641F13568F0010FBD3 /* NSString+TCCypher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TCCypher.m"; sourceTree = "<group>"; };
 		B76A7F651F13568F0010FBD3 /* TCProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxy.h; sourceTree = "<group>"; };
 		B76A7F661F13568F0010FBD3 /* TCProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxy.m; sourceTree = "<group>"; };
-		B76A7F671F13568F0010FBD3 /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
-		B76A7F681F13568F0010FBD3 /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 		B76A7F691F13568F0010FBD3 /* TCRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCRSA.h; sourceTree = "<group>"; };
 		B76A7F6A1F13568F0010FBD3 /* TCRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCRSA.m; sourceTree = "<group>"; };
 		B76A7F6C1F13568F0010FBD3 /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
@@ -725,6 +723,8 @@
 		B76D778C1F134DA100CF77FA /* UIAlertView+TCBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+TCBlocks.m"; sourceTree = "<group>"; };
 		B76D778D1F134DA100CF77FA /* UIApplication+TCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+TCHelper.h"; sourceTree = "<group>"; };
 		B76D778E1F134DA100CF77FA /* UIApplication+TCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+TCHelper.m"; sourceTree = "<group>"; };
+		B78D7F031F4D8AF00095C8DF /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
+		B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1152,8 +1152,6 @@
 				B76A7F641F13568F0010FBD3 /* NSString+TCCypher.m */,
 				B76A7F651F13568F0010FBD3 /* TCProxy.h */,
 				B76A7F661F13568F0010FBD3 /* TCProxy.m */,
-				B76A7F671F13568F0010FBD3 /* TCProxyDelegate.h */,
-				B76A7F681F13568F0010FBD3 /* TCProxyDelegate.m */,
 				B76A7F691F13568F0010FBD3 /* TCRSA.h */,
 				B76A7F6A1F13568F0010FBD3 /* TCRSA.m */,
 				B76A7F6B1F13568F0010FBD3 /* UICKeyChainStore */,
@@ -1289,6 +1287,8 @@
 		B76A7FA11F13568F0010FBD3 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B78D7F031F4D8AF00095C8DF /* TCProxyDelegate.h */,
+				B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */,
 				B76A7FA21F13568F0010FBD3 /* TCPullToRefresh */,
 				B76A7FA61F13568F0010FBD3 /* TCWKWebView */,
 				B76A7FAE1F13568F0010FBD3 /* UIButton+TCHelper.h */,
@@ -2386,6 +2386,7 @@
 				B76A7FC41F13568F0010FBD3 /* AFSecurityPolicy.m in Sources */,
 				B76A80051F13568F0010FBD3 /* UITextField+TCHelper.m in Sources */,
 				B76A7FC21F13568F0010FBD3 /* AFHTTPSessionManager.m in Sources */,
+				B78D7F051F4D8AF00095C8DF /* TCProxyDelegate.m in Sources */,
 				B76A7FEE1F13568F0010FBD3 /* NSURL+TCHelper.m in Sources */,
 				B76A7FC71F13568F0010FBD3 /* AFURLSessionManager.m in Sources */,
 				B76A7FFA1F13568F0010FBD3 /* AnimatedGIFImageSerialization.m in Sources */,
@@ -2432,7 +2433,6 @@
 				B76A7FF91F13568F0010FBD3 /* NSObject+TCMappingExtra.m in Sources */,
 				B76A7FED1F13568F0010FBD3 /* NSTimer+TCHelper.m in Sources */,
 				B76A7FF51F13568F0010FBD3 /* NSObject+TCPersistent.m in Sources */,
-				B76A7FE61F13568F0010FBD3 /* TCProxyDelegate.m in Sources */,
 				B76A7FCC1F13568F0010FBD3 /* TCHTTPTimerPolicy+TCHTTPRequest.m in Sources */,
 				B76A7FFD1F13568F0010FBD3 /* UIScrollView+TCPullToRefresh.m in Sources */,
 				B76A7FE41F13568F0010FBD3 /* NSString+TCCypher.m in Sources */,

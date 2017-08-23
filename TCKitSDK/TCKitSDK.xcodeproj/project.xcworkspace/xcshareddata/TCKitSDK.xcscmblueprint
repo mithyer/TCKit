@@ -5,12 +5,12 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "78657FD740A36FD7D0A79ED321BB432F67A9C67C" : 9223372036854775807,
-    "BD6DF7B91E4FE368ED389A4A702581D8A8BAEB07" : 9223372036854775807
+    "7A3EE0096FE3EB348375D72CD21501A6182DDF9E" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "10578A5F-4644-4259-96AA-B6C2149FCBB2",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "78657FD740A36FD7D0A79ED321BB432F67A9C67C" : "TCKit\/",
-    "BD6DF7B91E4FE368ED389A4A702581D8A8BAEB07" : "..\/.."
+    "7A3EE0096FE3EB348375D72CD21501A6182DDF9E" : "..\/.."
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "TCKitSDK",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -24,7 +24,7 @@
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:pixelcyber\/thor.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "BD6DF7B91E4FE368ED389A4A702581D8A8BAEB07"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7A3EE0096FE3EB348375D72CD21501A6182DDF9E"
     }
   ]
 }
