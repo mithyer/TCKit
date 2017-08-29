@@ -23,7 +23,12 @@ NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationD
 + (void)load
 {
     SEL sel = @selector(openURL:options:completionHandler:);
-    if (![self instancesRespondToSelector:@selector(openURL:options:completionHandler:)]) {
+    if (NULL == sel) {
+        sel = NSSelectorFromString(@"openURL:options:completionHandler:");
+    }
+    Method m1 = class_getInstanceMethod(self, sel);
+    
+    if (NULL != sel && NULL == m1) {
         IMP handler = imp_implementationWithBlock(^(UIApplication *app, NSURL *url, NSDictionary<NSString *, id> *options, void (^ __nullable completion)(BOOL success)) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
@@ -40,7 +45,7 @@ NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationD
             }
         });
         
-        if (!class_addMethod(self, sel, handler, method_getTypeEncoding(class_getInstanceMethod(self, sel)))) {
+        if (!class_addMethod(self, sel, handler, "v40@0:8@16@24@?32")) {
             NSAssert(false, @"add %@ failed", NSStringFromSelector(sel));
         }
     }
