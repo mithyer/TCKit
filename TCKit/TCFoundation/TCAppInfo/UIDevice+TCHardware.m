@@ -9,18 +9,22 @@
  https://github.com/lmirosevic/GBDeviceInfo
  */
 
-#include <sys/socket.h> // Per msqr
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import "UIDevice+TCHardware.h"
+
+#import <sys/socket.h> // Per msqr
+#import <sys/sysctl.h>
+#import <net/if.h>
+#import <net/if_dl.h>
 #import <mach/mach.h>
 
 #import <ifaddrs.h>
+#import <arpa/inet.h>
+#import <netdb.h>
 
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 
-#import "UIDevice+TCHardware.h"
+
 
 static NSString *s_device_names[kTCDeviceCount] = {
 
@@ -470,4 +474,86 @@ if ([btclass respondsToSelector:@selector(bluetoothStatus)])
     printf("Bluetooth %s enabled\n", bluetooth ? "is" : "isn't");
 }
 */
+
+
+#pragma mark -
+
++ (NSString *)stringFromSockAddr:(const struct sockaddr *)addr includeService:(BOOL)includeService
+{
+    // FIXME: ipv6
+    NSString *string = nil;
+    char hostBuffer[NI_MAXHOST] = {0};
+    char serviceBuffer[NI_MAXSERV] = {0};
+    if (getnameinfo(addr, addr->sa_len, hostBuffer, sizeof(hostBuffer), serviceBuffer, sizeof(serviceBuffer), NI_NUMERICHOST | NI_NUMERICSERV | NI_NOFQDN) >= 0) {
+        string = includeService ? [NSString stringWithFormat:@"%s:%s", hostBuffer, serviceBuffer] : @(hostBuffer);
+    }
+    return string;
+}
+
++ (BOOL)isIpv6Available {
+    __block BOOL ipv6Available = NO;
+    
+    [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
+        NSString* address;
+        if(addr->ifa_addr->sa_family == AF_INET6){
+            char ip[INET6_ADDRSTRLEN];
+            const char *str = inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)addr->ifa_addr)->sin6_addr), ip, INET6_ADDRSTRLEN);
+            
+            address = [NSString stringWithUTF8String:str];
+            NSArray* addressComponents = [address componentsSeparatedByString:@":"];
+            if(![addressComponents.firstObject isEqualToString:@"fe80"]){ // fe80 prefix in link-local ip
+                ipv6Available = YES;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return ipv6Available;
+}
+
++ (BOOL)isIpv4Available {
+    __block BOOL ipv4Available = NO;
+    
+    [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
+        if(addr->ifa_addr->sa_family == AF_INET){
+            ipv4Available = YES;
+            *stop = YES;
+        }
+    }];
+    
+    return ipv4Available;
+}
+
++ (void)enumerateNetworkInterfaces:(void (^)(struct ifaddrs *addr, BOOL *stop))block
+{
+    if (nil == block) {
+        return;
+    }
+    
+    struct ifaddrs *interfaces = NULL;
+    if (0 != getifaddrs(&interfaces)) {
+        if (NULL != interfaces) {
+            freeifaddrs(interfaces);
+        }
+        
+        return;
+    }
+    
+    struct ifaddrs *addr = interfaces;
+    BOOL stop = NO;
+    while(addr != NULL && !stop) {
+        
+        unsigned int flags = addr->ifa_flags;
+        
+        // Check for running IPv4, IPv6 interfaces. Skip the loopback interface.
+        if ((flags & (IFF_UP|IFF_RUNNING|IFF_LOOPBACK)) == (IFF_UP|IFF_RUNNING)) {
+            block(addr, &stop);
+        }
+        
+        addr = addr->ifa_next;
+    }
+    
+    freeifaddrs(interfaces);
+}
+
 @end

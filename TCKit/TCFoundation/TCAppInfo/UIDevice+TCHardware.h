@@ -5,6 +5,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <ifaddrs.h>
 
 typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDeviceUnknown = 0,
@@ -117,6 +118,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (TCDeviceFamily)deviceFamily;
 - (BOOL)hasCellular;
 - (BOOL)cellularAccessable;
+
+
+#pragma mark -
+
++ (BOOL)isIpv4Available;
++ (BOOL)isIpv6Available;
+
+// enumerate running IPv4, IPv6 interfaces. Skip the loopback interface.
++ (void)enumerateNetworkInterfaces:(void (^)(struct ifaddrs *addr, BOOL *stop))block;
+
++ (nullable NSString *)stringFromSockAddr:(const struct sockaddr *)addr includeService:(BOOL)includeService;
 
 @end
 
