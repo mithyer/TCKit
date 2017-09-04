@@ -19,6 +19,7 @@
 
 @implementation TCHTTPRequest
 
+@synthesize customHeaders;
 @synthesize isForceStart; // compatible with cache api
 @synthesize cachePolicy; // compatible with cache api
 

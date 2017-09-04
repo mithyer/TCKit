@@ -42,23 +42,25 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 @protocol TCHTTPRequestDelegate;
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol TCHTTPRequest <NSObject>
 
 @required
 
 #pragma mark - callback
 
-@property (nonatomic, weak) id<TCHTTPRequestDelegate> delegate;
-@property (nonatomic, copy) void (^resultBlock)(id<TCHTTPRequest> request, BOOL success);
+@property (nonatomic, weak, nullable) id<TCHTTPRequestDelegate> delegate;
+@property (nonatomic, copy, nullable) void (^resultBlock)(id<TCHTTPRequest> request, BOOL success);
 
-@property (nonatomic, strong) id<TCHTTPRespValidator> responseValidator;
+@property (nonatomic, strong, nullable) id<TCHTTPRespValidator> responseValidator;
 
 
 @property (nonatomic, copy) NSString *identifier;
-@property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong, nullable) NSDictionary *userInfo;
 @property (atomic, assign) TCRequestState state;
 
-@property (nonatomic, weak) id observer;
+@property (nonatomic, weak, nullable) id observer;
 
 
 /**
@@ -69,7 +71,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
  
  */
 - (BOOL)start:(NSError **)error;
-- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError **)error;
+- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError **_Nullable)error;
 
 - (BOOL)canStart:(NSError **)error;
 // delegate, resulteBlock always called, even if request was cancelled.
@@ -80,36 +82,37 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 
 #pragma mark - build request
 
-@property (nonatomic, copy) NSString *apiUrl; // "getUserInfo/"
-@property (nonatomic, copy) NSString *baseUrl; // "http://eet/oo/"
+@property (nonatomic, copy, nullable) NSString *apiUrl; // "getUserInfo/"
+@property (nonatomic, copy, nullable) NSString *baseUrl; // "http://eet/oo/"
 
 // Auto convert to query string, if requestMethod is GET
-@property (nonatomic, strong) id parameters;
+@property (nonatomic, strong, nullable) id parameters;
 @property (nonatomic, assign) NSTimeInterval timeoutInterval; // default: 30s
 @property (nonatomic, assign) TCHTTPMethod method;
 
 @property (nonatomic, assign) BOOL overrideIfImpact; // default: YES, NO: abandon current request, if a same one existed
 @property (nonatomic, assign) BOOL ignoreParamFilter;
 
+@property (nonatomic, strong, nullable) NSDictionary<NSString *, NSString *> *customHeaders;
 
 
-- (id)responseObject;
+- (nullable id)responseObject;
 
 
 #pragma mark - timer
 
-@property (nonatomic, strong) TCHTTPTimerPolicy *timerPolicy;
+@property (nonatomic, strong, nullable) TCHTTPTimerPolicy *timerPolicy;
 
 
 #pragma mark - Upload / download
 
-@property (nonatomic, strong) TCHTTPStreamPolicy *streamPolicy;
+@property (nonatomic, strong, nullable) TCHTTPStreamPolicy *streamPolicy;
 
 
 #pragma mark - Custom
 
 // set nonull to ignore requestUrl, argument, requestMethod, serializerType
-@property (nonatomic, strong) NSURLRequest *customUrlRequest;
+@property (nonatomic, strong, nullable) NSURLRequest *customUrlRequest;
 
 
 
@@ -118,7 +121,7 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 
 #pragma mark - Cache
 
-@property (nonatomic, strong, readonly) TCHTTPCachePolicy *cachePolicy;
+@property (nonatomic, strong, nullable, readonly) TCHTTPCachePolicy *cachePolicy;
 @property (nonatomic, assign) BOOL isForceStart;
 
 /**
@@ -129,9 +132,9 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
  
  @return <#return value description#>
  */
-- (BOOL)forceStart:(NSError **)error;
+- (BOOL)forceStart:(NSError **_Nullable)error;
 
-- (void)cachedResponseByForce:(BOOL)force result:(void(^)(id response, TCCachedRespState state))result;
+- (void)cachedResponseByForce:(BOOL)force result:(void(^)(id _Nullable response, TCCachedRespState state))result;
 
 
 #pragma mark - Batch
@@ -151,3 +154,4 @@ typedef NS_ENUM(NSInteger, TCHTTPMethod) {
 
 @end
 
+NS_ASSUME_NONNULL_END

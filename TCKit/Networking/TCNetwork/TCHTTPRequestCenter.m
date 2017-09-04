@@ -89,7 +89,7 @@
 
 - (nullable NSDictionary<NSString *, NSString *> *)customHeaderValueForRequest:(id<TCHTTPRequest>)request
 {
-    return nil;
+    return request.customHeaders;
 }
 
 
