@@ -478,8 +478,20 @@ if ([btclass respondsToSelector:@selector(bluetoothStatus)])
 
 #pragma mark -
 
+//static in_port_t get_in_port(const struct sockaddr *sa)
+//{
+//    if (sa->sa_family == AF_INET) {
+//        return (((struct sockaddr_in*)sa)->sin_port);
+//    }
+//    
+//    return (((struct sockaddr_in6*)sa)->sin6_port);
+//}
+
 + (NSString *)stringFromSockAddr:(const struct sockaddr *)addr includeService:(BOOL)includeService
 {
+    if (NULL == addr) {
+        return nil;
+    }
     // FIXME: ipv6
     NSString *string = nil;
     char hostBuffer[NI_MAXHOST] = {0};
@@ -494,14 +506,13 @@ if ([btclass respondsToSelector:@selector(bluetoothStatus)])
     __block BOOL ipv6Available = NO;
     
     [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
-        NSString* address;
-        if(addr->ifa_addr->sa_family == AF_INET6){
+        if (addr->ifa_addr->sa_family == AF_INET6){
             char ip[INET6_ADDRSTRLEN];
             const char *str = inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)addr->ifa_addr)->sin6_addr), ip, INET6_ADDRSTRLEN);
             
-            address = [NSString stringWithUTF8String:str];
-            NSArray* addressComponents = [address componentsSeparatedByString:@":"];
-            if(![addressComponents.firstObject isEqualToString:@"fe80"]){ // fe80 prefix in link-local ip
+            NSString *address = @(str);
+            NSArray *addressComponents = [address componentsSeparatedByString:@":"];
+            if (![addressComponents.firstObject isEqualToString:@"fe80"]){ // fe80 prefix in link-local ip
                 ipv6Available = YES;
                 *stop = YES;
             }
@@ -515,7 +526,7 @@ if ([btclass respondsToSelector:@selector(bluetoothStatus)])
     __block BOOL ipv4Available = NO;
     
     [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
-        if(addr->ifa_addr->sa_family == AF_INET){
+        if (addr->ifa_addr->sa_family == AF_INET){
             ipv4Available = YES;
             *stop = YES;
         }
