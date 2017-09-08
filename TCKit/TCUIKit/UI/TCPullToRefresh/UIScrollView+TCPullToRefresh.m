@@ -514,7 +514,7 @@ static char const kHeaderClassKey;
 - (void)tc_scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // 刷新操作
-    if (self.refreshEnabled && nil != self.refreshHeaderView && !self.refreshHeaderView.hidden) {
+    if (self.refreshEnabled && nil != self.refreshHeaderView) {
         [self.refreshHeaderView tcRefreshScrollViewDidScroll:scrollView];
     }
     

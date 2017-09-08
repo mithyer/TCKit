@@ -66,9 +66,9 @@ static NSString const *kDefaultDomain = @"TCKit";
 {
     NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:domain?:kDefaultDomain];
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
-                                 withIntermediateDirectories:YES
-                                                  attributes:nil
-                                                       error:NULL]) {
+                                           withIntermediateDirectories:YES
+                                                            attributes:nil
+                                                                 error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
