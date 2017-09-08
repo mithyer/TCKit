@@ -295,7 +295,6 @@ static char const kHeaderClassKey;
 
 #pragma mark - views
 
-
 // 初始化顶部刷新view
 - (void)setUpRefreshHeaderView
 {
@@ -325,7 +324,6 @@ static char const kHeaderClassKey;
     self.loadMoreEnabled = YES;
     
     if (nil == self.loadMoreView) {
-        
         CGRect frame = self.bounds;
         frame.origin.y = frame.size.height;
         UIView *loadMoreView = [[UIView alloc] initWithFrame:frame];
@@ -369,9 +367,11 @@ static char const kHeaderClassKey;
     self.reloading = YES;
     self.loadType = kTCRefreshPages;
     
-    if (animated && nil != self.refreshHeaderView && self.refreshEnabled) {
+    if (nil != self.refreshHeaderView && self.refreshEnabled) {
         self.refreshHeaderView.contentInset = self.contentInset;
-        [self.refreshHeaderView showRefreshView:self];
+        if (animated) {
+            [self.refreshHeaderView showRefreshView:self];
+        }
     }
 }
 
@@ -381,7 +381,7 @@ static char const kHeaderClassKey;
         if (nil != self.refreshHeaderView && self.refreshEnabled) {
             UIEdgeInsets contentInset = self.contentInset;
             contentInset.top = 0;
-            self.refreshHeaderView.contentInset = contentInset;
+            
             [self.refreshHeaderView tcRefreshScrollViewDataSourceDidFinishedLoading:self];
         }
     }
@@ -515,7 +515,7 @@ static char const kHeaderClassKey;
 - (void)tc_scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // 刷新操作
-    if (nil != self.refreshHeaderView && self.refreshEnabled) {
+    if (nil != self.refreshHeaderView && self.refreshEnabled && !self.reloading) {
         [self.refreshHeaderView tcRefreshScrollViewDidScroll:scrollView];
     }
     

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)delayContentTouches;
 
+- (void)stopScrolling;
+
 @end
 
 NS_ASSUME_NONNULL_END

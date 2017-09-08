@@ -38,8 +38,8 @@ typedef NS_ENUM(NSInteger, TCPullRefreshState) {
 @protocol TCRefreshHeaderInterface <NSObject>
 
 @required
-@property(nonatomic,assign) UIEdgeInsets contentInset;
-@property(nonatomic,weak) id<TCRefreshHeaderViewDelegate> delegate;
+@property (nonatomic, assign) UIEdgeInsets contentInset;
+@property (nonatomic, weak) id<TCRefreshHeaderViewDelegate> delegate;
 
 - (void)showRefreshView:(UIScrollView *)scrollView;
 - (void)tcRefreshScrollViewDidScroll:(UIScrollView *)scrollView;

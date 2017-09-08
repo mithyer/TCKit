@@ -45,6 +45,12 @@
     return [self tc_touchesShouldCancelInContentView:view];
 }
 
+- (void)stopScrolling
+{
+    if (self.isDragging || self.isDecelerating || self.tracking) {
+        [self setContentOffset:self.contentOffset animated:NO];
+    }
+}
 
 #pragma mark -
 
