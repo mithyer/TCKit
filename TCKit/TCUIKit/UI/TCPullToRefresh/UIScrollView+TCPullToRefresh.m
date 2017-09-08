@@ -368,8 +368,8 @@ static char const kHeaderClassKey;
     self.loadType = kTCRefreshPages;
     
     if (nil != self.refreshHeaderView && self.refreshEnabled) {
-        self.refreshHeaderView.contentInset = self.contentInset;
         if (animated) {
+            self.refreshHeaderView.contentInset = self.contentInset;
             [self.refreshHeaderView showRefreshView:self];
         }
     }
@@ -379,10 +379,9 @@ static char const kHeaderClassKey;
 {
     if (self.reloading) {
         if (nil != self.refreshHeaderView && self.refreshEnabled) {
-            UIEdgeInsets contentInset = self.contentInset;
-            contentInset.top = 0;
-            
-            [self.refreshHeaderView tcRefreshScrollViewDataSourceDidFinishedLoading:self];
+            if (!self.refreshHeaderView.hidden) {
+                [self.refreshHeaderView tcRefreshScrollViewDataSourceDidFinishedLoading:self];
+            }
         }
     }
     
@@ -515,7 +514,7 @@ static char const kHeaderClassKey;
 - (void)tc_scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // 刷新操作
-    if (nil != self.refreshHeaderView && self.refreshEnabled && !self.reloading) {
+    if (self.refreshEnabled && nil != self.refreshHeaderView && !self.refreshHeaderView.hidden) {
         [self.refreshHeaderView tcRefreshScrollViewDidScroll:scrollView];
     }
     
