@@ -106,7 +106,7 @@
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path error:NULL].fileSize;
+    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path.stringByResolvingSymlinksInPath error:NULL].fileSize;
 }
 
 @end
