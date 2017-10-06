@@ -97,7 +97,7 @@
         return 0;
     }
     
-    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path error:NULL];
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path.stringByResolvingSymlinksInPath error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
         for (NSString *fileName in subPath) {
