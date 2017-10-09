@@ -110,7 +110,8 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
         return codingObject(((NSOrderedSet *)obj).array, style, parentKlass, option, recordFlag);
         
     } else if ([obj isKindOfClass:NSURL.class]) { // -> string
-        return ((NSURL *)obj).absoluteString;
+        NSURL *url = (NSURL *)obj;
+        return url.isFileURL ? url.path : url.absoluteString;
         
     } else if ([obj isKindOfClass:NSDate.class]) { // -> string
         if (kTCPersisentStylePlist == style) {
