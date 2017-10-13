@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TCHTTPRequestProtocol.h"
-
+#import "TCHTTPReqAgentDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +17,7 @@ typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
 
 @interface TCHTTPStreamPolicy : NSObject
 
-@property (nonatomic, weak) id<TCHTTPRequest> request;
+@property (nonatomic, weak) id<TCHTTPRequest, TCHTTPReqAgentDelegate> request;
 @property (nonatomic, strong, nullable) NSProgress *progress;
 
 
@@ -32,6 +32,8 @@ typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
 @property (nonatomic, copy, nullable) NSString *downloadIdentifier; // such as hash string, but can not be file system path! if nil, apiUrl's md5 used.
 @property (nonatomic, copy, nullable) NSString *downloadResumeCacheDirectory; // if nil, `tmp` directory used.
 @property (nonatomic, copy) NSString *downloadDestinationPath;
+
+- (void)purgeResumeData;
 
 @end
 

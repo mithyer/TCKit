@@ -31,11 +31,7 @@
 
 - (void)clearCachedResumeDataForRequest:(id<TCHTTPReqAgentDelegate>)request
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @autoreleasepool {
-            [request.requestTask tc_purgeResumeData];
-        }
-    });
+    [request.requestTask tc_purgeResumeData];
 }
 
 

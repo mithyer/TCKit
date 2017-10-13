@@ -8,6 +8,7 @@
 
 #import "TCHTTPStreamPolicy.h"
 #import "TCHTTPRequestHelper.h"
+#import "NSURLSessionTask+TCResumeDownload.h"
 
 @implementation TCHTTPStreamPolicy
 
@@ -39,5 +40,12 @@
     
     return _downloadResumeCacheDirectory;
 }
+
+- (void)purgeResumeData
+{
+    [self.request.requestTask tc_purgeResumeData];
+}
+
+
 
 @end
