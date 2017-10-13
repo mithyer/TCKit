@@ -92,12 +92,11 @@
 
 - (unsigned long long)contentSizeInByte
 {
-    NSURL *url = self.filePathURL;
-    if (nil == url) {
+    if (!self.isFileURL) {
         return 0;
     }
     
-    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path.stringByResolvingSymlinksInPath error:NULL];
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:self.path.stringByResolvingSymlinksInPath error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
         for (NSString *fileName in subPath) {
@@ -106,7 +105,7 @@
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path.stringByResolvingSymlinksInPath error:NULL].fileSize;
+    return [NSFileManager.defaultManager attributesOfItemAtPath:self.path.stringByResolvingSymlinksInPath error:NULL].fileSize;
 }
 
 @end
