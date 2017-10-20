@@ -237,3 +237,18 @@
 }
 
 @end
+
+@implementation NSMutableDictionary (TCUtilities)
+
+- (void)removeValueForCaseInsensitiveKey:(NSString *)key
+{
+    NSParameterAssert(key);
+    if (nil == key) {
+        return;
+    }
+    
+    [self removeObjectForKey:key];
+    [self removeObjectForKey:key.lowercaseString];
+}
+
+@end
