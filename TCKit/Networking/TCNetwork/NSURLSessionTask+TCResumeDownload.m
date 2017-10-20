@@ -166,7 +166,7 @@ static NSString *tc_md5_32(NSString *str)
 
 + (NSString *)tc_resumeCachePathWithDirectory:(NSString *)subpath identifier:(NSString *)indentifier
 {
-    return [subpath stringByAppendingPathComponent:indentifier];
+    return [subpath stringByAppendingPathComponent:tc_md5_32(indentifier)];
 }
 
 + (BOOL)tc_isTmpResumeCache:(NSString *)resumeDirectory

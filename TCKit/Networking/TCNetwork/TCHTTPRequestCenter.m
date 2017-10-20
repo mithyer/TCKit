@@ -312,13 +312,6 @@
             [requestMgr.requestSerializer clearAuthorizationHeader];
         }
         
-        // if api need add custom value to HTTPHeaderField
-        NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
-        for (NSString *httpHeaderField in headerFieldValueDic) {
-            NSString *value = headerFieldValueDic[httpHeaderField];
-            [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
-        }
-        
         [self generateTaskFor:request polling:NO];
     }
     
@@ -338,7 +331,6 @@
         return [NSURL fileURLWithPath:request.streamPolicy.downloadDestinationPath];
     };
     
-    
     __weak typeof(self) wSelf = self;
     void (^completionHandler)(NSURLResponse *response, NSURL *filePath, NSError *error) = ^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         if (nil != error || nil == filePath) {
@@ -356,10 +348,13 @@
     };
     
     AFHTTPSessionManager *requestMgr = self.requestManager;
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:downloadUrl
-                                                cachePolicy:requestMgr.requestSerializer.cachePolicy
-                                            timeoutInterval:requestMgr.requestSerializer.timeoutInterval];
-    
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:downloadUrl
+                                                              cachePolicy:requestMgr.requestSerializer.cachePolicy
+                                                          timeoutInterval:requestMgr.requestSerializer.timeoutInterval];
+    NSDictionary *headers = [self customHeaderValueForRequest:request];
+    for (NSString *key in headers) {
+        [urlRequest setValue:[NSString stringWithFormat:@"%@", headers[key]] forHTTPHeaderField:key];
+    }
     if (request.streamPolicy.shouldResumeDownload) {
         [self loadResumeData:^(NSData *data) {
             if (nil != data) {
@@ -422,10 +417,12 @@
     }
     
     // if api need add custom value to HTTPHeaderField
-    NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
-    for (NSString *httpHeaderField in headerFieldValueDic) {
-        NSString *value = headerFieldValueDic[httpHeaderField];
-        [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
+    if (request.method != kTCHTTPMethodDownload) {
+        NSDictionary *headerFieldValueDic = [self customHeaderValueForRequest:request];
+        for (NSString *httpHeaderField in headerFieldValueDic) {
+            NSString *value = headerFieldValueDic[httpHeaderField];
+            [requestMgr.requestSerializer setValue:value forHTTPHeaderField:httpHeaderField];
+        }
     }
     
     NSURL *url = [self buildRequestUrlForRequest:request];
