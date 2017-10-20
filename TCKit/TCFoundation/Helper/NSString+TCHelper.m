@@ -67,6 +67,13 @@
     NSString *ext = nil;
     if ([decodeUrl hasPrefix:@"http"]) {
         NSURL *url = [NSURL URLWithString:decodeUrl];
+        if (nil == url) {
+            NSString *tmp = [decodeUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+            if (nil != tmp) {
+                url = [NSURL URLWithString:tmp];
+            }
+        }
+
         if (url.path.length < 1) {
             if (url.query.length < 1) {
                 return nil;
