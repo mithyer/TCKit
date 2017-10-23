@@ -318,7 +318,7 @@
     return YES;
 }
 
-- (void)fireDownloadTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request downloadUrl:(NSURL *)downloadUrl successBlock:(void (^)())successBlock failureBlock:(void (^)())failureBlock
+- (void)fireDownloadTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request downloadUrl:(NSURL *)downloadUrl successBlock:(void (^)(NSURLSessionTask *task, id responseObject))successBlock failureBlock:(void (^)(NSURLSessionTask *task, NSError *error))failureBlock
 {
     NSParameterAssert(request);
     NSParameterAssert(downloadUrl);
@@ -389,12 +389,12 @@
 - (void)generateTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request polling:(BOOL)polling
 {
     __weak typeof(self) wSelf = self;
-    void (^successBlock)() = ^(NSURLSessionTask *task, id responseObject) {
+    void (^successBlock)(NSURLSessionTask *task, id responseObject) = ^(NSURLSessionTask *task, id responseObject) {
         NSAssert(NSThread.isMainThread, @"not main thread");
         request.rawResponseObject = responseObject;
         [wSelf handleRequestResult:request success:YES error:nil];
     };
-    void (^failureBlock)() = ^(NSURLSessionTask *task, NSError *error) {
+    void (^failureBlock)(NSURLSessionTask *task, NSError *error) = ^(NSURLSessionTask *task, NSError *error) {
         NSAssert(NSThread.isMainThread, @"not main thread");
         [wSelf handleRequestResult:request success:NO error:error];
     };
@@ -474,7 +474,9 @@
         }
             
         case kTCHTTPMethodHead: {
-            task = [requestMgr HEAD:url.absoluteString parameters:param success:successBlock failure:failureBlock];
+            task = [requestMgr HEAD:url.absoluteString parameters:param success:^(NSURLSessionDataTask * _Nonnull task) {
+                successBlock(task, nil);
+            } failure:failureBlock];
             break;
         }
             
