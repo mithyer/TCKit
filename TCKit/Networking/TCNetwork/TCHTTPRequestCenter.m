@@ -680,7 +680,7 @@
 
 - (id<TCHTTPRespValidator>)responseValidatorForRequest:(id<TCHTTPRequest>)request
 {
-    return request.method != kTCHTTPMethodDownload ? [[self.responseValidorClass alloc] init] : nil;
+    return [[self.responseValidorClass alloc] init];
 }
 
 
