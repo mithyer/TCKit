@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 // xx.jpg?i=xx&j=oo -> jpg
 - (nullable NSString *)fixedFileExtension;
 
+- (nullable NSString *)tc_fileMD5;
+
 @end
 
 NS_ASSUME_NONNULL_END
