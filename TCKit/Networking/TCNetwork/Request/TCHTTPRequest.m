@@ -117,6 +117,9 @@
 - (BOOL)start:(NSError **)error
 {
     NSParameterAssert(self.requestAgent);
+    if (self.isCancelled) {
+        return NO;
+    }
     
     if (self.method == kTCHTTPMethodDownload && nil != self.timerPolicy) {
         @throw [NSException exceptionWithName:NSStringFromClass(self.class) reason:@"download task can not be polling" userInfo:nil];
@@ -165,8 +168,7 @@
         }
     }
     
-    if (self.isCancelled ||
-        nil == self.requestTask ||
+    if (nil == self.requestTask ||
         NSURLSessionTaskStateCanceling == self.requestTask.state ||
         NSURLSessionTaskStateCompleted == self.requestTask.state) {
         self.isCancelled = YES;
