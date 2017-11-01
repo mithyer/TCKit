@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TCMappingPersistentContext <NSObject>
 
-@required
+@optional
++ (id __nullable)instanceForPrimaryKey:(NSDictionary<NSString *, id> *)primaryKey class:(Class)klass;
 - (id __nullable)instanceForPrimaryKey:(NSDictionary<NSString *, id> *)primaryKey class:(Class)klass;
 
 @end
