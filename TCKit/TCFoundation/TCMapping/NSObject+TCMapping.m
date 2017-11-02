@@ -649,11 +649,13 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
     NSParameterAssert(map);
     NSAssert([obj isKindOfClass:self.class], @"obj must be kindof self class");
     
-    if (nil == obj || nil == map || ![obj isKindOfClass:self.class]) {
+    __unsafe_unretained Class curClass = self.class;
+    if (nil == obj || nil == map || ![obj isKindOfClass:curClass]) {
         return;
     }
     
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(self.class, YES);
+    TCMappingOption *opt = [curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil;
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != opt ? opt.autoMapUntilRoot : YES);
     for (NSString *key in metaDic) {
         __unsafe_unretained TCMappingMeta *meta = metaDic[key];
         if (NULL == meta->_setter || NULL == meta->_getter) {
