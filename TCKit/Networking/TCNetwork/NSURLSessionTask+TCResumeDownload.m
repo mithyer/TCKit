@@ -118,8 +118,8 @@ static NSString *tc_md5_32(NSString *str)
                         if (nil != tmpDownloadFile) {
                             NSError *error = nil;
                             NSString *cachePath = [sSelf.tc_resumeCacheDirectory stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent];
-                            [[NSFileManager defaultManager] removeItemAtPath:cachePath error:NULL];
-                            [[NSFileManager defaultManager] moveItemAtPath:tmpDownloadFile toPath:cachePath error:&error];
+                            [NSFileManager.defaultManager removeItemAtPath:cachePath error:NULL];
+                            [NSFileManager.defaultManager moveItemAtPath:tmpDownloadFile toPath:cachePath error:&error];
                             NSAssert(nil == error, @"%@", error);
                         }
                     }
@@ -240,17 +240,20 @@ static NSString *tc_md5_32(NSString *str)
 
 + (nullable NSData *)tc_resumeDataWithIdentifier:(NSString *)identifier inDirectory:(nullable NSString *)subpath
 {
-    NSData *data = [NSData dataWithContentsOfFile:[self tc_resumeCachePathWithDirectory:subpath identifier:identifier]];
+    NSData *data = [NSData dataWithContentsOfFile:[self tc_resumeCachePathWithDirectory:subpath identifier:identifier] options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL];
     NSString *tmpDownloadFile = [self tc_resumeInfoTempFileNameFor:data];
     if (nil != tmpDownloadFile) {
         if (![self tc_isTmpResumeCache:subpath]) {
             NSError *error = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:tmpDownloadFile error:NULL];
-            [[NSFileManager defaultManager] copyItemAtPath:[subpath stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent] toPath:tmpDownloadFile error:&error];
+            [NSFileManager.defaultManager removeItemAtPath:tmpDownloadFile error:NULL];
+            [NSFileManager.defaultManager copyItemAtPath:[subpath stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent] toPath:tmpDownloadFile error:&error];
             NSAssert(nil == error, @"%@", error);
         }
         
-        if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDownloadFile]) {
+        if (![NSFileManager.defaultManager fileExistsAtPath:tmpDownloadFile]) {
+            if (nil != subpath) {
+                [NSFileManager.defaultManager removeItemAtPath:[subpath stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent] error:NULL];
+            }
             data = nil;
         }
     }
@@ -267,7 +270,7 @@ static NSString *tc_md5_32(NSString *str)
     }
     
     // rm tmp files
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL];
     NSString *tmpDownloadFile = [self tc_resumeInfoTempFileNameFor:data];
     if (nil != tmpDownloadFile) {
         [NSFileManager.defaultManager removeItemAtPath:tmpDownloadFile error:NULL];

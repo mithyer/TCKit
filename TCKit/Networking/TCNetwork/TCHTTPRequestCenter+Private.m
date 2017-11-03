@@ -21,7 +21,6 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         @autoreleasepool {
             NSData *data = [NSURLSessionTask tc_resumeDataWithIdentifier:policy.downloadIdentifier inDirectory:policy.downloadResumeCacheDirectory];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 finish(data);
             });
