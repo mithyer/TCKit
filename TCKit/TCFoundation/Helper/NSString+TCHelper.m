@@ -180,20 +180,29 @@
 
 - (BOOL)isPureNumber
 {
-    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
-    return string.length < 1 || [string isEqualToString:@"."];
+    if (self.length < 1) {
+        return NO;
+    }
+    NSString *str = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
+    return str.length < 1 || [str isEqualToString:@"."];
 }
 
 - (BOOL)isInteger
 {
-    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
-    return string.length < 1;
+    if (self.length < 1) {
+        return NO;
+    }
+    NSString *str = [self stringByTrimmingCharactersInSet:NSCharacterSet.decimalDigitCharacterSet];
+    return str.length < 1;
 }
 
 - (BOOL)isPureAlphabet
 {
-    NSString *string = [self stringByTrimmingCharactersInSet:NSCharacterSet.letterCharacterSet];
-    return string.length < 1;
+    if (self.length < 1) {
+        return NO;
+    }
+    NSString *str = [self stringByTrimmingCharactersInSet:NSCharacterSet.letterCharacterSet];
+    return str.length < 1;
 }
 
 - (BOOL)isValidIDCardNumberOfChina
