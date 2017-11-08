@@ -11,6 +11,15 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#import <UIKit/UIKit.h>
+
+@interface NSAttributedString (HTML)
+
++ (instancetype)attributedStringWithHTMLString:(NSString *)htmlString;
+
+@end
+
+
 @implementation NSString (TCHelper)
 
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
@@ -394,6 +403,28 @@ bool tc_is_ip_addr(char const *host)
     }
     
     return text;
+}
+
+- (NSString *)stringByUnescapingHTML
+{
+    if (self.length < 1) {
+        return self;
+    }
+    
+    return [NSAttributedString attributedStringWithHTMLString:self].string;
+}
+
+@end
+
+
+@implementation NSAttributedString (HTML)
+
++ (instancetype)attributedStringWithHTMLString:(NSString *)htmlString
+{
+    NSDictionary *options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                              NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)};
+    NSData *data = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    return [[NSAttributedString alloc] initWithData:data options:options documentAttributes:nil error:NULL];
 }
 
 @end

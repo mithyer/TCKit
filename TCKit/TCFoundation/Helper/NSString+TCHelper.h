@@ -41,6 +41,8 @@ extern bool tc_is_ip_addr(char const *host);
 + (nullable NSString *)IANACharsetForEncoding:(NSStringEncoding)encoding;
 + (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc;
 
+- (nullable NSString *)stringByUnescapingHTML;
+
 @end
 
 NS_ASSUME_NONNULL_END
