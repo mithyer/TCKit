@@ -1284,6 +1284,23 @@ void tcHSPtoRGB(
     return result;
 }
 
+- (NSString *)rgbHexStringValue
+{
+    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
+    NSString *result = nil;
+    switch (self.colorSpaceModel) {
+        case kCGColorSpaceModelRGB:
+            result = [NSString stringWithFormat:@"%02X%02X%02X", self.redByte, self.greenByte, self.blueByte];
+            break;
+        case kCGColorSpaceModelMonochrome:
+            result = [NSString stringWithFormat:@"%02X%02X%02X", self.whiteByte, self.whiteByte, self.whiteByte];
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+
 - (NSString *)argbHexStringValue
 {
     NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");

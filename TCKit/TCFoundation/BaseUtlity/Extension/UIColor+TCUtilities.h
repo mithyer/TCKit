@@ -189,6 +189,7 @@ extern void tcHSPtoRGB(CGFloat  H, CGFloat  S, CGFloat  P, CGFloat *R, CGFloat *
 @property (nullable, nonatomic, readonly) NSString *stringValue;
 // "12345FE8"
 @property (nullable, nonatomic, readonly) NSString *rgbaHexStringValue;
+@property (nullable, nonatomic, readonly) NSString *rgbHexStringValue;
 @property (nullable, nonatomic, readonly) NSString *argbHexStringValue;
 @property (nonatomic, readonly) NSString *valueString;
 // {r, g, b, a} --> {0.3, 1, 0.5, 1}
