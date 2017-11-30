@@ -599,6 +599,44 @@ static char const kBtnExtraKey;
 }
 #endif
 
++ (UIImage *)imageFromBarButtonSystemItem:(UIBarButtonSystemItem)item
+{
+    static const CGFloat defaultNBBtnHW  = 44.0;
+    
+    UIImage *barButtonSystemItemImage = nil;
+    @try {
+        UINavigationBar *tempNavigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, defaultNBBtnHW, defaultNBBtnHW)];
+        UINavigationItem *tempNavigationItem = [[UINavigationItem alloc] init];
+        UIBarButtonItem *tempBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:nil action:NULL];
+        
+        tempNavigationBar.items = @[tempNavigationItem];
+        tempNavigationItem.rightBarButtonItems = @[tempBarButtonItem];
+        [tempNavigationBar snapshotViewAfterScreenUpdates:YES];
+        
+        UIView *barButtonItemView = [tempBarButtonItem valueForKey:@"view"];
+        if ([barButtonItemView isKindOfClass:UIButton.class]) {
+            barButtonSystemItemImage = [(UIButton *)barButtonItemView imageForState:UIControlStateNormal];
+        } else {
+            for (UIView *subview in barButtonItemView.subviews) {
+                if ([subview isKindOfClass:UIButton.class]) {
+                    barButtonSystemItemImage = [(UIButton *)subview imageForState:UIControlStateNormal];
+                } else if ([subview isKindOfClass:UIImageView.class]) {
+                    barButtonSystemItemImage = ((UIImageView *)subview).image;
+                }
+                
+                if (nil != barButtonSystemItemImage) {
+                    break;
+                }
+            }
+        }
+    } @catch (NSException *exp) {
+        NSLog(@"%s: Exception while retrieving image from UIBarButtonItem!", __PRETTY_FUNCTION__);
+        
+    } @finally {
+        return barButtonSystemItemImage;
+    }
+}
+
 
 @end
 

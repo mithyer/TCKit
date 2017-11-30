@@ -27,6 +27,8 @@ typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
 
 @property (nonatomic, assign) TCButtonLayoutStyle layoutStyle;
 
++ (nullable UIImage *)imageFromBarButtonSystemItem:(UIBarButtonSystemItem)item;
+
 /**
  @brief set underline
  
@@ -50,10 +52,10 @@ typedef NS_ENUM(NSInteger, TCButtonLayoutStyle) {
 - (void)setLayoutSizeNeedChange:(void(^)(CGSize layoutSize))block;
 
 
-- (UIColor * __nullable)backgroundColorForState:(UIControlState)state;
+- (nullable UIColor *)backgroundColorForState:(UIControlState)state;
 - (void)setBackgroundColor:(UIColor * __nullable)color forState:(UIControlState)state;
 
-- (UIColor * __nullable)borderColorForState:(UIControlState)state;
+- (nullable UIColor *)borderColorForState:(UIControlState)state;
 - (void)setBorderColor:(UIColor * __nullable)color forState:(UIControlState)state;
 
 
