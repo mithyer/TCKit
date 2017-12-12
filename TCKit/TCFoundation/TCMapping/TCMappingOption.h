@@ -42,8 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-typedef Class __nullable (^TCTypeMappingBlock)(id value);
 typedef id __nullable (^TCValueMappingBlock)(id value);
 
 @interface TCMappingOption : NSObject <NSCopying>
@@ -60,7 +58,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 /**
  @brief	format: @{@"propertyName": @"object'class name or Class or `TCTypeMappingBlock`, or yyyy-MM-dd...(-> NSDate)"}
  */
-@property (nullable, nonatomic, strong) NSDictionary<NSString *, Class/* Class\TCTypeMappingBlock\yyyy-MM-dd... */> *typeMapping;
+@property (nullable, nonatomic, strong) NSDictionary<NSString *, Class/* Class\TCValueMappingBlock\yyyy-MM-dd... */> *typeMapping;
 
 @property (nullable, nonatomic, strong) NSDictionary<NSString *, id/* TCValueMappingBlock */> *undefineMapping;
 

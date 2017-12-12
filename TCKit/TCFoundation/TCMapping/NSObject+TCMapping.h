@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (TCMapping) <TCMappingOption>
 
++ (instancetype __nullable)valueForBaseTypeOfProperty:(id)value option:(TCMappingOption *__nullable)option;
+
 
 /**
  @brief	property type support CGPoint, CGSize, etc...

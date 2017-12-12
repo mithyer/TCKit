@@ -62,9 +62,6 @@ NS_INLINE Class classForType(id type, id value)
         return type;
     } else if ([type isKindOfClass:NSString.class]) {
         return NSClassFromString(type);
-    } else if ([TCMappingMeta isBlock:type]) {
-        TCTypeMappingBlock block = type;
-        return block(value);
     }
     
     return Nil;
@@ -194,8 +191,11 @@ NS_INLINE UIColor *valueForUIColor(NSDictionary *dic, Class klass)
 
 static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOption *option, Class curClass)
 {
-    id ret = nil;
+    if (nil == meta) {
+        return value;
+    }
     
+    id ret = nil;
     TCEncodingType type = tc_typeForInfo(meta->_info);
     if (tc_isObjForInfo(meta->_info)) {
         __unsafe_unretained Class klass = meta->_typeClass;
@@ -209,7 +209,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         ret = [klass stringWithString:value];
                     }
                 } else {
-                    NSCAssert(option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    NSCAssert(nil == option || option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
                     ret = [klass stringWithFormat:@"%@", value];
                 }
             
@@ -229,7 +229,7 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         ret = value;
                     }
                 } else {
-                    NSCAssert(option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                    NSCAssert(nil == option || option.ignoreUndefineMapping, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
                     if ([value isKindOfClass:NSString.class] && ((NSString *)value).length > 0) {
                         if (type == kTCEncodingTypeNSNumber) {
                             ret = [tc_mapping_number_fmter() numberFromString:(NSString *)value];
@@ -422,20 +422,14 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                                    Class curClass);
 
 
-static NSArray *mappingArray(NSArray *value, NSString *property, Class curClass, TCMappingOption *option, TCTypeMappingBlock typeBlock, TCMappingOption *childOption, id<TCMappingPersistentContext> context)
+static NSArray *mappingArray(NSArray *value, NSString *property, Class curClass, TCMappingOption *option, Class klass, TCMappingOption *childOption, id<TCMappingPersistentContext> context)
 {
-    if (nil == typeBlock) {
+    if (Nil == klass) {
         return nil;
     }
     NSMutableArray *arry = NSMutableArray.array;
     
     for (NSDictionary *dic in value) {
-        Class klass = typeBlock(dic);
-        
-        if (Nil == klass) {
-            continue;
-        }
-        
         if ([dic isKindOfClass:klass]) {
             [arry addObject:dic];
             
@@ -450,9 +444,7 @@ static NSArray *mappingArray(NSArray *value, NSString *property, Class curClass,
             if (nil == meta) {
                 break;
             }
-            
             meta->_propertyName = property;
-            
             id obj = valueForBaseTypeOfProperty(dic, meta, option, curClass);
             if (nil != obj) {
                 [arry addObject:obj];
@@ -484,6 +476,12 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 
 
 @implementation NSObject (TCMapping)
+
++ (instancetype)valueForBaseTypeOfProperty:(id)value option:(TCMappingOption *)option
+{
+    Class curClass = self.class;
+    return valueForBaseTypeOfProperty(value, [TCMappingMeta metaForNSClass:curClass], option, curClass);
+}
 
 + (NSMutableArray *)tc_mappingWithArray:(NSArray *)arry
 {
@@ -743,14 +741,33 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     __unsafe_unretained Class dicItemClass = classForType(typeDic[property], valueDic);
                     if (Nil != dicItemClass) {
                         NSMutableDictionary *tmpDic = NSMutableDictionary.dictionary;
+                        TCMappingMeta *valueMeta = nil;
                         for (id dicKey in valueDic) {
-                            id tmpValue = tc_mappingWithDictionary(valueDic[dicKey], propOpt, context, nil, dicItemClass);
+                            id tmpValue = nil;
+                            id value = valueDic[dicKey];
+                            if ([value isKindOfClass:NSDictionary.class]) {
+                                tmpValue = tc_mappingWithDictionary(value, propOpt, context, nil, dicItemClass);
+                            } else {
+                                if (nil == valueMeta) {
+                                    valueMeta = [TCMappingMeta metaForNSClass:dicItemClass];
+                                    if (nil == valueMeta) {
+                                        break;
+                                    }
+                                }
+     
+                                tmpValue = valueForBaseTypeOfProperty(value, valueMeta, propOpt, dicItemClass);
+                            }
+
                             if (nil != tmpValue) {
                                 tmpDic[dicKey] = tmpValue;
                             }
                         }
                         
-                        value = tmpDic.count > 0 ? [meta->_typeClass dictionaryWithDictionary:tmpDic] : nil;
+                        value = tmpDic.count > 0 ? [meta->_typeClass dictionaryWithDictionary:tmpDic] : valueDic;
+                        
+                    } else if ([TCMappingMeta isBlock:typeDic[property]]) {
+                        TCValueMappingBlock block = typeDic[property];
+                        value = block(value);
                         
                     } else if (valueDic.class != meta->_typeClass) {
                         value = [meta->_typeClass dictionaryWithDictionary:valueDic];
@@ -782,7 +799,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                     value = nil;
                     
                 } else {
-                    TCTypeMappingBlock typeBlock = nil;
+                    TCValueMappingBlock typeBlock = nil;
                     __unsafe_unretained Class arryItemType = Nil;
                     
                     id properyType = typeDic[property];
@@ -794,13 +811,19 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         }
                     }
                     
+                    if (nil != typeBlock) {
+                        value = typeBlock(valueArry);
+                    } else if (Nil != arryItemType) {
+                        value = mappingArray(valueArry, property, curClass, option, arryItemType, propOpt, context);
+                    }
+                    
                     if (Nil != arryItemType || nil != typeBlock) {
                         if (nil == typeBlock) {
                             typeBlock = ^Class (id value){
                                 return arryItemType;
                             };
                         }
-                        value = mappingArray(valueArry, property, curClass, option, typeBlock, propOpt, context);
+                        
                     }
                     
                     if (nil != value) {
