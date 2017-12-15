@@ -262,6 +262,8 @@
 		B76D77941F134DA100CF77FA /* UIActionSheet+TCBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778A1F134DA100CF77FA /* UIActionSheet+TCBlocks.m */; };
 		B76D77951F134DA100CF77FA /* UIAlertView+TCBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778C1F134DA100CF77FA /* UIAlertView+TCBlocks.m */; };
 		B76D77961F134DA100CF77FA /* UIApplication+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76D778E1F134DA100CF77FA /* UIApplication+TCHelper.m */; };
+		B773EA6E1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B773EA6C1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h */; };
+		B773EA6F1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B773EA6D1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m */; };
 		B78D7F051F4D8AF00095C8DF /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */; };
 /* End PBXBuildFile section */
 
@@ -723,6 +725,8 @@
 		B76D778C1F134DA100CF77FA /* UIAlertView+TCBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+TCBlocks.m"; sourceTree = "<group>"; };
 		B76D778D1F134DA100CF77FA /* UIApplication+TCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+TCHelper.h"; sourceTree = "<group>"; };
 		B76D778E1F134DA100CF77FA /* UIApplication+TCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+TCHelper.m"; sourceTree = "<group>"; };
+		B773EA6C1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSOutputStream+TCHelper.h"; sourceTree = "<group>"; };
+		B773EA6D1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSOutputStream+TCHelper.m"; sourceTree = "<group>"; };
 		B78D7F031F4D8AF00095C8DF /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
 		B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1488,6 +1492,8 @@
 				B76D749C1F13198800CF77FA /* NSURL+TCHelper.m */,
 				B76D749D1F13198800CF77FA /* UIImage+TCHelper.h */,
 				B76D749E1F13198800CF77FA /* UIImage+TCHelper.m */,
+				B773EA6C1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h */,
+				B773EA6D1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1867,6 +1873,7 @@
 				B76D74C51F13198800CF77FA /* UIColor+TCUtilities.h in Headers */,
 				B76D74F41F13198800CF77FA /* NSManagedObjectContext+TCMapping.h in Headers */,
 				B76D74F21F13198800CF77FA /* TCMappingOption.h in Headers */,
+				B773EA6E1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h in Headers */,
 				B76D74D51F13198800CF77FA /* CLLocation+TCHelper.h in Headers */,
 				B76D74F01F13198800CF77FA /* TCMappingMeta.h in Headers */,
 				B76D74D31F13198800CF77FA /* UICKeyChainStore.h in Headers */,
@@ -2304,6 +2311,7 @@
 				B76D74CA1F13198800CF77FA /* NSData+TCCypher.m in Sources */,
 				B76D74F91F13198800CF77FA /* AnimatedGIFImageSerialization.m in Sources */,
 				B76D74EB1F13198800CF77FA /* NSObject+TCCoding.m in Sources */,
+				B773EA6F1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m in Sources */,
 				B76D74E01F13198800CF77FA /* NSURL+TCHelper.m in Sources */,
 				B76D74FD1F13198800CF77FA /* UIImage+Resize.m in Sources */,
 				B76D74D41F13198800CF77FA /* UICKeyChainStore.m in Sources */,

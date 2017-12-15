@@ -27,6 +27,7 @@
 #import "NSData+TCCypher.h"
 #import "NSString+TCCypher.h"
 #import "NSBundle+TCHelper.h"
+#import "NSOutputStream+TCHelper.h"
 
 #import "NSString+TCHelper.h"
 #import "NSURL+TCHelper.h"
