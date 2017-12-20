@@ -46,10 +46,10 @@ NS_INLINE NSString *mappingForNSValue(NSValue *value)
 
 static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class parentKlass, TCMappingOption *option, NSHashTable *recordFlag)
 {
-    if (nil == obj ||
-        obj == (id)kCFNull ||
-        [obj isKindOfClass:NSString.class] ||
-        [obj isKindOfClass:NSNumber.class]) {
+    if (nil == obj
+        || obj == (id)kCFNull
+        || [obj isKindOfClass:NSString.class]
+        || [obj isKindOfClass:NSNumber.class]) {
         if (kTCPersisentStylePlist == style && obj == (id)kCFNull) {
             return nil;
         }
@@ -183,6 +183,10 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             
             if (nil == value && isNSNullValid) {
                 value = (typeof(value))kCFNull;
+            }
+            
+            if ([value isKindOfClass:NSNumber.class] && option.ignoreCodingFalseValue) {
+                value = [(NSNumber *)value boolValue] ? value : nil;
             }
             
             if (nil != value && (typeof(value))kCFNull != value && tc_isObjForInfo(meta->_info)) {

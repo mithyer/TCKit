@@ -76,6 +76,7 @@ NS_INLINE BOOL SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(NSString *v)
     return COMPARE_SYSTEM_VERSION(v) != NSOrderedDescending;
 }
 
+
 NS_INLINE dispatch_queue_t tc_dispatch_get_current_queue(void)
 {
     return NSOperationQueue.currentQueue.underlyingQueue;
@@ -96,15 +97,27 @@ NS_INLINE void tc_dispatch_main_sync_safe(dispatch_block_t block)
 
 NS_INLINE void tc_dispatch_main_async_safe(dispatch_block_t block)
 {
-    if (nil == block) {
-        return;
-    }
-    
-    if (NSThread.isMainThread) {
-        block();
-    } else {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
+    dispatch_async(dispatch_get_main_queue(), block);
+}
+
+NS_INLINE void tc_dispatch_global_async_default(dispatch_block_t block)
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}
+
+NS_INLINE void tc_dispatch_global_async_high(dispatch_block_t block)
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), block);
+}
+
+NS_INLINE void tc_dispatch_global_async_low(dispatch_block_t block)
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), block);
+}
+
+NS_INLINE void tc_dispatch_global_async_bg(dispatch_block_t block)
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), block);
 }
 
 #endif // TCDefines_h
