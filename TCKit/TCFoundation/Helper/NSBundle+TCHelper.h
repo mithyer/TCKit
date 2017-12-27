@@ -15,6 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)hostMainBundle;
 + (BOOL)isHostMainBundle;
 
+- (nullable NSString *)bundleVersion;
+- (nullable NSString *)bundleShortVersion;
+- (nullable NSString *)bundleName;
+- (nullable NSString *)bundleIdentifier;
+- (nullable NSString *)displayName;
+
+
 @end
 
 

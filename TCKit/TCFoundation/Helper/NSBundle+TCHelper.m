@@ -32,6 +32,33 @@
     return [NSBundle.mainBundle isEqual:self.hostMainBundle];
 }
 
+
+- (nullable NSString *)bundleVersion
+{
+    return [self objectForInfoDictionaryKey:(id)kCFBundleVersionKey];
+}
+
+- (nullable NSString *)bundleShortVersion
+{
+    return [self objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+}
+
+- (nullable NSString *)bundleName
+{
+    return [self objectForInfoDictionaryKey:(id)kCFBundleNameKey];
+}
+
+- (nullable NSString *)bundleIdentifier
+{
+    return [self objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+}
+
+- (nullable NSString *)displayName
+{
+    NSString *name = [self objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    return name.length > 0 ? name : self.bundleName;
+}
+
 @end
 
 @implementation UIImage (AppExtension)
