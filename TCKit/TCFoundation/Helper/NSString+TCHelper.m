@@ -116,9 +116,10 @@
         } else {
             return nil;
         }
-    } 
-
-    NSUInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(=?"]].location;
+    }
+    
+    NSUInteger lastDot = [ext rangeOfString:@"." options:NSBackwardsSearch].location;
+    NSUInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(=?"] options:0 range:NSMakeRange(lastDot, ext.length - lastDot)].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
     }
