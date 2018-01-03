@@ -66,6 +66,20 @@
     return returnDictionary;
 }
 
+- (NSString *)stringByAppendingPathExtensionMust:(NSString *)str
+{
+    if (nil == str || str.length < 1) {
+        return self;
+    }
+    
+    NSString *tmp = [self stringByAppendingPathExtension:str];
+    if (nil != tmp) {
+        return tmp;
+    }
+    
+    return [self stringByAppendingFormat:@".%@", str];
+}
+
 - (nullable NSString *)fixedFileExtension
 {
     NSString *decodeUrl = self.stringByRemovingPercentEncoding;

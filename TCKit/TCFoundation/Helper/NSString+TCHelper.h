@@ -16,6 +16,7 @@ extern bool tc_is_ip_addr(char const *host);
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
 - (nullable NSString *)fixedFileExtension;
+- (nullable NSString *)stringByAppendingPathExtensionMust:(NSString *)str;
 
 #pragma mark - pattern
 
