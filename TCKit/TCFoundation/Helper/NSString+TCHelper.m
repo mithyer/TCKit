@@ -133,6 +133,9 @@
     }
     
     NSUInteger lastDot = [ext rangeOfString:@"." options:NSBackwardsSearch].location;
+    if (lastDot == NSNotFound) {
+        lastDot = 0;
+    }
     NSUInteger loc = [ext rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"&,;(=?"] options:0 range:NSMakeRange(lastDot, ext.length - lastDot)].location;
     if (loc != NSNotFound) {
         ext = [ext substringToIndex:loc];
