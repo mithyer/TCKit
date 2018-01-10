@@ -37,6 +37,10 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDevice7iPhone,
     kTCDevice7PlusiPhone,
     
+    kTCDevice8iPhone,
+    kTCDevice8PlusiPhone,
+    kTCDeviceXiPhone,
+    
     kTCDevice1GiPod,
     kTCDevice2GiPod,
     kTCDevice3GiPod,
@@ -50,6 +54,8 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     
     kTCDevice3GiPad,
     kTCDevice4GiPad,
+    kTCDevice5GiPad,
+    
     kTCDevice1GiPadAir,
     kTCDevice2GiPadMini,
     kTCDevice3GiPadMini,
@@ -59,6 +65,8 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDevice1GiPadPro9_7,
     kTCDevice1GiPadPro12_9,
     
+    kTCDevice1GiPadPro10_5,
+    kTCDevice2GiPadPro12_9,
     
     kTCDeviceAppleTV2,
     kTCDeviceAppleTV3,

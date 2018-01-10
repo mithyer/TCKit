@@ -8,11 +8,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSInteger D_MINUTE;
-extern NSInteger D_HOUR;
-extern NSInteger D_DAY;
-extern NSInteger D_WEEK;
-extern NSInteger D_YEAR;
+extern NSInteger const D_MINUTE;
+extern NSInteger const D_HOUR;
+extern NSInteger const D_DAY;
+extern NSInteger const D_WEEK;
+extern NSInteger const D_YEAR;
 
 @interface NSDate (TCUtilities)
 

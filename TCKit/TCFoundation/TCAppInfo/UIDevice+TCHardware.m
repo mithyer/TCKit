@@ -5,7 +5,7 @@
  */
 
 /** Thanks to
- https://github.com/Ekhoo/Device/blob/master/Source/Device.swift
+https://github.com/Ekhoo/Device/
  https://github.com/lmirosevic/GBDeviceInfo
  */
 
@@ -23,7 +23,6 @@
 
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-
 
 
 static NSString *s_device_names[kTCDeviceCount] = {
@@ -47,6 +46,11 @@ static NSString *s_device_names[kTCDeviceCount] = {
     
     [kTCDevice7iPhone] = @"iPhone 7",
     [kTCDevice7PlusiPhone] = @"iPhone 7 Plus",
+    
+    [kTCDevice8iPhone] = @"iPhone 8",
+    [kTCDevice8PlusiPhone] = @"iPhone 8 Plus",
+    [kTCDeviceXiPhone] = @"iPhone X",
+    
     [kTCDeviceUnknowniPhone] = @"Unknown iPhone",
     
     // iPod
@@ -63,6 +67,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice2GiPad] = @"iPad 2G",
     [kTCDevice3GiPad] = @"iPad 3G",
     [kTCDevice4GiPad] = @"iPad 4G",
+    [kTCDevice5GiPad] = @"iPad 5G",
     
     // iPad mini
     [kTCDevice1GiPadMini] = @"iPad Mini 1G",
@@ -78,6 +83,9 @@ static NSString *s_device_names[kTCDeviceCount] = {
     // ipad pro
     [kTCDevice1GiPadPro9_7] = @"iPad Pro 1G 9.7-inch",
     [kTCDevice1GiPadPro12_9] = @"iPad Pro 1G 12.9-inch",
+    
+    [kTCDevice1GiPadPro10_5] = @"iPad Pro 1G 10.5-inch",
+    [kTCDevice2GiPadPro12_9] = @"iPad Pro 2G 12.9-inch",
     
     // apple TV
     [kTCDeviceAppleTV2] = @"Apple TV 2G",
@@ -237,11 +245,30 @@ static NSString *s_device_names[kTCDeviceCount] = {
     else if ([platform hasPrefix:@"iPhone8,4"])          return kTCDeviceSEiPhone;
     
     else if ([platform hasPrefix:@"iPhone9"]) {
-    NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (1 == subVersion || 3 == subVersion) {
             return kTCDevice7iPhone;
         } else if (2 == subVersion || 4 == subVersion) {
             return kTCDevice7PlusiPhone;
+        }
+    }
+    else if ([platform hasPrefix:@"iPhone10"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        switch (subVersion) {
+            case 1:
+            case 4:
+                return kTCDevice8iPhone;
+                
+            case 2:
+            case 5:
+                return kTCDevice8PlusiPhone;
+                
+            case 3:
+            case 6:
+                return kTCDeviceXiPhone;
+                
+            default:
+                break;
         }
     }
     
@@ -295,6 +322,16 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice1GiPadPro9_7;
         } else if (subVersion >= 7 && subVersion <= 8) {
             return kTCDevice1GiPadPro12_9;
+        } else if (subVersion >= 11 && subVersion <= 12) {
+            return kTCDevice5GiPad;
+        }
+    }
+    else if ([platform hasPrefix:@"iPad7"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        if (subVersion <= 2) {
+            return kTCDevice2GiPadPro12_9;
+        } else if (subVersion <= 4) {
+            return kTCDevice1GiPadPro10_5;
         }
     }
     

@@ -29,11 +29,11 @@
 
 #endif
 
-NSInteger D_MINUTE = 60;
-NSInteger D_HOUR = 3600;
-NSInteger D_DAY = 86400;
-NSInteger D_WEEK = 604800;
-NSInteger D_YEAR = 31556926;
+NSInteger const D_MINUTE = 60;
+NSInteger const D_HOUR = 3600;
+NSInteger const D_DAY = 86400;
+NSInteger const D_WEEK = 604800;
+NSInteger const D_YEAR = 31556926;
 
 // Thanks, AshFurrow
 static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit);
