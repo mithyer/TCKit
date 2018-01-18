@@ -55,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSData *)cryptRC4WithKeyData:(NSData *)keyData;
 // Data returned will be same byte count (-length) as receiver.
 
+// sha256
+- (instancetype)SHA256Digest;
+
 @end
 
 

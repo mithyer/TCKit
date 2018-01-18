@@ -33,7 +33,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequest : NSObject <TCHTTPRequest, 
 //
 // build request
 //
-@property (nonatomic, copy) NSString *apiUrl; // "getUserInfo/"
+@property (nonatomic, copy, nullable) NSString *apiUrl; // "getUserInfo/"
 @property (nonatomic, copy, nullable) NSString *baseUrl; // "http://eet/oo/"
 
 // NSDictionary or NSArray, Auto convert to query string, if requestMethod is GET

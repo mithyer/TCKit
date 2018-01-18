@@ -265,6 +265,8 @@
 		B773EA6E1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B773EA6C1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h */; };
 		B773EA6F1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B773EA6D1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m */; };
 		B78D7F051F4D8AF00095C8DF /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */; };
+		B7ECE348201090EC0039F92E /* TCECDSA.h in Headers */ = {isa = PBXBuildFile; fileRef = B7ECE346201090EC0039F92E /* TCECDSA.h */; };
+		B7ECE349201090EC0039F92E /* TCECDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = B7ECE347201090EC0039F92E /* TCECDSA.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -729,6 +731,8 @@
 		B773EA6D1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSOutputStream+TCHelper.m"; sourceTree = "<group>"; };
 		B78D7F031F4D8AF00095C8DF /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
 		B78D7F041F4D8AF00095C8DF /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
+		B7ECE346201090EC0039F92E /* TCECDSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCECDSA.h; sourceTree = "<group>"; };
+		B7ECE347201090EC0039F92E /* TCECDSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCECDSA.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1437,6 +1441,8 @@
 				B76D74881F13198800CF77FA /* TCProxy.m */,
 				B76D748B1F13198800CF77FA /* TCRSA.h */,
 				B76D748C1F13198800CF77FA /* TCRSA.m */,
+				B7ECE346201090EC0039F92E /* TCECDSA.h */,
+				B7ECE347201090EC0039F92E /* TCECDSA.m */,
 				B76D748D1F13198800CF77FA /* UICKeyChainStore */,
 			);
 			path = BaseUtlity;
@@ -1871,6 +1877,7 @@
 				B76D74EA1F13198800CF77FA /* NSObject+TCCoding.h in Headers */,
 				B76D74C31F13198800CF77FA /* NSObject+TCUtilities.h in Headers */,
 				B76D74C51F13198800CF77FA /* UIColor+TCUtilities.h in Headers */,
+				B7ECE348201090EC0039F92E /* TCECDSA.h in Headers */,
 				B76D74F41F13198800CF77FA /* NSManagedObjectContext+TCMapping.h in Headers */,
 				B76D74F21F13198800CF77FA /* TCMappingOption.h in Headers */,
 				B773EA6E1FE3A8E6009FAB14 /* NSOutputStream+TCHelper.h in Headers */,
@@ -2322,6 +2329,7 @@
 				B76D74D81F13198800CF77FA /* NSBundle+TCHelper.m in Sources */,
 				B76D74CC1F13198800CF77FA /* NSString+TCCypher.m in Sources */,
 				B76D74CE1F13198800CF77FA /* TCProxy.m in Sources */,
+				B7ECE349201090EC0039F92E /* TCECDSA.m in Sources */,
 				B76D74E41F13198800CF77FA /* TCAppInfo.m in Sources */,
 				B76D74C81F13198800CF77FA /* FCUUID.m in Sources */,
 				B76D74EF1F13198800CF77FA /* NSObject+TCPersistent.m in Sources */,

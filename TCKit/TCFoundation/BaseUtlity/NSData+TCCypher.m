@@ -236,6 +236,13 @@ void rc4_crypt(
     return [NSData dataWithBytes:buf length:nPayloadBytes];
 }
 
+- (instancetype)SHA256Digest
+{
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(self.bytes, (CC_LONG)self.length, result);
+    return [[NSData alloc] initWithBytes:result length:CC_SHA256_DIGEST_LENGTH];
+}
+
 @end
 
 

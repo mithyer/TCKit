@@ -215,7 +215,7 @@
         
         OSStatus status = SecKeyDecrypt(key, kSecPaddingPKCS1, buffer.bytes, buffer.length, plain, &plainLen);
         
-        if (status != noErr) {
+        if (status != errSecSuccess) {
             free(plain);
             decryptedData = nil;
             break;
@@ -287,12 +287,17 @@
     }
     bzero(signedHashBytes, signedHashBytesSize);
     
-    SecKeyRawSign(key,
-                  kSecPaddingPKCS1SHA256,
-                  hashBytes,
-                  CC_SHA256_DIGEST_LENGTH,
-                  signedHashBytes,
-                  &signedHashBytesSize);
+    OSStatus status = SecKeyRawSign(key,
+                                    kSecPaddingPKCS1SHA256,
+                                    hashBytes,
+                                    CC_SHA256_DIGEST_LENGTH,
+                                    signedHashBytes,
+                                    &signedHashBytesSize);
+    
+    if (status != errSecSuccess) {
+        free(signedHashBytes);
+        return nil;
+    }
     
     return [NSData dataWithBytesNoCopy:signedHashBytes
                                 length:(NSUInteger)signedHashBytesSize];
