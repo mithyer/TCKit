@@ -299,9 +299,9 @@
         return nil;
     }
     
-    return [NSData dataWithBytesNoCopy:signedHashBytes
-                                length:(NSUInteger)signedHashBytesSize];
-    
+    NSData *data = [NSData dataWithBytes:signedHashBytes length:(NSUInteger)signedHashBytesSize];
+    free(signedHashBytes);
+    return data;
 }
 
 - (BOOL)verifySHA256Data:(NSData *)plainData signData:(NSData *)signData

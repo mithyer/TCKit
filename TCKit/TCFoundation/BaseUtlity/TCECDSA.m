@@ -97,48 +97,6 @@
     bzero(signedHashBytes, signedHashBytesSize);
     
     OSStatus status = SecKeyRawSign(key,
-                                    kSecPaddingSigRaw,
-                                    hashBytes,
-                                    CC_SHA256_DIGEST_LENGTH,
-                                    signedHashBytes,
-                                    &signedHashBytesSize);
-    
-    if (status != errSecSuccess) {
-        free(signedHashBytes);
-        return nil;
-    }
-    
-    return [NSData dataWithBytesNoCopy:signedHashBytes
-                                length:(NSUInteger)signedHashBytesSize];
-}
-
-- (NSData *)signSHA256Data:(NSData *)plainData
-{
-    NSParameterAssert(plainData);
-    if (nil == plainData) {
-        return nil;
-    }
-    
-    SecKeyRef key = self.privateKey;
-    NSParameterAssert(key);
-    if (NULL == key) {
-        return nil;
-    }
-    
-    uint8_t hashBytes[CC_SHA256_DIGEST_LENGTH];
-    bzero(hashBytes, CC_SHA256_DIGEST_LENGTH);
-    if (!CC_SHA256(plainData.bytes, (CC_LONG)plainData.length, hashBytes)) {
-        return nil;
-    }
-    
-    size_t signedHashBytesSize = SecKeyGetBlockSize(key);
-    uint8_t *signedHashBytes = malloc(signedHashBytesSize);
-    if (NULL == signedHashBytes) {
-        return nil;
-    }
-    bzero(signedHashBytes, signedHashBytesSize);
-    
-    OSStatus status = SecKeyRawSign(key,
                                     kSecPaddingPKCS1SHA256,
                                     hashBytes,
                                     CC_SHA256_DIGEST_LENGTH,
@@ -150,9 +108,9 @@
         return nil;
     }
     
-    return [NSData dataWithBytesNoCopy:signedHashBytes
-                                length:(NSUInteger)signedHashBytesSize];
-    
+    NSData *data = [NSData dataWithBytes:signedHashBytes length:(NSUInteger)signedHashBytesSize];
+    free(signedHashBytes);
+    return data;
 }
 
 @end
