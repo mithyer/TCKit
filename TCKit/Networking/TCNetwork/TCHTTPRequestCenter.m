@@ -67,6 +67,16 @@
     }
 }
 
+- (AFJSONRequestSerializer *)jsonSerializer
+{
+    if (nil == _jsonSerializer) {
+        _jsonSerializer = AFJSONRequestSerializer.serializer;
+        _jsonSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+    }
+    
+    return _jsonSerializer;
+}
+
 - (Class)responseValidorClass
 {
     return _respValidorClass ?: TCBaseResponseValidator.class;
@@ -286,13 +296,9 @@
         
         BOOL rawJSON = kTCHTTPMethodPostJSON == request.method;
         if (rawJSON) {
-            if (requestMgr.requestSerializer != _jsonSerializer) {
-                if (nil == _jsonSerializer) {
-                    _jsonSerializer = AFJSONRequestSerializer.serializer;
-                    _jsonSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-                }
+            if (requestMgr.requestSerializer != self.jsonSerializer) {
                 _httpSerializer = requestMgr.requestSerializer;
-                requestMgr.requestSerializer = _jsonSerializer;
+                requestMgr.requestSerializer = self.jsonSerializer;
             }
         } else {
             if (![requestMgr.requestSerializer isMemberOfClass:AFHTTPRequestSerializer.class]) {
