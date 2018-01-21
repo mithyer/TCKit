@@ -14,6 +14,8 @@ extern bool tc_is_ip_addr(char const *host);
 
 @interface NSString (TCHelper)
 
+- (NSString *)reversedString;
+
 - (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue;
 - (nullable NSString *)fixedFileExtension;
 - (nullable NSString *)stringByAppendingPathExtensionMust:(NSString *)str;

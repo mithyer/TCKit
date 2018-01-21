@@ -22,6 +22,18 @@
 
 @implementation NSString (TCHelper)
 
+- (NSString *)reversedString
+{
+    NSMutableString *reversedString = [NSMutableString stringWithCapacity:self.length];
+    
+    [self enumerateSubstringsInRange:NSMakeRange(0,self.length)
+                             options:(NSStringEnumerationReverse | NSStringEnumerationByComposedCharacterSequences)
+                          usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                              [reversedString appendString:substring];
+                          }];
+    return reversedString;
+}
+
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
 {
     NSString *str = self.stringByRemovingPercentEncoding;
