@@ -256,13 +256,14 @@
 - (NSString *)description
 {
     NSURLRequest *request = self.requestTask.originalRequest;
-    return [NSString stringWithFormat:@"🌍🌍🌍 %@: %@\nhead:%@\nparam: %@\nfrom cache: %@\nresponse: %@",
+    return [NSString stringWithFormat:@"🌍🌍🌍 %@: %@\nhead:%@\nparam: %@\nfrom cache: %@\nresponse: %@\n%@",
             NSStringFromClass(self.class),
             request.URL,
             request.allHTTPHeaderFields,
             nil != request.HTTPBody ? [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] : nil,
             self.cachePolicy.isDataFromCache ? @"YES" : @"NO",
-            self.responseObject];
+            self.responseObject,
+            self.responseValidator.error];
 }
 
 
