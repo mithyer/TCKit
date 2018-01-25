@@ -97,7 +97,7 @@
     bzero(signedHashBytes, signedHashBytesSize);
     
     OSStatus status = SecKeyRawSign(key,
-                                    kSecPaddingNone,//kSecPaddingPKCS1, //kSecPaddingPKCS1SHA256
+                                    kSecPaddingNone,//kSecPaddingPKCS1, //kSecPaddingPKCS1SHA256 : iOS10, iOS11 有效
                                     hashBytes,
                                     CC_SHA256_DIGEST_LENGTH,
                                     signedHashBytes,
