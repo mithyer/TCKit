@@ -765,7 +765,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         
                         value = tmpDic.count > 0 ? [meta->_typeClass dictionaryWithDictionary:tmpDic] : valueDic;
                         
-                    } else if ([TCMappingMeta isBlock:typeDic[property]]) {
+                    } else if (nil != typeDic[property] && [TCMappingMeta isBlock:typeDic[property]]) {
                         TCValueMappingBlock block = typeDic[property];
                         value = block(value);
                         
@@ -815,15 +815,6 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         value = typeBlock(valueArry);
                     } else if (Nil != arryItemType) {
                         value = mappingArray(valueArry, property, curClass, option, arryItemType, propOpt, context);
-                    }
-                    
-                    if (Nil != arryItemType || nil != typeBlock) {
-                        if (nil == typeBlock) {
-                            typeBlock = ^Class (id value){
-                                return arryItemType;
-                            };
-                        }
-                        
                     }
                     
                     if (nil != value) {

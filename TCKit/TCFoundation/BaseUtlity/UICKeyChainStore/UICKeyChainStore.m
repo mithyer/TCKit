@@ -1118,7 +1118,7 @@ static NSString *_defaultService;
         if (_server.host) {
             query[(__bridge __strong id)kSecAttrServer] = _server.host;
         }
-        if (_server.port) {
+        if (nil != _server.port) {
             query[(__bridge __strong id)kSecAttrPort] = _server.port;
         }
         CFTypeRef protocolTypeObject = [self protocolTypeObject];

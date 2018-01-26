@@ -45,23 +45,23 @@
     return privateKeyRef;
 }
 
-- (SecKeyRef)getPublicKeyRefrenceFromeData:(NSData*)derData {
-    
-    SecCertificateRef myCertificate = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)derData);
-    SecPolicyRef myPolicy = SecPolicyCreateBasicX509();
-    SecTrustRef myTrust;
-    OSStatus status = SecTrustCreateWithCertificates(myCertificate,myPolicy,&myTrust);
-    SecTrustResultType trustResult;
-    if (status == noErr) {
-        status = SecTrustEvaluate(myTrust, &trustResult);
-    }
-    SecKeyRef securityKey = SecTrustCopyPublicKey(myTrust);
-    CFRelease(myCertificate);
-    CFRelease(myPolicy);
-    CFRelease(myTrust);
-    
-    return securityKey;
-}
+//- (SecKeyRef)getPublicKeyRefrenceFromeData:(NSData*)derData {
+//
+//    SecCertificateRef myCertificate = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)derData);
+//    SecPolicyRef myPolicy = SecPolicyCreateBasicX509();
+//    SecTrustRef myTrust;
+//    OSStatus status = SecTrustCreateWithCertificates(myCertificate,myPolicy,&myTrust);
+//    SecTrustResultType trustResult;
+//    if (status == noErr) {
+//        status = SecTrustEvaluate(myTrust, &trustResult);
+//    }
+//    SecKeyRef securityKey = SecTrustCopyPublicKey(myTrust);
+//    CFRelease(myCertificate);
+//    CFRelease(myPolicy);
+//    CFRelease(myTrust);
+//
+//    return securityKey;
+//}
 
 - (SecKeyRef)privateKey
 {
