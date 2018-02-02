@@ -119,7 +119,10 @@
     
     if (needResetTopInsets) {
         for (UIView *subView in scrollView.subviews) {
-            if ([subView isKindOfClass:NSClassFromString(@"UIWebBrowserView")]) {
+            // http://blog.csdn.net/hursing/article/details/8781386
+            NSString *name = NSStringFromClass(subView.class);
+            // [subView isKindOfClass:NSClassFromString(@"UIWebBrowserView")]
+            if (name.length == 17 && [name containsString:@"Browser"] && [name hasSuffix:@"View"] && [name containsString:@"Web"]) {
                 CGRect rect = subView.frame;
                 rect.origin.y = CGRectGetMaxY(frame);
                 subView.frame = rect;

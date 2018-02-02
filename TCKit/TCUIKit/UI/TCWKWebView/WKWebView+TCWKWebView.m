@@ -102,8 +102,14 @@
 {
     NSMutableArray *arry = NSMutableArray.array;
     for (UIView *subView in webView.scrollView.subviews) {
-        if ([subView isKindOfClass:NSClassFromString(@"WKContentView")] || CGSizeEqualToSize(subView.frame.size, CGSizeZero)) {
+        if (CGSizeEqualToSize(subView.frame.size, CGSizeZero)) {
             [arry addObject:subView];
+        } else {
+            // [subView isKindOfClass:NSClassFromString(@"WKContentView")]
+            NSString *name = NSStringFromClass(subView.class);
+            if (name.length == 13 && [name hasSuffix:@"View"] && [name containsString:@"Content"] && [name hasPrefix:@"W"]) {
+                [arry addObject:subView];
+            }
         }
     }
     self.kvoSubviews = arry.copy;
@@ -398,9 +404,11 @@
 
 - (void)tc_setContentSize:(CGSize)contentSize
 {
-    if ([self isKindOfClass:NSClassFromString(@"WKScrollView")]) {
+    // [self isKindOfClass:NSClassFromString(@"WKScrollView")]
+    NSString *name = NSStringFromClass(self.class);
+    if (name.length == 13 && [name hasSuffix:@"ScrollView"] && [name hasPrefix:@"WKS"]) {
         
-        CGFloat height = 0;
+        CGFloat height = 0.0f;
         for (UIView *view in self.subviews) {
             CGFloat h = CGRectGetMaxY(view.frame);
             if (h > height) {

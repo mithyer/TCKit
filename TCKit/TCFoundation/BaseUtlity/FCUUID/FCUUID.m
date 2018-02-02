@@ -239,7 +239,7 @@ NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesToggle";
 {
     _uuidsOfUserDevices_iCloudAvailable = NO;
     
-    if(NSClassFromString(@"NSUbiquitousKeyValueStore"))
+    if(Nil != NSUbiquitousKeyValueStore.class)
     {
         NSUbiquitousKeyValueStore *iCloud = [NSUbiquitousKeyValueStore defaultStore];
         

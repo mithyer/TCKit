@@ -501,18 +501,6 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return outstring;
 }
 
-// Illicit Bluetooth check -- cannot be used in App Store
-/* 
-Class  btclass = NSClassFromString(@"GKBluetoothSupport");
-if ([btclass respondsToSelector:@selector(bluetoothStatus)])
-{
-    printf("BTStatus %d\n", ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0);
-    bluetooth = ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0;
-    printf("Bluetooth %s enabled\n", bluetooth ? "is" : "isn't");
-}
-*/
-
-
 #pragma mark -
 
 //static in_port_t get_in_port(const struct sockaddr *sa)
