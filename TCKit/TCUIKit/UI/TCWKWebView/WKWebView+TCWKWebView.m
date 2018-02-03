@@ -64,6 +64,9 @@
 
 @end
 
+
+/* fix non-public api
+
 @interface _WKWebViewExtra : NSObject
 {
     @public
@@ -147,6 +150,8 @@
 
 
 @end
+ 
+ */
 
 
 @implementation WKWebView (TCWKWebView)
@@ -156,7 +161,9 @@
 + (void)load
 {
     [self tc_swizzle:@selector(loadRequest:)];
-    [self tc_swizzle:@selector(layoutSubviews)];
+    
+    // fix non-public api
+//    [self tc_swizzle:@selector(layoutSubviews)];
 }
 
 + (NSString *)tc_systemUserAgent
@@ -306,7 +313,7 @@
     }
 }
 
-
+/* fix non-public api
 #pragma mark -
 
 - (void)tc_layoutSubviews
@@ -423,8 +430,10 @@
     
     [self tc_setContentSize:contentSize];
 }
+ */
+
 
 @end
-
+ 
 #endif
 

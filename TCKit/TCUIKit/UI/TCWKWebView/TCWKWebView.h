@@ -18,7 +18,7 @@
 //@property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, weak) id delegate;
-@property (nonatomic, strong) UIView *webHeaderView;
+//@property (nonatomic, strong) UIView *webHeaderView;
 
 + (NSString *)tc_systemUserAgent;
 

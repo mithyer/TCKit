@@ -71,8 +71,9 @@
 }
 
 
+/* fix non-public api
+ 
 #pragma mark -
-
 
 - (UIView *)webHeaderView
 {
@@ -131,6 +132,8 @@
         }
     }
 }
+ 
+ */
 
 @end
 
