@@ -346,7 +346,7 @@
 }
 
 
-bool tc_is_ip_addr(char const *host)
+bool tc_is_ip_addr(char const *host, bool *ipv6)
 {
     if (NULL == host) {
         return false;
@@ -359,12 +359,17 @@ bool tc_is_ip_addr(char const *host)
     
     struct sockaddr_in6 sin6;
     bzero(&sin6, sizeof(sin6));
-    return 1 == inet_pton(AF_INET6, host, &sin6);
+    
+    bool ret = 1 == inet_pton(AF_INET6, host, &sin6);
+    if (NULL != ipv6) {
+        *ipv6 = ret;
+    }
+    return ret;
 }
 
 - (BOOL)isIPAddress
 {
-    return tc_is_ip_addr(self.UTF8String);
+    return tc_is_ip_addr(self.UTF8String, NULL);
 }
 
 #pragma mark - 

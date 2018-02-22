@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern bool tc_is_ip_addr(char const *host);
+extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 
 @interface NSString (TCHelper)
 
