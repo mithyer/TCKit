@@ -623,10 +623,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return;
         }
         
-        if (NULL != addr->ifa_netmask && NULL != addr->ifa_name && [@(addr->ifa_name) isEqualToString:ifType]) {
-            ip = [self stringFromSockAddr:addr->ifa_addr includeService:NO];
-            if (nil != ip) {
-                *stop = YES;
+        if (NULL != addr->ifa_netmask && NULL != addr->ifa_addr && NULL != addr->ifa_name && [@(addr->ifa_name) isEqualToString:ifType]) {
+            BOOL ipv4 = addr->ifa_addr->sa_family == AF_INET;
+            NSString *tmp = [self stringFromSockAddr:addr->ifa_addr includeService:NO];
+            if (nil != tmp) {
+                ip = tmp;
+                if (ipv4) {
+                    *stop = YES;
+                }
             }
         }
     }];
