@@ -13,7 +13,6 @@ https://github.com/Ekhoo/Device/
 
 #import <sys/socket.h> // Per msqr
 #import <sys/sysctl.h>
-#import <net/if.h>
 #import <net/if_dl.h>
 #import <mach/mach.h>
 
@@ -527,10 +526,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return string;
 }
 
-+ (BOOL)isIpv6Available {
++ (BOOL)isIpv6Available
+{
     __block BOOL ipv6Available = NO;
-    
     [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
+        unsigned int flags = addr->ifa_flags;
+        if ((flags & (IFF_UP|IFF_RUNNING)) != (IFF_UP|IFF_RUNNING)) {
+            return;
+        }
         if (addr->ifa_addr->sa_family == AF_INET6){
             char ip[INET6_ADDRSTRLEN];
             const char *str = inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)addr->ifa_addr)->sin6_addr), ip, INET6_ADDRSTRLEN);
@@ -547,11 +550,15 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return ipv6Available;
 }
 
-+ (BOOL)isIpv4Available {
++ (BOOL)isIpv4Available
+{
     __block BOOL ipv4Available = NO;
-    
     [self enumerateNetworkInterfaces:^(struct ifaddrs *addr, BOOL *stop) {
-        if (addr->ifa_addr->sa_family == AF_INET){
+        unsigned int flags = addr->ifa_flags;
+        if ((flags & (IFF_UP|IFF_RUNNING)) != (IFF_UP|IFF_RUNNING)) {
+            return;
+        }
+        if (addr->ifa_addr->sa_family == AF_INET) {
             ipv4Available = YES;
             *stop = YES;
         }
@@ -571,25 +578,59 @@ static NSString *s_device_names[kTCDeviceCount] = {
         if (NULL != interfaces) {
             freeifaddrs(interfaces);
         }
-        
         return;
     }
     
     struct ifaddrs *addr = interfaces;
     BOOL stop = NO;
-    while(addr != NULL && !stop) {
-        
-        unsigned int flags = addr->ifa_flags;
-        
-        // Check for running IPv4, IPv6 interfaces. Skip the loopback interface.
-        if ((flags & (IFF_UP|IFF_RUNNING|IFF_LOOPBACK)) == (IFF_UP|IFF_RUNNING)) {
-            block(addr, &stop);
-        }
+    while (addr != NULL && !stop) {
+//        unsigned int flags = addr->ifa_flags;
+//        // Check for running IPv4, IPv6 interfaces. Skip the loopback interface.
+//        if ((flags & (IFF_UP|IFF_RUNNING|IFF_LOOPBACK)) == (IFF_UP|IFF_RUNNING)) {
+//            block(addr, &stop);
+//        }
+        block(addr, &stop);
         
         addr = addr->ifa_next;
     }
     
     freeifaddrs(interfaces);
+}
+
++ (NSString *)ipFromInterface:(TCNetworkInterfaceType)type
+{
+    static NSString *kMap[] = {
+        [kTCNetworkInterfaceTypeLoopback] = @"lo0",
+        [kTCNetworkInterfaceTypeCellular] = @"pdp_ip0",
+        [kTCNetworkInterfaceTypeWiFi] = @"en0",
+        [kTCNetworkInterfaceTypeHotspot] = @"bridge100",
+        [kTCNetworkInterfaceTypeUSB] = @"en2",
+        [kTCNetworkInterfaceTypeBluetooth] = @"en3",
+        
+        [kTCNetworkInterfaceTypeNEVPN] = @"utun1",
+        [kTCNetworkInterfaceTypePersonalVPN] = @"ipsec0",
+    };
+    
+    if (type < 0 || type >= kTCNetworkInterfaceTypeCount) {
+        return nil;
+    }
+    
+    NSString *ifType = kMap[type];
+    __block NSString *ip = nil;
+    [self enumerateNetworkInterfaces:^(struct ifaddrs * _Nonnull addr, BOOL * _Nonnull stop) {
+        unsigned int flags = addr->ifa_flags;
+        if ((flags & (IFF_UP|IFF_RUNNING)) != (IFF_UP|IFF_RUNNING)) {
+            return;
+        }
+        
+        if (NULL != addr->ifa_netmask && NULL != addr->ifa_name && [@(addr->ifa_name) isEqualToString:ifType]) {
+            ip = [self stringFromSockAddr:addr->ifa_addr includeService:NO];
+            if (nil != ip) {
+                *stop = YES;
+            }
+        }
+    }];
+    return ip;
 }
 
 @end

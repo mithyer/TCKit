@@ -6,6 +6,7 @@
 
 #import <UIKit/UIKit.h>
 #import <ifaddrs.h>
+#import <net/if.h>
 
 typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDeviceUnknown = 0,
@@ -137,6 +138,22 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)enumerateNetworkInterfaces:(void (^)(struct ifaddrs *addr, BOOL *stop))block;
 
 + (nullable NSString *)stringFromSockAddr:(const struct sockaddr *)addr includeService:(BOOL)includeService;
+
+typedef NS_ENUM(NSInteger, TCNetworkInterfaceType) {
+    kTCNetworkInterfaceTypeLoopback, // lo0
+    kTCNetworkInterfaceTypeCellular, // pdp_ip0
+    kTCNetworkInterfaceTypeWiFi, // en0
+    kTCNetworkInterfaceTypeHotspot, // bridge100
+    kTCNetworkInterfaceTypeUSB, // en2
+    kTCNetworkInterfaceTypeBluetooth, // en3
+    
+    kTCNetworkInterfaceTypeNEVPN, // utun1
+    kTCNetworkInterfaceTypePersonalVPN, // ipsec0
+    
+    kTCNetworkInterfaceTypeCount,
+};
+
++ (nullable NSString *)ipFromInterface:(TCNetworkInterfaceType)type;
 
 @end
 
