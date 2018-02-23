@@ -615,6 +615,16 @@ static NSString *s_device_names[kTCDeviceCount] = {
         return nil;
     }
     
+    if ((kTCNetworkInterfaceTypeUSB == type || kTCNetworkInterfaceTypeBluetooth == type)
+        // iPod, iPad
+        && !UIDevice.currentDevice.hasCellular) {
+        if (kTCNetworkInterfaceTypeUSB == type) {
+            type = kTCNetworkInterfaceTypeBluetooth;
+        } else {
+            type = kTCNetworkInterfaceTypeUSB;
+        }
+    }
+    
     NSString *ifType = kMap[type];
     __block NSString *ip = nil;
     [self enumerateNetworkInterfaces:^(struct ifaddrs * _Nonnull addr, BOOL * _Nonnull stop) {
