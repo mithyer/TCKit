@@ -616,8 +616,9 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
     
     if ((kTCNetworkInterfaceTypeUSB == type || kTCNetworkInterfaceTypeBluetooth == type)
-        // iPod, iPad
-        && !UIDevice.currentDevice.hasCellular) {
+        // iPod, iPad, >= iOS11
+        && !UIDevice.currentDevice.hasCellular
+        && [UIDevice.currentDevice.systemVersion compare:@"11" options:NSNumericSearch] != NSOrderedAscending) {
         if (kTCNetworkInterfaceTypeUSB == type) {
             type = kTCNetworkInterfaceTypeBluetooth;
         } else {
