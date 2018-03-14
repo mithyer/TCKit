@@ -15,14 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSString *humanDescription;
 
 // file system
-+ (nullable NSString *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain;
-+ (nullable NSString *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
-
-+ (nullable NSString *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain;
-+ (nullable NSString *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
-
-+ (nullable NSString *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain;
-+ (nullable NSString *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
++ (nullable NSURL *)defaultPersistentDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
++ (nullable NSURL *)defaultCacheDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
++ (nullable NSURL *)defaultTmpDirectoryInDomain:(NSString *__nullable)domain create:(BOOL)create;
 
 @end
 

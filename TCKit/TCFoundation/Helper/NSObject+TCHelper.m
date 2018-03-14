@@ -15,12 +15,7 @@ static NSString const *kDefaultDomain = @"TCKit";
 
 @dynamic humanDescription;
 
-+ (NSString *)defaultPersistentDirectoryInDomain:(NSString *)domain
-{
-    return [self defaultPersistentDirectoryInDomain:domain create:YES];
-}
-
-+ (NSString *)defaultPersistentDirectoryInDomain:(NSString *)domain create:(BOOL)create
++ (NSURL *)defaultPersistentDirectoryInDomain:(NSString *)domain create:(BOOL)create
 {
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:domain?:kDefaultDomain];
     //#if TARGET_IPHONE_SIMULATOR
@@ -28,41 +23,31 @@ static NSString const *kDefaultDomain = @"TCKit";
     //#endif
     
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
-                                 withIntermediateDirectories:YES
-                                                  attributes:nil
-                                                       error:NULL]) {
+                                           withIntermediateDirectories:YES
+                                                            attributes:nil
+                                                                 error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
     
-    return dir;
+    return nil == dir ? nil : [NSURL fileURLWithPath:dir];
 }
 
-+ (NSString *)defaultCacheDirectoryInDomain:(NSString *)domain
-{
-    return [self defaultCacheDirectoryInDomain:domain create:YES];
-}
-
-+ (NSString *)defaultCacheDirectoryInDomain:(NSString *)domain create:(BOOL)create
++ (NSURL *)defaultCacheDirectoryInDomain:(NSString *)domain create:(BOOL)create
 {
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:domain?:kDefaultDomain];
     
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
-                                 withIntermediateDirectories:YES
-                                                  attributes:nil
-                                                       error:NULL]) {
+                                           withIntermediateDirectories:YES
+                                                            attributes:nil
+                                                                 error:NULL]) {
         NSAssert(false, @"create directory failed.");
         dir = nil;
     }
-    return dir;
+    return nil == dir ? nil : [NSURL fileURLWithPath:dir];
 }
 
-+ (NSString *)defaultTmpDirectoryInDomain:(NSString *)domain
-{
-    return [self defaultTmpDirectoryInDomain:domain create:YES];
-}
-
-+ (NSString *)defaultTmpDirectoryInDomain:(NSString *)domain create:(BOOL)create;
++ (NSURL *)defaultTmpDirectoryInDomain:(NSString *)domain create:(BOOL)create;
 {
     NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:domain?:kDefaultDomain];
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
@@ -73,7 +58,7 @@ static NSString const *kDefaultDomain = @"TCKit";
         dir = nil;
     }
     
-    return dir;
+    return nil == dir ? nil : [NSURL fileURLWithPath:dir];
 }
 
 
