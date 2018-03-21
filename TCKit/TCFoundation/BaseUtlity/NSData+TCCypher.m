@@ -7,8 +7,6 @@
 //
 
 #import "NSData+TCCypher.h"
-#import <CommonCrypto/CommonCryptor.h>
-#import <CommonCrypto/CommonDigest.h>
 
 #if ! __has_feature(objc_arc)
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
@@ -95,7 +93,7 @@ void rc4_crypt(
 
 - (instancetype)base64Encode
 {
-    return  [self base64EncodedDataWithOptions:kNilOptions];
+    return [self base64EncodedDataWithOptions:kNilOptions];
 }
 
 - (instancetype)base64Decode
@@ -103,37 +101,20 @@ void rc4_crypt(
     return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
+- (NSString *)base64EncodeString
+{
+    return [self base64EncodedStringWithOptions:kNilOptions];
+}
+
 
 #pragma mark - AESCrypt
 
-- (instancetype)AES128EncryptWithKey:(NSString *)key_16_byte iv:(NSString *)iv_16_byte
-{
-    return [self AESOperation:kCCEncrypt key:key_16_byte iv:iv_16_byte keySize:kCCKeySizeAES128];
-}
-
-- (instancetype)AES128DecryptWithKey:(NSString *)key_16_byte iv:(NSString *)iv_16_byte
-{
-    return [self AESOperation:kCCDecrypt key:key_16_byte iv:iv_16_byte keySize:kCCKeySizeAES128];
-}
-
-
-- (instancetype)AES256EncryptWithKey:(NSString *)key_32_byte iv:(NSString *)iv_16_byte
-{
-    return [self AESOperation:kCCEncrypt key:key_32_byte iv:iv_16_byte keySize:kCCKeySizeAES256];
-}
-
-- (instancetype)AES256DecryptWithKey:(NSString *)key_32_byte iv:(NSString *)iv_16_byte
-{
-    return [self AESOperation:kCCDecrypt key:key_32_byte iv:iv_16_byte keySize:kCCKeySizeAES256];
-}
-
-
-- (instancetype)AESOperation:(CCOperation)operation key:(NSString *)key iv:(NSString *)iv keySize:(size_t)keySize
+- (instancetype)AESOperation:(CCOperation)operation key:(NSData *)key iv:(NSData *)iv keySize:(size_t)keySize
 {
     char keyPtr[keySize];
     bzero(keyPtr, sizeof(keyPtr));
     if (key.length > 0) {
-        memcpy(keyPtr, key.UTF8String, key.length <= keySize ? key.length : keySize);
+        memcpy(keyPtr, key.bytes, key.length <= keySize ? key.length : keySize);
     }
     
     static size_t const kIvSize = kCCBlockSizeAES128;
@@ -142,7 +123,7 @@ void rc4_crypt(
     
     char *ivPtr = NULL;
     if (iv.length > 0) {
-        memcpy(tmpIvPtr, iv.UTF8String, iv.length <= kIvSize ? iv.length : kIvSize);
+        memcpy(tmpIvPtr, iv.bytes, iv.length <= kIvSize ? iv.length : kIvSize);
         ivPtr = tmpIvPtr;
     }
     
@@ -236,11 +217,54 @@ void rc4_crypt(
     return [NSData dataWithBytes:buf length:nPayloadBytes];
 }
 
-- (instancetype)SHA256Digest
+
+// SHA
+- (instancetype)SHADigest:(NSUInteger)len
 {
-    unsigned char result[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256(self.bytes, (CC_LONG)self.length, result);
-    return [[NSData alloc] initWithBytes:result length:CC_SHA256_DIGEST_LENGTH];
+    unsigned char result[len];
+    
+    switch (len) {
+        case CC_SHA1_DIGEST_LENGTH:
+             CC_SHA1(self.bytes, (CC_LONG)self.length, result);
+            break;
+            
+        case CC_SHA256_DIGEST_LENGTH:
+            CC_SHA256(self.bytes, (CC_LONG)self.length, result);
+            break;
+            
+        case CC_SHA224_DIGEST_LENGTH:
+            CC_SHA224(self.bytes, (CC_LONG)self.length, result);
+            break;
+            
+        case CC_SHA384_DIGEST_LENGTH:
+            CC_SHA384(self.bytes, (CC_LONG)self.length, result);
+            break;
+            
+        case CC_SHA512_DIGEST_LENGTH:
+            CC_SHA512(self.bytes, (CC_LONG)self.length, result);
+            break;
+            
+        default:
+            return nil;
+    }
+    
+    return [NSData dataWithBytes:result length:len];
+}
+
+- (nullable NSString *)SHAString:(NSUInteger)len
+{
+    NSData *data = [self SHADigest:len];
+    if (nil == data) {
+        return nil;
+    }
+    
+    const unsigned char *result = data.bytes;
+    NSUInteger dataLen = data.length;
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:dataLen * 2];
+    for (NSUInteger i = 0; i < dataLen; ++i) {
+        [outputString appendFormat:@"%02x", result[i]];
+    }
+    return outputString;
 }
 
 @end

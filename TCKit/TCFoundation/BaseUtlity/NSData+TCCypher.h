@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCryptor.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,15 +17,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Base64
 - (instancetype)base64Encode;
-- (instancetype)base64Decode;
+- (nullable instancetype)base64Decode;
+
+- (NSString *)base64EncodeString;
 
 
-// AES
-- (nullable instancetype)AES128EncryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES128DecryptWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-
-- (nullable instancetype)AES256EncryptWithKey:(nullable NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES256DecryptWithKey:(nullable NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+/**
+ @brief keySize
+ kCCKeySizeAES128          = 16,
+ kCCKeySizeAES192          = 24,
+ kCCKeySizeAES256          = 32,
+ 
+ iv 16
+ */
+- (nullable instancetype)AESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
 
 // RC4
 // Utility method for generating keys from string passwords
@@ -55,8 +62,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSData *)cryptRC4WithKeyData:(NSData *)keyData;
 // Data returned will be same byte count (-length) as receiver.
 
-// sha256
-- (instancetype)SHA256Digest;
+
+/**
+ @brief    
+ case CC_SHA1_DIGEST_LENGTH:
+ case CC_SHA256_DIGEST_LENGTH:
+ case CC_SHA224_DIGEST_LENGTH:
+ case CC_SHA384_DIGEST_LENGTH:
+ case CC_SHA512_DIGEST_LENGTH:
+ */
+- (nullable instancetype)SHADigest:(NSUInteger)len;
+- (nullable NSString *)SHAString:(NSUInteger)len;
 
 @end
 

@@ -7,34 +7,35 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCryptor.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (TCCypher)
 
 // for AES
-- (nullable instancetype)AES128EncryptBase64WithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES128DecryptBase64WithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
 
-- (nullable instancetype)AES256EncryptBase64WithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES256DecryptBase64WithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
-
-- (nullable instancetype)AES128EncryptHexWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES128DecryptHexWithKey:(nullable NSString *)key_16_byte iv:(nullable NSString *)iv_16_byte;
-
-- (nullable instancetype)AES256EncryptHexWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
-- (nullable instancetype)AES256DecryptHexWithKey:(NSString *)key_32_byte iv:(nullable NSString *)iv_16_byte;
+/**
+ @brief keySize
+ kCCKeySizeAES128          = 16,
+ kCCKeySizeAES192          = 24,
+ kCCKeySizeAES256          = 32,
+ */
+- (nullable NSData *)AESEncryptWithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
+- (nullable NSData *)AESDecryptBase64WithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
+- (nullable NSData *)AESDecryptHexWithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
 
 // for MD5
 - (nullable instancetype)MD5_32;
 - (nullable instancetype)MD5_16;
 
-- (nullable instancetype)SHA_1;
+- (nullable instancetype)SHAString:(NSUInteger)len;
 
 // base64
 - (nullable instancetype)base64Encode;
 - (nullable instancetype)base64Decode;
-
+- (nullable NSData *)base64DecodeData;
 @end
 
 NS_ASSUME_NONNULL_END
