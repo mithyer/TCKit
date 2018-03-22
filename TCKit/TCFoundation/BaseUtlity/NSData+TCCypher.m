@@ -267,6 +267,62 @@ void rc4_crypt(
     return outputString;
 }
 
+- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
+{
+    NSUInteger digestLen = 0;
+    switch (alg) {
+        case kCCHmacAlgSHA1:
+            digestLen = CC_SHA1_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgMD5:
+            digestLen = CC_MD5_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA224:
+            digestLen = CC_SHA224_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA256:
+            digestLen = CC_SHA256_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA384:
+            digestLen = CC_SHA384_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA512:
+            digestLen = CC_SHA512_DIGEST_LENGTH;
+            break;
+        default:
+            return nil;
+    }
+    
+    unsigned char buf[digestLen];
+    CCHmac(alg, key.bytes, key.length, self.bytes, self.length, buf);
+    
+    return [NSData dataWithBytes:buf length:digestLen];
+}
+
+- (nullable NSString *)HmacString:(CCHmacAlgorithm)alg key:(nullable NSData *)key
+{
+    NSData *data = [self Hmac:alg key:key];
+    if (nil == data) {
+        return nil;
+    }
+    
+    const unsigned char *result = data.bytes;
+    NSUInteger dataLen = data.length;
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:dataLen * 2];
+    for (NSUInteger i = 0; i < dataLen; ++i) {
+        [outputString appendFormat:@"%02x", result[i]];
+    }
+    return outputString;
+}
+
+- (instancetype)MD5_32
+{
+    unsigned char buf[CC_MD5_DIGEST_LENGTH];
+    bzero(buf, sizeof(buf));
+    CC_MD5(self.bytes, (CC_LONG)self.length, buf);
+    return [NSData dataWithBytes:buf length:CC_MD5_DIGEST_LENGTH];
+}
+
 @end
 
 

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
+#import <CommonCrypto/CommonHMAC.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)MD5_16;
 
 - (nullable instancetype)SHAString:(NSUInteger)len;
+
+- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
 
 // base64
 - (nullable instancetype)base64Encode;

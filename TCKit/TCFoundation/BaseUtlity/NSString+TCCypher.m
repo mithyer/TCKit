@@ -43,14 +43,13 @@
         return nil;
     }
     
-    const char *value = self.UTF8String;
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
     bzero(outputBuffer, sizeof(outputBuffer));
-    CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
+    CC_MD5(self.UTF8String, (CC_LONG)self.length, outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (NSInteger count = 0; count < CC_MD5_DIGEST_LENGTH; ++count) {
-        [outputString appendFormat:@"%02x",outputBuffer[count]];
+    for (NSUInteger i = 0; i < CC_MD5_DIGEST_LENGTH; ++i) {
+        [outputString appendFormat:@"%02x", outputBuffer[i]];
     }
     
     return outputString;
@@ -61,33 +60,6 @@
     NSString *str = self.MD5_32;
     return nil != str ? [str substringWithRange:NSMakeRange(8, 16)] : str;
 }
-
-//- (instancetype)SHA_1
-//{
-//    if (self.length < 1) {
-//        return nil;
-//    }
-//    
-//    const char *value = self.UTF8String;
-//    
-//    size_t len = strlen(value);
-//    Byte byteArray[len];
-//    for (NSInteger i = 0; i < len; ++i) {
-//        unsigned int eachChar = (unsigned int)*(value + i);
-//        byteArray[i] = eachChar & 0xFF;
-//    }
-//    
-//    unsigned char outputBuffer[CC_SHA1_DIGEST_LENGTH];
-//    bzero(outputBuffer, sizeof(outputBuffer));
-//    CC_SHA1(byteArray, (CC_LONG)len, outputBuffer);
-//    
-//    NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-//    for (NSInteger count = 0; count < CC_SHA1_DIGEST_LENGTH; ++count) {
-//        [outputString appendFormat:@"%02x",outputBuffer[count]];
-//    }
-//    
-//    return outputString;
-//}
 
 - (instancetype)SHAString:(NSUInteger)len
 {
@@ -121,6 +93,41 @@
     NSMutableString *outputString = [NSMutableString stringWithCapacity:len * 2];
     for (NSUInteger i = 0; i < len; ++i) {
         [outputString appendFormat:@"%02x", result[i]];
+    }
+    return outputString;
+}
+
+- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
+{
+    NSUInteger digestLen = 0;
+    switch (alg) {
+        case kCCHmacAlgSHA1:
+            digestLen = CC_SHA1_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgMD5:
+            digestLen = CC_MD5_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA224:
+            digestLen = CC_SHA224_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA256:
+            digestLen = CC_SHA256_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA384:
+            digestLen = CC_SHA384_DIGEST_LENGTH;
+            break;
+        case kCCHmacAlgSHA512:
+            digestLen = CC_SHA512_DIGEST_LENGTH;
+            break;
+        default:
+            return nil;
+    }
+    
+    unsigned char buf[digestLen];
+    CCHmac(alg, key.bytes, key.length, self.UTF8String, self.length, buf);
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:digestLen * 2];
+    for (NSUInteger i = 0; i < digestLen; ++i) {
+        [outputString appendFormat:@"%02x", buf[i]];
     }
     return outputString;
 }

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
+#import <CommonCrypto/CommonHMAC.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -73,6 +74,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)SHADigest:(NSUInteger)len;
 - (nullable NSString *)SHAString:(NSUInteger)len;
+
+
+- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
+- (nullable NSString *)HmacString:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
+
+- (nullable instancetype)MD5_32;
 
 @end
 
