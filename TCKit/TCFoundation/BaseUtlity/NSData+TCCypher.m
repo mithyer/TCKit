@@ -86,6 +86,142 @@ void rc4_crypt(
     }
 }
 
+
+static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutableData *ivData)
+{
+    NSUInteger keyLength = keyData.length;
+    switch (algorithm) {
+        case kCCAlgorithmAES: {
+            if (keyLength <= kCCKeySizeAES128) {
+                keyData.length = kCCKeySizeAES128;
+            } else if (keyLength <= kCCKeySizeAES192) {
+                keyData.length = kCCKeySizeAES192;
+            } else if (keyLength <= kCCKeySizeAES256) {
+                keyData.length = kCCKeySizeAES256;
+            }
+            
+            if (nil != ivData) {
+                ivData.length = kCCBlockSizeAES128;
+            }
+            return;
+        }
+            
+        case kCCAlgorithmDES: {
+            keyData.length = kCCKeySizeDES;
+            break;
+        }
+            
+        case kCCAlgorithm3DES: {
+            keyData.length = kCCKeySize3DES;
+            break;
+        }
+            
+        case kCCAlgorithmCAST: {
+            if (keyLength <= kCCKeySizeMinCAST) {
+                keyData.length = kCCKeySizeMinCAST;
+            } else if (keyLength > kCCKeySizeMaxCAST) {
+                keyData.length = kCCKeySizeMaxCAST;
+            }
+            break;
+        }
+            
+        case kCCAlgorithmRC4: {
+            if (keyLength <= kCCKeySizeMinRC4) {
+                keyData.length = kCCKeySizeMinRC4;
+            } else if (keyLength > kCCKeySizeMaxRC4) {
+                keyData.length = kCCKeySizeMaxRC4;
+            }
+            break;
+        }
+            
+        case kCCAlgorithmRC2: {
+            if (keyLength <= kCCKeySizeMinRC2) {
+                keyData.length = kCCKeySizeMinRC2;
+            } else if (keyLength > kCCKeySizeMaxRC2) {
+                keyData.length = kCCKeySizeMaxRC2;
+            }
+            break;
+        }
+           
+        case kCCAlgorithmBlowfish: {
+            if (keyLength <= kCCKeySizeMinBlowfish) {
+                keyData.length = kCCKeySizeMinBlowfish;
+            } else if (keyLength > kCCKeySizeMaxBlowfish) {
+                keyData.length = kCCKeySizeMaxBlowfish;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if (nil != ivData) {
+        ivData.length = keyData.length;
+    }
+}
+
+
+
+NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
+
+@implementation NSError (CommonCryptoErrorDomain)
+
++ (NSError *)errorWithCCCryptorStatus:(CCCryptorStatus)status
+{
+    NSString *description = nil, *reason = nil;
+    
+    switch (status) {
+        case kCCSuccess:
+            description = NSLocalizedString(@"Success", @"Error description");
+            break;
+            
+        case kCCParamError:
+            description = NSLocalizedString(@"Parameter Error", @"Error description");
+            reason = NSLocalizedString(@"Illegal parameter supplied to encryption/decryption algorithm", @"Error reason");
+            break;
+            
+        case kCCBufferTooSmall:
+            description = NSLocalizedString(@"Buffer Too Small", @"Error description");
+            reason = NSLocalizedString(@"Insufficient buffer provided for specified operation", @"Error reason");
+            break;
+            
+        case kCCMemoryFailure:
+            description = NSLocalizedString(@"Memory Failure", @"Error description");
+            reason = NSLocalizedString(@"Failed to allocate memory", @"Error reason");
+            break;
+            
+        case kCCAlignmentError:
+            description = NSLocalizedString(@"Alignment Error", @"Error description");
+            reason = NSLocalizedString(@"Input size to encryption algorithm was not aligned correctly", @"Error reason");
+            break;
+            
+        case kCCDecodeError:
+            description = NSLocalizedString(@"Decode Error", @"Error description");
+            reason = NSLocalizedString(@"Input data did not decode or decrypt correctly", @"Error reason");
+            break;
+            
+        case kCCUnimplemented:
+            description = NSLocalizedString(@"Unimplemented Function", @"Error description");
+            reason = NSLocalizedString(@"Function not implemented for the current algorithm", @"Error reason");
+            break;
+            
+        default:
+            description = NSLocalizedString(@"Unknown Error", @"Error description");
+            break;
+    }
+    
+    NSMutableDictionary *userInfo = NSMutableDictionary.dictionary;
+    userInfo[NSLocalizedDescriptionKey] = description;
+    if (reason != nil) {
+         userInfo[NSLocalizedFailureReasonErrorKey] = reason;
+    }
+    
+    return [NSError errorWithDomain:TCCommonCryptoErrorDomain code:status userInfo:userInfo];
+}
+
+@end
+
 @implementation NSData (TCCypher)
 
 
@@ -111,6 +247,12 @@ void rc4_crypt(
 
 - (instancetype)AESOperation:(CCOperation)operation key:(NSData *)key iv:(NSData *)iv keySize:(size_t)keySize
 {
+    if (operation == kCCDecrypt) {
+        if (self.length % kCCBlockSizeAES128 != 0) {
+            return nil;
+        }
+    }
+    
     char keyPtr[keySize];
     bzero(keyPtr, sizeof(keyPtr));
     if (key.length > 0) {
@@ -127,7 +269,13 @@ void rc4_crypt(
         ivPtr = tmpIvPtr;
     }
     
-    size_t bufferSize = self.length + kCCBlockSizeAES128;
+    size_t bufferSize = 0;
+    if (operation == kCCEncrypt) {
+        bufferSize = (self.length/kCCBlockSizeAES128 + 1) * kCCBlockSizeAES128;
+    } else {
+        bufferSize = self.length;
+    }
+    
     void *buffer = malloc(bufferSize);
     if (NULL == buffer) {
         return nil;
@@ -153,6 +301,115 @@ void rc4_crypt(
         }
     }
     free(buffer);
+    return nil;
+}
+
+
+- (nullable NSData *)dataUsingAlgorithm:(CCAlgorithm)algorithm
+                              operation:(CCOperation)operation
+                                    key:(NSData *)key
+                                     iv:(NSData *)iv
+                                options:(CCOptions)options
+                                  error:(CCCryptorStatus *)error
+{
+    NSMutableData *keyData = key.mutableCopy ?: NSMutableData.data;
+    NSMutableData *ivData = iv.mutableCopy;
+    fixKeyLengths(algorithm, keyData, ivData);
+    
+    CCCryptorRef cryptor = NULL;
+    CCCryptorStatus status = CCCryptorCreate(operation,
+                                             algorithm,
+                                             options,
+                                             keyData.bytes,
+                                             keyData.length,
+                                             ivData.bytes,
+                                             &cryptor);
+    
+    if (status != kCCSuccess) {
+        if (error != NULL) {
+            *error = status;
+        }
+        if (NULL != cryptor) {
+            CCCryptorRelease(cryptor);
+        }
+        return nil;
+    }
+    
+    NSData *result = [self _runCryptor:cryptor result:&status];
+    if (result == nil && error != NULL) {
+        *error = status;
+    }
+    CCCryptorRelease(cryptor);
+    return result;
+}
+
+- (NSData *)_runCryptor:(CCCryptorRef)cryptor result:(CCCryptorStatus *)status
+{
+    size_t bufsize = CCCryptorGetOutputLength(cryptor, (size_t)self.length, true);
+    void *buf = malloc(bufsize);
+    if (NULL == buf) {
+        return nil;
+    }
+    
+    size_t bufused = 0;
+    size_t bytesTotal = 0;
+    *status = CCCryptorUpdate(cryptor, self.bytes, (size_t)self.length, buf, bufsize, &bufused);
+    if (*status != kCCSuccess) {
+        free(buf);
+        return nil;
+    }
+    
+    bytesTotal += bufused;
+    
+    // From Brent Royal-Gordon (Twitter: architechies):
+    //  Need to update buf ptr past used bytes when calling CCCryptorFinal()
+    *status = CCCryptorFinal(cryptor, buf + bufused, bufsize - bufused, &bufused);
+    if (*status != kCCSuccess) {
+        free(buf);
+        return nil;
+    }
+    
+    bytesTotal += bufused;
+    return [NSData dataWithBytesNoCopy:buf length:bytesTotal];
+}
+
+- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error
+{
+    CCCryptorStatus status = kCCSuccess;
+    NSData *result = [self dataUsingAlgorithm:kCCAlgorithmDES
+                                     operation:operation
+                                           key:key
+                                            iv:nil
+                                       options:kCCOptionPKCS7Padding
+                                         error:&status];
+    
+    if (result != nil) {
+        return result;
+    }
+    
+    if (error != NULL) {
+        *error = [NSError errorWithCCCryptorStatus: status];
+    }
+    return nil;
+}
+
+- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error
+{
+    CCCryptorStatus status = kCCSuccess;
+    NSData *result = [self dataUsingAlgorithm:kCCAlgorithm3DES
+                                    operation:operation
+                                          key:key
+                                           iv:nil
+                                      options:kCCOptionPKCS7Padding
+                                        error:&status];
+    
+    if (result != nil) {
+        return result;
+    }
+    
+    if (error != NULL) {
+        *error = [NSError errorWithCCCryptorStatus: status];
+    }
     return nil;
 }
 

@@ -13,6 +13,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+extern NSString *const TCCommonCryptoErrorDomain;
+
 @interface NSData (TCCypher)
 
 
@@ -28,10 +31,23 @@ NS_ASSUME_NONNULL_BEGIN
  kCCKeySizeAES128          = 16,
  kCCKeySizeAES192          = 24,
  kCCKeySizeAES256          = 32,
+ kCCKeySizeDES             = 8,
+ kCCKeySize3DES            = 24,
+ kCCKeySizeMinCAST         = 5,
+ kCCKeySizeMaxCAST         = 16,
+ kCCKeySizeMinRC4          = 1,
+ kCCKeySizeMaxRC4          = 512,
+ kCCKeySizeMinRC2          = 1,
+ kCCKeySizeMaxRC2          = 128,
+ kCCKeySizeMinBlowfish     = 8,
+ kCCKeySizeMaxBlowfish     = 56,
  
  iv 16
  */
 - (nullable instancetype)AESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
+- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error;
+- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error;
+
 
 // RC4
 // Utility method for generating keys from string passwords
