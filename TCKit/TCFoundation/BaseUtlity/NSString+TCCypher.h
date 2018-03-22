@@ -31,6 +31,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)MD5_32;
 - (nullable instancetype)MD5_16;
 
+/**
+ @brief
+ case CC_SHA1_DIGEST_LENGTH:
+ case CC_SHA256_DIGEST_LENGTH:
+ case CC_SHA224_DIGEST_LENGTH:
+ case CC_SHA384_DIGEST_LENGTH:
+ case CC_SHA512_DIGEST_LENGTH:
+ */
 - (nullable instancetype)SHAString:(NSUInteger)len;
 
 - (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;

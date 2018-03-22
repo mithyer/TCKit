@@ -90,6 +90,7 @@ void rc4_crypt(
 static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutableData *ivData)
 {
     NSUInteger keyLength = keyData.length;
+    NSUInteger ivLen = 0;
     switch (algorithm) {
         case kCCAlgorithmAES: {
             if (keyLength <= kCCKeySizeAES128) {
@@ -100,19 +101,19 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
                 keyData.length = kCCKeySizeAES256;
             }
             
-            if (nil != ivData) {
-                ivData.length = kCCBlockSizeAES128;
-            }
-            return;
+            ivLen = kCCBlockSizeAES128;
+            break;
         }
             
         case kCCAlgorithmDES: {
             keyData.length = kCCKeySizeDES;
+            ivLen = kCCBlockSizeDES;
             break;
         }
             
         case kCCAlgorithm3DES: {
             keyData.length = kCCKeySize3DES;
+            ivLen = kCCBlockSize3DES;
             break;
         }
             
@@ -122,6 +123,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
             } else if (keyLength > kCCKeySizeMaxCAST) {
                 keyData.length = kCCKeySizeMaxCAST;
             }
+            ivLen = kCCBlockSizeCAST;
             break;
         }
             
@@ -140,15 +142,17 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
             } else if (keyLength > kCCKeySizeMaxRC2) {
                 keyData.length = kCCKeySizeMaxRC2;
             }
+            ivLen = kCCBlockSizeRC2;
             break;
         }
-           
+            
         case kCCAlgorithmBlowfish: {
             if (keyLength <= kCCKeySizeMinBlowfish) {
                 keyData.length = kCCKeySizeMinBlowfish;
             } else if (keyLength > kCCKeySizeMaxBlowfish) {
                 keyData.length = kCCKeySizeMaxBlowfish;
             }
+            ivLen = kCCBlockSizeBlowfish;
             break;
         }
             
@@ -156,8 +160,8 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
             break;
     }
     
-    if (nil != ivData) {
-        ivData.length = keyData.length;
+    if (nil != ivData && ivLen > 0) {
+        ivData.length = ivLen;
     }
 }
 
@@ -373,15 +377,16 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSData dataWithBytesNoCopy:buf length:bytesTotal];
 }
 
-- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error
+- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
 {
+    // CBC
     CCCryptorStatus status = kCCSuccess;
     NSData *result = [self dataUsingAlgorithm:kCCAlgorithmDES
-                                     operation:operation
-                                           key:key
-                                            iv:nil
-                                       options:kCCOptionPKCS7Padding
-                                         error:&status];
+                                    operation:operation
+                                          key:key
+                                           iv:nil
+                                      options:kCCOptionPKCS7Padding
+                                        error:&status];
     
     if (result != nil) {
         return result;
@@ -393,13 +398,13 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return nil;
 }
 
-- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key error:(NSError **)error
+- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
 {
     CCCryptorStatus status = kCCSuccess;
     NSData *result = [self dataUsingAlgorithm:kCCAlgorithm3DES
                                     operation:operation
                                           key:key
-                                           iv:nil
+                                           iv:iv
                                       options:kCCOptionPKCS7Padding
                                         error:&status];
     
