@@ -31,7 +31,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 
 
 + (instancetype)defaultCenter;
-
+- (instancetype)initWithSession:(nullable AFHTTPSessionManager *)mng;
 - (instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration;
 - (AFSecurityPolicy *)securityPolicy;
 

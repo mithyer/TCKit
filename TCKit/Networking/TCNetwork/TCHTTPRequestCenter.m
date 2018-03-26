@@ -71,7 +71,12 @@
 {
     if (nil == _jsonSerializer) {
         _jsonSerializer = AFJSONRequestSerializer.serializer;
-        _jsonSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        _jsonSerializer.cachePolicy = _httpSerializer.cachePolicy;
+        _jsonSerializer.allowsCellularAccess = _httpSerializer.allowsCellularAccess;
+        _jsonSerializer.HTTPShouldHandleCookies = _httpSerializer.HTTPShouldHandleCookies;
+        _jsonSerializer.HTTPShouldUsePipelining = _httpSerializer.HTTPShouldUsePipelining;
+        _jsonSerializer.timeoutInterval = _httpSerializer.timeoutInterval;
+        _jsonSerializer.networkServiceType = _httpSerializer.networkServiceType;
     }
     
     return _jsonSerializer;
@@ -227,6 +232,15 @@
     return _requestManager;
 }
 
+- (instancetype)initWithSession:(nullable AFHTTPSessionManager *)mng
+{
+    self = [self initWithSessionConfiguration:nil];
+    if (self) {
+        _requestManager = mng;
+    }
+    return self;
+}
+
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration
 {
     self = [self init];
@@ -296,12 +310,12 @@
         
         BOOL rawJSON = kTCHTTPMethodPostJSON == request.method;
         if (rawJSON) {
-            if (requestMgr.requestSerializer != self.jsonSerializer) {
+            if (![requestMgr.requestSerializer isKindOfClass:AFJSONRequestSerializer.class ]) {
                 _httpSerializer = requestMgr.requestSerializer;
                 requestMgr.requestSerializer = self.jsonSerializer;
             }
         } else {
-            if (![requestMgr.requestSerializer isMemberOfClass:AFHTTPRequestSerializer.class]) {
+            if ([requestMgr.requestSerializer isKindOfClass:AFJSONRequestSerializer.class]) {
                 if (nil == _httpSerializer) {
                     _httpSerializer = AFHTTPRequestSerializer.serializer;
                 }
@@ -411,13 +425,16 @@
     
     if (polling && nil != request.requestTask.originalRequest) {
         NSURLRequest *req = request.requestTask.originalRequest.copy;
-        task = [requestMgr dataTaskWithRequest:req completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-            if (nil != error) {
-                failureBlock(task, error);
-            } else {
-                successBlock(task, responseObject);
-            }
-        }];
+        task = [requestMgr dataTaskWithRequest:req
+                                uploadProgress:nil
+                              downloadProgress:nil
+                             completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                                 if (nil != error) {
+                                     failureBlock(task, error);
+                                 } else {
+                                     successBlock(task, responseObject);
+                                 }
+                             }];
         [self addTask:task toRequest:request];
         return;
     }
@@ -500,13 +517,16 @@
             // build custom url request
             NSURLRequest *customUrlRequest = request.customUrlRequest;
             if (nil != customUrlRequest) {
-                task = [requestMgr dataTaskWithRequest:customUrlRequest completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
-                    if (nil != error) {
-                        failureBlock(task, error);
-                    } else {
-                        successBlock(task, responseObject);
-                    }
-                }];
+                task = [requestMgr dataTaskWithRequest:customUrlRequest
+                                        uploadProgress:nil
+                                      downloadProgress:nil
+                                     completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+                                         if (nil != error) {
+                                             failureBlock(task, error);
+                                         } else {
+                                             successBlock(task, responseObject);
+                                         }
+                                     }];
             }
             break;
         }
