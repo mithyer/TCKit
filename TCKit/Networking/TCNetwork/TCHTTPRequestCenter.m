@@ -19,7 +19,6 @@
 @implementation TCHTTPRequestCenter
 {
 @private
-    AFHTTPSessionManager *_requestManager;
     AFJSONRequestSerializer *_jsonSerializer;
     AFHTTPRequestSerializer *_httpSerializer;
     
