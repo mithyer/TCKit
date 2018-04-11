@@ -13,80 +13,6 @@
 #endif
 
 
-#include <sys/types.h>
-
-
-struct rc4_state {
-    u_char	perm[256];
-    u_char	index1;
-    u_char	index2;
-};
-
-static __inline void swap_bytes(u_char *a, u_char *b) {
-    u_char temp;
-    
-    temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-/*
- * Initialize an RC4 state buffer using the supplied key,
- * which can have arbitrary length.  keylen is in bytes.
- */
-void rc4_init(
-              struct rc4_state* const state,
-              const u_char* key,
-              NSUInteger keylen
-              ) {
-    u_char j;
-    NSUInteger i;
-    
-    /* Initialize state with identity permutation */
-    for (i = 0; i < 256; i++)
-        state->perm[i] = (u_char)i;
-    state->index1 = 0;
-    state->index2 = 0;
-    
-    /* Randomize the permutation using key data */
-    for (j = i = 0; i < 256; i++) {
-        j += state->perm[i] + key[i % keylen];
-        swap_bytes(&state->perm[i], &state->perm[j]);
-    }
-}
-
-/*
- * Encrypt some data using the supplied RC4 state buffer.
- * The input and output buffers may be the same buffer.
- * Since RC4 is a stream cypher, this function is used
- * for both encryption and decryption.
- */
-void rc4_crypt(
-               struct rc4_state* const state,
-               const u_char* inbuf,
-               u_char* outbuf,
-               NSUInteger buflen
-               ) {
-    NSUInteger i;
-    u_char j;
-    
-    for (i = 0; i < buflen; i++) {
-        
-        /* Update modification indicies */
-        state->index1++;
-        state->index2 += state->perm[state->index1];
-        
-        /* Modify permutation */
-        swap_bytes(&state->perm[state->index1],
-                   &state->perm[state->index2]);
-        
-        /* Encrypt/decrypt next byte */
-        j = state->perm[state->index1] + state->perm[state->index2];
-        outbuf[i] = inbuf[i] ^ state->perm[j];
-    }
-}
-
-
 static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutableData *ivData)
 {
     NSUInteger keyLength = keyData.length;
@@ -249,64 +175,64 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
 
 #pragma mark - AESCrypt
 
-- (instancetype)AESOperation:(CCOperation)operation key:(NSData *)key iv:(NSData *)iv keySize:(size_t)keySize
-{
-    if (operation == kCCDecrypt) {
-        if (self.length % kCCBlockSizeAES128 != 0) {
-            return nil;
-        }
-    }
-    
-    char keyPtr[keySize];
-    bzero(keyPtr, sizeof(keyPtr));
-    if (key.length > 0) {
-        memcpy(keyPtr, key.bytes, key.length <= keySize ? key.length : keySize);
-    }
-    
-    static size_t const kIvSize = kCCBlockSizeAES128;
-    char tmpIvPtr[kIvSize];
-    bzero(tmpIvPtr, sizeof(tmpIvPtr));
-    
-    char *ivPtr = NULL;
-    if (iv.length > 0) {
-        memcpy(tmpIvPtr, iv.bytes, iv.length <= kIvSize ? iv.length : kIvSize);
-        ivPtr = tmpIvPtr;
-    }
-    
-    size_t bufferSize = 0;
-    if (operation == kCCEncrypt) {
-        bufferSize = (self.length/kCCBlockSizeAES128 + 1) * kCCBlockSizeAES128;
-    } else {
-        bufferSize = self.length;
-    }
-    
-    void *buffer = malloc(bufferSize);
-    if (NULL == buffer) {
-        return nil;
-    }
-    bzero(buffer, bufferSize);
-    
-    size_t numBytesCrypted = 0;
-    CCCryptorStatus cryptStatus = CCCrypt(operation,
-                                          kCCAlgorithmAES,
-                                          kCCOptionPKCS7Padding,
-                                          keyPtr,
-                                          keySize,
-                                          ivPtr,
-                                          self.bytes,
-                                          self.length,
-                                          buffer,
-                                          bufferSize,
-                                          &numBytesCrypted);
-    if (cryptStatus == kCCSuccess) {
-        NSData *data = [NSData dataWithBytesNoCopy:buffer length:numBytesCrypted];
-        if (nil != data) {
-            return data;
-        }
-    }
-    free(buffer);
-    return nil;
-}
+//- (instancetype)AESOperation:(CCOperation)operation option:(CCOptions)option key:(NSData *)key iv:(NSData *)iv keySize:(size_t)keySize
+//{
+//    if (operation == kCCDecrypt) {
+//        if (self.length % kCCBlockSizeAES128 != 0) {
+//            return nil;
+//        }
+//    }
+//
+//    char keyPtr[keySize];
+//    bzero(keyPtr, sizeof(keyPtr));
+//    if (key.length > 0) {
+//        memcpy(keyPtr, key.bytes, key.length <= keySize ? key.length : keySize);
+//    }
+//
+//    static size_t const kIvSize = kCCBlockSizeAES128;
+//    char tmpIvPtr[kIvSize];
+//    bzero(tmpIvPtr, sizeof(tmpIvPtr));
+//
+//    char *ivPtr = NULL;
+//    if (iv.length > 0) {
+//        memcpy(tmpIvPtr, iv.bytes, iv.length <= kIvSize ? iv.length : kIvSize);
+//        ivPtr = tmpIvPtr;
+//    }
+//
+//    size_t bufferSize = 0;
+//    if (operation == kCCEncrypt) {
+//        bufferSize = (self.length/kCCBlockSizeAES128 + 1) * kCCBlockSizeAES128;
+//    } else {
+//        bufferSize = self.length;
+//    }
+//
+//    void *buffer = malloc(bufferSize);
+//    if (NULL == buffer) {
+//        return nil;
+//    }
+//    bzero(buffer, bufferSize);
+//
+//    size_t numBytesCrypted = 0;
+//    CCCryptorStatus cryptStatus = CCCrypt(operation,
+//                                          kCCAlgorithmAES,
+//                                          kCCOptionPKCS7Padding,
+//                                          keyPtr,
+//                                          keySize,
+//                                          ivPtr,
+//                                          self.bytes,
+//                                          self.length,
+//                                          buffer,
+//                                          bufferSize,
+//                                          &numBytesCrypted);
+//    if (cryptStatus == kCCSuccess) {
+//        NSData *data = [NSData dataWithBytesNoCopy:buffer length:numBytesCrypted];
+//        if (nil != data) {
+//            return data;
+//        }
+//    }
+//    free(buffer);
+//    return nil;
+//}
 
 
 - (nullable NSData *)dataUsingAlgorithm:(CCAlgorithm)algorithm
@@ -377,19 +303,18 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSData dataWithBytesNoCopy:buf length:bytesTotal];
 }
 
-- (nullable NSData *)DESOperation:(CCOperation)operation triple:(BOOL)triple ecb:(BOOL)ecb key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
+- (nullable NSData *)cryptoOperation:(CCOperation)operation algorithm:(CCAlgorithm)algorithm option:(CCOptions)option key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize error:(NSError **)error
 {
-    // CBC
-    CCCryptorStatus status = kCCSuccess;
-    CCOptions opt = kCCOptionPKCS7Padding;
-    if (ecb) {
-        opt |= kCCOptionECBMode;
+    NSMutableData *keyData = key.mutableCopy ?: NSMutableData.data;
+    if (keySize > 0) {
+        keyData.length = keySize;
     }
-    NSData *result = [self dataUsingAlgorithm:triple ? kCCAlgorithm3DES : kCCAlgorithmDES
+    CCCryptorStatus status = kCCSuccess;
+    NSData *result = [self dataUsingAlgorithm:algorithm
                                     operation:operation
-                                          key:key
-                                           iv:nil
-                                      options:opt
+                                          key:keyData
+                                           iv:iv
+                                      options:option
                                         error:&status];
     
     if (result != nil) {
@@ -400,67 +325,6 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
         *error = [NSError errorWithCCCryptorStatus:status];
     }
     return nil;
-}
-
-
-#pragma mark - RC4
-
-+ (NSData *)dataKeyByteCount:(NSInteger)nKeyBytes from7BitString:(NSString *)password
-{
-    const char *passwordString = password.UTF8String;
-    NSMutableData *keyData = NSMutableData.data;
-    NSInteger gotBits = 0;
-    NSInteger carryBits;
-    u_char currentByte = 0;
-    u_char nextByte = 0;
-    u_char mask = 0;
-    u_char newASCIIChar = 0;
-    NSInteger gotKeyBytes = 0;
-    NSInteger iASCII = 0;
-    
-    while ((newASCIIChar = (u_char)passwordString[iASCII]) != 0) {
-        currentByte = (typeof(currentByte))(currentByte | (newASCIIChar << gotBits)); // "<<" shifts on zeros
-        carryBits = 8 - gotBits;
-        nextByte = (newASCIIChar >> carryBits); // ">>" shifts in ones but we don't care because they will be masked off later
-        gotBits += 7;
-        if (gotBits >= 8) {
-            [keyData appendBytes:&currentByte
-                          length:1];
-            gotBits -= 8;
-            currentByte = nextByte;
-            mask = (typeof(mask))(~(0xff << gotBits));
-            currentByte &= mask;
-            gotKeyBytes++;
-        }
-        iASCII++;
-    }
-    
-    if (gotKeyBytes < nKeyBytes) {
-        NSLog(
-              @"Failed since %ld-bit key requires password of %ld bytes.  Password %@ has only %lu.",
-              (long)(nKeyBytes*8),
-              (long)ceil((nKeyBytes*8)/7.0),
-              password,
-              (unsigned long)strlen(passwordString));
-        keyData = nil;
-    }
-    
-    return keyData;
-}
-
-- (NSData *)cryptRC4WithKeyData:(NSData *)keyData
-{
-    NSUInteger nKeyBytes = keyData.length;
-    u_char key[nKeyBytes];
-    [keyData getBytes:key length:nKeyBytes];
-    struct rc4_state state;
-    rc4_init(&state, key, nKeyBytes);
-    NSUInteger nPayloadBytes = self.length;
-    unsigned char buf[nPayloadBytes];
-    [self getBytes:buf length:nPayloadBytes];
-    
-    rc4_crypt(&state, buf, buf, nPayloadBytes);
-    return [NSData dataWithBytes:buf length:nPayloadBytes];
 }
 
 

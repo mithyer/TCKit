@@ -21,17 +21,17 @@
 
 - (nullable NSData *)AESEncryptWithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize
 {
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] AESOperation:kCCEncrypt key:key iv:iv keySize:keySize];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] cryptoOperation:kCCEncrypt algorithm:kCCAlgorithmAES option:kCCOptionPKCS7Padding key:key iv:iv keySize:keySize error:NULL];
 }
 
 - (nullable NSData *)AESDecryptBase64WithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize
 {
-    return [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] AESOperation:kCCDecrypt key:key iv:iv keySize:keySize];
+    return [[[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters] cryptoOperation:kCCDecrypt algorithm:kCCAlgorithmAES option:kCCOptionPKCS7Padding key:key iv:iv keySize:keySize error:NULL];
 }
 
 - (nullable NSData *)AESDecryptHexWithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize
 {
-    return [[NSData dataWithHexString:self] AESOperation:kCCDecrypt key:key iv:iv keySize:keySize];
+    return [[NSData dataWithHexString:self] cryptoOperation:kCCDecrypt algorithm:kCCAlgorithmAES option:kCCOptionPKCS7Padding key:key iv:iv keySize:keySize error:NULL];
 }
 
 
