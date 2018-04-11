@@ -20,8 +20,8 @@ extern NSString *const TCCommonCryptoErrorDomain;
 
 
 // Base64
-- (instancetype)base64Encode;
-- (nullable instancetype)base64Decode;
+- (NSData *)base64Encode;
+- (nullable NSData *)base64Decode;
 
 - (NSString *)base64EncodeString;
 
@@ -56,14 +56,16 @@ extern NSString *const TCCommonCryptoErrorDomain;
  case CC_SHA384_DIGEST_LENGTH:
  case CC_SHA512_DIGEST_LENGTH:
  */
-- (nullable instancetype)SHADigest:(NSUInteger)len;
+- (nullable NSData *)SHADigest:(NSUInteger)len;
 - (nullable NSString *)SHAString:(NSUInteger)len;
 
 
-- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
+- (nullable NSData *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
 - (nullable NSString *)HmacString:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
 
-- (nullable instancetype)MD5_32;
+- (nullable NSData *)MD5_32;
+
+- (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key;
 
 @end
 

@@ -157,12 +157,12 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
 
 #pragma mark - Base64
 
-- (instancetype)base64Encode
+- (NSData *)base64Encode
 {
     return [self base64EncodedDataWithOptions:kNilOptions];
 }
 
-- (instancetype)base64Decode
+- (NSData *)base64Decode
 {
     return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
@@ -327,9 +327,13 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return nil;
 }
 
+- (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key
+{
+    return [self cryptoOperation:operation algorithm:kCCAlgorithmRC4 option:0 key:key iv:nil keySize:0 error:NULL];
+}
 
 // SHA
-- (instancetype)SHADigest:(NSUInteger)len
+- (NSData *)SHADigest:(NSUInteger)len
 {
     unsigned char result[len];
     
@@ -377,7 +381,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return outputString;
 }
 
-- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
+- (nullable NSData *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
 {
     NSUInteger digestLen = 0;
     switch (alg) {
@@ -425,7 +429,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return outputString;
 }
 
-- (instancetype)MD5_32
+- (NSData *)MD5_32
 {
     unsigned char buf[CC_MD5_DIGEST_LENGTH];
     bzero(buf, sizeof(buf));

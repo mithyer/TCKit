@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSData *)AESDecryptHexWithKey:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
 
 // for MD5
-- (nullable instancetype)MD5_32;
-- (nullable instancetype)MD5_16;
+- (nullable NSString *)MD5_32;
+- (nullable NSString *)MD5_16;
 
 /**
  @brief
@@ -39,13 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
  case CC_SHA384_DIGEST_LENGTH:
  case CC_SHA512_DIGEST_LENGTH:
  */
-- (nullable instancetype)SHAString:(NSUInteger)len;
+- (nullable NSString *)SHAString:(NSUInteger)len;
 
-- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
+- (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
 
 // base64
-- (nullable instancetype)base64Encode;
-- (nullable instancetype)base64Decode;
+- (nullable NSString *)base64Encode;
+- (nullable NSString *)base64Decode;
 - (nullable NSData *)base64DecodeData;
 @end
 

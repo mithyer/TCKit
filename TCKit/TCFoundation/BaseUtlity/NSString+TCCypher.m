@@ -37,7 +37,7 @@
 
 #pragma mark - MD5
 
-- (instancetype)MD5_32
+- (NSString *)MD5_32
 {
     if (self.length < 1) {
         return nil;
@@ -55,13 +55,13 @@
     return outputString;
 }
 
-- (instancetype)MD5_16
+- (NSString *)MD5_16
 {
     NSString *str = self.MD5_32;
     return nil != str ? [str substringWithRange:NSMakeRange(8, 16)] : str;
 }
 
-- (instancetype)SHAString:(NSUInteger)len
+- (NSString *)SHAString:(NSUInteger)len
 {
     unsigned char result[len];
     
@@ -97,7 +97,7 @@
     return outputString;
 }
 
-- (nullable instancetype)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
+- (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
 {
     NSUInteger digestLen = 0;
     switch (alg) {
@@ -132,12 +132,12 @@
     return outputString;
 }
 
-- (instancetype)base64Encode
+- (NSString *)base64Encode
 {
     return  [[self dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:kNilOptions];
 }
 
-- (instancetype)base64Decode
+- (NSString *)base64Decode
 {
     NSData *data = self.base64DecodeData;
     return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
