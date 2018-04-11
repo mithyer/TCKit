@@ -45,8 +45,9 @@ extern NSString *const TCCommonCryptoErrorDomain;
  iv 16
  */
 - (nullable instancetype)AESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize;
-- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error;
-- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error;
+
+// CBC default
+- (nullable NSData *)DESOperation:(CCOperation)operation triple:(BOOL)triple ecb:(BOOL)ecb key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error;
 
 
 // RC4

@@ -377,15 +377,19 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSData dataWithBytesNoCopy:buf length:bytesTotal];
 }
 
-- (nullable NSData *)DESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
+- (nullable NSData *)DESOperation:(CCOperation)operation triple:(BOOL)triple ecb:(BOOL)ecb key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
 {
     // CBC
     CCCryptorStatus status = kCCSuccess;
-    NSData *result = [self dataUsingAlgorithm:kCCAlgorithmDES
+    CCOptions opt = kCCOptionPKCS7Padding;
+    if (ecb) {
+        opt |= kCCOptionECBMode;
+    }
+    NSData *result = [self dataUsingAlgorithm:triple ? kCCAlgorithm3DES : kCCAlgorithmDES
                                     operation:operation
                                           key:key
                                            iv:nil
-                                      options:kCCOptionPKCS7Padding
+                                      options:opt
                                         error:&status];
     
     if (result != nil) {
@@ -393,27 +397,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     }
     
     if (error != NULL) {
-        *error = [NSError errorWithCCCryptorStatus: status];
-    }
-    return nil;
-}
-
-- (nullable NSData *)TripleDESOperation:(CCOperation)operation key:(nullable NSData *)key iv:(nullable NSData *)iv error:(NSError **)error
-{
-    CCCryptorStatus status = kCCSuccess;
-    NSData *result = [self dataUsingAlgorithm:kCCAlgorithm3DES
-                                    operation:operation
-                                          key:key
-                                           iv:iv
-                                      options:kCCOptionPKCS7Padding
-                                        error:&status];
-    
-    if (result != nil) {
-        return result;
-    }
-    
-    if (error != NULL) {
-        *error = [NSError errorWithCCCryptorStatus: status];
+        *error = [NSError errorWithCCCryptorStatus:status];
     }
     return nil;
 }
