@@ -82,18 +82,18 @@ NS_INLINE dispatch_queue_t tc_dispatch_get_current_queue(void)
     return NSOperationQueue.currentQueue.underlyingQueue;
 }
 
-NS_INLINE void tc_dispatch_main_sync_safe(dispatch_block_t block)
-{
-    if (nil == block) {
-        return;
-    }
-    
-    if (NSThread.isMainThread) {
-        block();
-    } else {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
+//NS_INLINE void tc_dispatch_main_sync_safe(dispatch_block_t block)
+//{
+//    if (nil == block) {
+//        return;
+//    }
+//
+//    if (NSThread.isMainThread) {
+//        block();
+//    } else {
+//        dispatch_sync(dispatch_get_main_queue(), block);
+//    }
+//}
 
 NS_INLINE void tc_dispatch_main_async_safe(dispatch_block_t block)
 {
