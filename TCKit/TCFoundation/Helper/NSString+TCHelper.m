@@ -58,16 +58,21 @@
             NSString *value = nil;
             if (secondExplode.count == 2) {
                 value = secondExplode[1];
-                NSString *str = value.stringByRemovingPercentEncoding;
-                if (nil != str) {
-                    value = str;
-                }
             } else {
                 value = [firstExplode[i] substringFromIndex:secondExplode[0].length];
-                NSString *str = value.stringByRemovingPercentEncoding;
-                if (nil != str) {
-                    value = str;
+            }
+            NSString *str = value.stringByRemovingPercentEncoding;
+            while (nil != str) {
+                @autoreleasepool {
+                    NSString *tmp = str.stringByRemovingPercentEncoding;
+                    if (nil == tmp || [tmp isEqualToString:str]) {
+                        break;
+                    }
+                    str = tmp;
                 }
+            }
+            if (nil != str) {
+                value = str;
             }
             if (nil == value) {
                 continue;
