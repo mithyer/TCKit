@@ -36,12 +36,14 @@
 
 - (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
 {
-    NSString *str = self.stringByRemovingPercentEncoding;
-    if (nil == str) {
-        str = self;
-    }
     // Explode based on outter glue
-    NSArray<NSString *> *firstExplode = [str componentsSeparatedByString:outterGlue];
+    NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
+    if (firstExplode.count < 2) {
+        NSString *str = self.stringByRemovingPercentEncoding;
+        if (nil != str) {
+            firstExplode = [str componentsSeparatedByString:outterGlue];
+        }
+    }
     
     // Explode based on inner glue
     NSMutableDictionary *returnDictionary = NSMutableDictionary.dictionary;
