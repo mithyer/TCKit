@@ -59,7 +59,7 @@
             if (secondExplode.count == 2) {
                 value = secondExplode[1];
             } else {
-                value = [firstExplode[i] substringFromIndex:secondExplode[0].length];
+                value = [firstExplode[i] substringFromIndex:secondExplode[0].length + 1];
             }
             NSString *str = value.stringByRemovingPercentEncoding;
             while (nil != str) {
