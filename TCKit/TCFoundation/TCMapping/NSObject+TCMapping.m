@@ -256,7 +256,18 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         fmt.timeZone = nil;
                         fmt.dateFormat = nil;
                     } else if ([(NSString *)value rangeOfString:@"T"].location != NSNotFound) {
-                        ret = [tcISODateFormatter() dateFromString:value];
+                        if ([(NSString *)value hasSuffix:@"Z"]) {
+                            ret = [tcISODateFormatter() dateFromString:value];
+                        } else if ([(NSString *)value rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"]].location != NSNotFound) {
+                            NSDateFormatter *fmt = tc_mapping_date_write_fmter();
+                            fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.sZZZ";
+                            ret = [fmt dateFromString:value];
+                            fmt.timeZone = nil;
+                            fmt.dateFormat = nil;
+                        } else {
+                            ret = [tcISODateFormatter() dateFromString:value];
+                        }
+                        
                     } else {
                         goto DATE_NUMBER;
                     }
