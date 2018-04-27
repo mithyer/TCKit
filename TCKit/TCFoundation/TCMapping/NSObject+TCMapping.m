@@ -260,8 +260,15 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                             ret = [tcISODateFormatter() dateFromString:value];
                         } else if ([(NSString *)value rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"]].location != NSNotFound) {
                             NSDateFormatter *fmt = tc_mapping_date_write_fmter();
-                            fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.sZZZ";
+                            fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
                             ret = [fmt dateFromString:value];
+                            if (nil == ret) {
+                                fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.sZZZ";
+                                ret = [fmt dateFromString:value];
+                                if (nil == ret) {
+                                    ret = [tcISODateFormatter() dateFromString:value];
+                                }
+                            }
                             fmt.timeZone = nil;
                             fmt.dateFormat = nil;
                         } else {
