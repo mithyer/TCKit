@@ -10,6 +10,22 @@
 #import "NSString+TCHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
 
+
+@implementation NSCharacterSet (TCHelper)
+
++ (NSCharacterSet *)urlComponentAllowedCharacters
+{
+    static NSCharacterSet *set = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        set = [self characterSetWithCharactersInString:@"/:?&=#%\x20"].invertedSet;
+    });
+    
+    return set;
+}
+
+@end
+
 @implementation NSURL (TCHelper)
 
 - (nullable NSString *)fixedFileExtension
@@ -17,19 +33,15 @@
     return self.absoluteString.fixedFileExtension;
 }
 
-- (NSCharacterSet *)urlComponentAllowedCharacters
-{
-    static NSCharacterSet *set = nil;
-    if (nil == set) {
-        set = [NSCharacterSet characterSetWithCharactersInString:@"/:?&=#%\x20"].invertedSet;
-    }
-    
-    return set;
-}
 
+
+- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf
+{
+    return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:decodeInf];
+}
 - (NSMutableDictionary *)parseQueryToDictionary
 {
-    return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&"];
+    return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:YES];
 }
 
 - (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode
@@ -42,7 +54,7 @@
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
     
     if (force) {
-        NSMutableDictionary *dic = self.parseQueryToDictionary;
+        NSMutableDictionary *dic = [self parseQueryToDictionaryWithDecodeInf:NO];
         if (nil == dic) {
             dic = NSMutableDictionary.dictionary;
         }
@@ -52,7 +64,7 @@
         for (NSString *key in dic) {
             NSString *value = [NSString stringWithFormat:@"%@", dic[key]];
             if (encode) {
-                value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+                value = [value stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.urlComponentAllowedCharacters];
             }
             [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
         }
@@ -68,7 +80,7 @@
             if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
                 NSString *value = [NSString stringWithFormat:@"%@", param[key]];
                 if (encode) {
-                    value = [value stringByAddingPercentEncodingWithAllowedCharacters:self.urlComponentAllowedCharacters];
+                    value = [value stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.urlComponentAllowedCharacters];
                 }
                 [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
             } else {

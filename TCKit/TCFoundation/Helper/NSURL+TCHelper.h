@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (TCHelper)
 
-- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary;
+- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary; // decodeInf: YES
+- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf;
 - (nullable instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode;
 - (nullable instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force;
 - (nullable instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param;
@@ -24,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)fixedFileExtension;
 
 - (nullable NSString *)tc_fileMD5;
+
+@end
+
+@interface NSCharacterSet (TCHelper)
+
++ (NSCharacterSet *)urlComponentAllowedCharacters;
 
 @end
 

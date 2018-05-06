@@ -34,7 +34,7 @@
     return reversedString;
 }
 
-- (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue
+- (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue decodeInf:(BOOL)decodeInf
 {
     // Explode based on outter glue
     NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
@@ -69,6 +69,9 @@
                         break;
                     }
                     str = tmp;
+                    if (!decodeInf) {
+                        break;
+                    }
                 }
             }
             if (nil != str) {

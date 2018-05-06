@@ -300,20 +300,20 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                 if ([value isKindOfClass:NSString.class]) {
                     if (((NSString *)value).length > 0) {
                         NSString *str = value;
-                        if ([str hasPrefix:@"/"]) {
+                        if ([str hasPrefix:@"/"] || [str hasPrefix:@"file://"]) {
                             ret = [klass fileURLWithPath:str];
-                        } else {
-                            ret = [klass URLWithString:str];
                         }
                         
                         if (nil == ret) {
-                            str = [str stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-                            if ([str hasPrefix:@"/"]) {
+                            str = [str stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+                            if ([str hasPrefix:@"/"] || [str hasPrefix:@"file://"]) {
                                 ret = [klass fileURLWithPath:str];
-                            } else {
+                            }
+                            if (nil == ret) {
                                 ret = [klass URLWithString:str];
                             }
                         }
+     
                         NSCParameterAssert(ret);
                     }
                 } else if ([value isKindOfClass:NSURL.class]) {
