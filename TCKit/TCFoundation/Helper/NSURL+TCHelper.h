@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * TCPercentEscapedStringFromString(NSString *string);
+
 @interface NSURL (TCHelper)
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary; // decodeInf: YES

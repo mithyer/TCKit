@@ -10,6 +10,33 @@
 #import "NSString+TCHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
 
+extern NSString * TCPercentEscapedStringFromString(NSString *string) {
+    NSCharacterSet * allowedCharacterSet = NSCharacterSet.urlComponentAllowedCharacters;
+    
+    // FIXME: https://github.com/AFNetworking/AFNetworking/pull/3028
+    // return [string stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
+    
+    static NSUInteger const batchSize = 50;
+    
+    NSUInteger index = 0;
+    NSMutableString *escaped = NSMutableString.string;
+    
+    while (index < string.length) {
+        NSUInteger length = MIN(string.length - index, batchSize);
+        NSRange range = NSMakeRange(index, length);
+        
+        // To avoid breaking up character sequences such as 👴🏻👮🏽
+        range = [string rangeOfComposedCharacterSequencesForRange:range];
+        
+        NSString *substring = [string substringWithRange:range];
+        NSString *encoded = [substring stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
+        [escaped appendString:encoded];
+        
+        index += range.length;
+    }
+    
+    return escaped;
+}
 
 @implementation NSCharacterSet (TCHelper)
 
@@ -18,7 +45,13 @@
     static NSCharacterSet *set = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        set = [self characterSetWithCharactersInString:@"/:?&=#%\x20"].invertedSet;
+        static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
+        
+        NSMutableCharacterSet * allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy;
+        [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
+        
+        set = allowedCharacterSet;
     });
     
     return set;
@@ -34,11 +67,11 @@
 }
 
 
-
 - (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf
 {
     return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:decodeInf];
 }
+
 - (NSMutableDictionary *)parseQueryToDictionary
 {
     return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:YES];
@@ -62,32 +95,32 @@
         
         NSMutableString *query = NSMutableString.string;
         for (NSString *key in dic) {
-            NSString *value = [NSString stringWithFormat:@"%@", dic[key]];
+            NSString *value = TCPercentEscapedStringFromString([NSString stringWithFormat:@"%@", dic[key]]);
             if (encode) {
-                value = [value stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.urlComponentAllowedCharacters];
+                value = TCPercentEscapedStringFromString(value);
             }
-            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [TCPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", value]];
         }
-        com.query = query;
+        com.percentEncodedQuery = query;
     } else {
         NSMutableString *query = NSMutableString.string;
-        NSString *rawQuery = com.query;
+        NSString *rawQuery = com.percentEncodedQuery;
         if (nil != rawQuery) {
             [query appendString:rawQuery];
         }
         
         for (NSString *key in param) {
-            if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
-                NSString *value = [NSString stringWithFormat:@"%@", param[key]];
+            if (nil == com.percentEncodedQuery || [com.query rangeOfString:key].location == NSNotFound) {
+                NSString *value = TCPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]]);
                 if (encode) {
-                    value = [value stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.urlComponentAllowedCharacters];
+                    value = TCPercentEscapedStringFromString(value);
                 }
-                [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", value]];
+                [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [TCPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", value]];
             } else {
                 NSAssert(false, @"conflict query param");
             }
         }
-        com.query = query;
+        com.percentEncodedQuery = query;
     }
     
     return com.URL;

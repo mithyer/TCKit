@@ -62,16 +62,13 @@
                 value = [firstExplode[i] substringFromIndex:secondExplode[0].length + 1];
             }
             NSString *str = value.stringByRemovingPercentEncoding;
-            while (nil != str) {
+            while (decodeInf && nil != str) {
                 @autoreleasepool {
                     NSString *tmp = str.stringByRemovingPercentEncoding;
                     if (nil == tmp || [tmp isEqualToString:str]) {
                         break;
                     }
                     str = tmp;
-                    if (!decodeInf) {
-                        break;
-                    }
                 }
             }
             if (nil != str) {

@@ -7,6 +7,7 @@
 //
 
 #import "TCHTTPRequestHelper.h"
+#import "AFURLRequestSerialization.h"
 
 #ifndef __TCKit__
 #import <CommonCrypto/CommonDigest.h>
@@ -68,19 +69,19 @@
     // NSURLComponents auto url encoding, property auto decoding
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
     NSMutableString *query = NSMutableString.string;
-    NSString *rawQuery = com.query;
+    NSString *rawQuery = com.percentEncodedQuery;
     if (nil != rawQuery) {
         [query appendString:rawQuery];
     }
     
     for (NSString *key in param) {
-        if (nil == com.query || [com.query rangeOfString:key].location == NSNotFound) {
-            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [key stringByAppendingFormat:@"=%@", param[key]]];
+        if (nil == com.percentEncodedQuery || [com.query rangeOfString:key].location == NSNotFound) {
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [AFPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", AFPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]])]];
         } else {
             NSAssert(false, @"conflict query param");
         }
     }
-    com.query = query;
+    com.percentEncodedQuery = query;
     
     return com.URL;
 }
