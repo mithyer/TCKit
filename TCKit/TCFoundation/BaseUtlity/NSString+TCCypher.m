@@ -139,7 +139,12 @@
 
 - (NSString *)base64Decode
 {
-    NSData *data = self.base64DecodeData;
+    return [self base64DecodeWithOptions:NSDataBase64DecodingIgnoreUnknownCharacters];
+}
+
+- (NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options
+{
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:options];
     return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
 }
 
