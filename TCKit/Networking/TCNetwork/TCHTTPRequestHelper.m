@@ -70,12 +70,12 @@
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
     NSMutableString *query = NSMutableString.string;
     NSString *rawQuery = com.percentEncodedQuery;
-    if (nil != rawQuery) {
+    if (rawQuery.length > 0) {
         [query appendString:rawQuery];
     }
     
     for (NSString *key in param) {
-        if (nil == com.percentEncodedQuery || [com.query rangeOfString:key].location == NSNotFound) {
+        if (nil == com.percentEncodedQuery || [com.percentEncodedQuery rangeOfString:key].location == NSNotFound) {
             [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [AFPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", AFPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]])]];
         } else {
             NSAssert(false, @"conflict query param");

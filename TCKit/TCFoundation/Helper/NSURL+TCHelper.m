@@ -105,12 +105,12 @@ extern NSString * TCPercentEscapedStringFromString(NSString *string) {
     } else {
         NSMutableString *query = NSMutableString.string;
         NSString *rawQuery = com.percentEncodedQuery;
-        if (nil != rawQuery) {
+        if (rawQuery.length > 0) {
             [query appendString:rawQuery];
         }
         
         for (NSString *key in param) {
-            if (nil == com.percentEncodedQuery || [com.query rangeOfString:key].location == NSNotFound) {
+            if (nil == com.percentEncodedQuery || [com.percentEncodedQuery rangeOfString:key].location == NSNotFound) {
                 NSString *value = TCPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]]);
                 if (encode) {
                     value = TCPercentEscapedStringFromString(value);
