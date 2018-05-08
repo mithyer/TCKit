@@ -302,6 +302,8 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         NSString *str = value;
                         if ([str hasPrefix:@"/"] || [str hasPrefix:@"file://"]) {
                             ret = [klass fileURLWithPath:str];
+                        } else {
+                            ret = [klass URLWithString:str];
                         }
                         
                         if (nil == ret) {
