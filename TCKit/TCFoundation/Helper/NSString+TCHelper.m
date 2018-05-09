@@ -38,7 +38,7 @@
 {
     // Explode based on outter glue
     NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
-    if (firstExplode.count < 2) {
+    if (firstExplode.count < 2 && [self componentsSeparatedByString:innerGlue].count < 2) {
         NSString *str = self.stringByRemovingPercentEncoding;
         if (nil != str) {
             firstExplode = [str componentsSeparatedByString:outterGlue];
