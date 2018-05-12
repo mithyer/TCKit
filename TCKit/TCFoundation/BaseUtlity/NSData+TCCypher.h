@@ -22,6 +22,7 @@ extern NSString *const TCCommonCryptoErrorDomain;
 // Base64
 - (NSData *)base64Encode;
 - (nullable NSData *)base64Decode;
+- (nullable NSData *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)ops;
 
 - (NSString *)base64EncodeString;
 

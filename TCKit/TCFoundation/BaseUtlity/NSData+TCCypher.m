@@ -162,6 +162,11 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [self base64EncodedDataWithOptions:kNilOptions];
 }
 
+- (NSData *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)ops
+{
+    return [[NSData alloc] initWithBase64EncodedData:self options:ops];
+}
+
 - (NSData *)base64Decode
 {
     return [[NSData alloc] initWithBase64EncodedData:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
