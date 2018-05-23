@@ -435,7 +435,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     
     NSString *text = nil;
     for (NSNumber *ed in s_tryEncodings) {
-        text = [[NSString alloc] initWithData:data encoding:ed.unsignedIntegerValue];// [NSString stringWithContentsOfURL:self.URL usedEncoding:NULL error:NULL];
+        text = [[self alloc] initWithData:data encoding:ed.unsignedIntegerValue];// [NSString stringWithContentsOfURL:self.URL usedEncoding:NULL error:NULL];
         if (nil != text) {
             if (NULL != enc) {
                 *enc = ed.unsignedIntegerValue;
