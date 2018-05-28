@@ -26,6 +26,9 @@ extern NSString * TCPercentEscapedStringFromString(NSString *string);
 // xx.jpg?i=xx&j=oo -> jpg
 - (nullable NSString *)fixedFileExtension;
 
+// "http://bid.cn/path/?er=1" 这种为 .path 补全最后的 /
+- (nullable NSString *)fixedPath;
+
 - (nullable NSString *)tc_fileMD5;
 
 @end
