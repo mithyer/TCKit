@@ -68,7 +68,7 @@ extern NSString * TCPercentEscapedStringFromString(NSString *string) {
 
 - (nullable NSString *)fixedPath
 {
-    return self.hasDirectoryPath ? [self.path stringByAppendingString:@"/"] : self.path;
+    return (self.hasDirectoryPath && self.path.length > 1) ? [self.path stringByAppendingString:@"/"] : self.path;
 }
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf
