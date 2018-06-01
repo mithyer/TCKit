@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNumberFormatter *tc_mapping_number_fmter(void);
+
 @protocol TCMappingPersistentContext <NSObject>
 
 @optional

@@ -37,7 +37,7 @@ static NSDateFormatter *tc_mapping_date_write_fmter(void)
     return s_fmt;
 }
 
-static NSNumberFormatter *tc_mapping_number_fmter(void)
+NSNumberFormatter *tc_mapping_number_fmter(void)
 {
     static NSNumberFormatter *s_fmt = nil;
     static dispatch_once_t onceToken;
