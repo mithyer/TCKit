@@ -117,6 +117,7 @@ static NSString *_defaultService;
 - (void)commonInit
 {
     _accessibility = UICKeyChainStoreAccessibilityAfterFirstUnlock;
+    _useAuthenticationUI = YES;
 }
 
 #pragma mark -
@@ -360,9 +361,9 @@ static NSString *_defaultService;
 {
     NSMutableDictionary *query = [self query];
     query[(__bridge __strong id)kSecAttrAccount] = key;
-    
+
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, NULL);
-    return status == errSecSuccess;
+    return status == errSecSuccess || status == errSecInteractionNotAllowed;
 }
 
 #pragma mark -
@@ -375,7 +376,7 @@ static NSString *_defaultService;
 - (NSString *)stringForKey:(id)key error:(NSError *__autoreleasing *)error
 {
     NSData *data = [self dataForKey:key error:error];
-    if (nil != data) {
+    if (data) {
         NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (string) {
             return string;
@@ -908,7 +909,7 @@ static NSString *_defaultService;
             item[@"key"] = key;
         }
         NSData *data = attributes[(__bridge id)kSecValueData];
-        NSString *string = nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (string) {
             item[@"value"] = string;
         } else {
@@ -1118,7 +1119,7 @@ static NSString *_defaultService;
         if (_server.host) {
             query[(__bridge __strong id)kSecAttrServer] = _server.host;
         }
-        if (nil != _server.port) {
+        if (_server.port) {
             query[(__bridge __strong id)kSecAttrPort] = _server.port;
         }
         CFTypeRef protocolTypeObject = [self protocolTypeObject];
@@ -1140,6 +1141,20 @@ static NSString *_defaultService;
         }
     }
 #endif
+
+    if (!_useAuthenticationUI) {
+#if TARGET_OS_IOS
+        if (floor(NSFoundationVersionNumber) > floor(1144.17)) { // iOS 9+
+            query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
+#if  __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
+        } else if (floor(NSFoundationVersionNumber) > floor(1047.25)) { // iOS 8+
+            query[(__bridge __strong id)kSecUseNoAuthenticationUI] = (__bridge id)kCFBooleanTrue;
+#endif
+        }
+#elif TARGET_OS_WATCH || TARGET_OS_TV
+        query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
+#endif
+    }
     
     return query;
 }
