@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * TCPercentEscapedStringFromString(NSString *string);
+extern NSString * TCPercentEscapedStringFromFileName(NSString *string);
 
 @interface NSURL (TCHelper)
 
@@ -36,6 +37,7 @@ extern NSString * TCPercentEscapedStringFromString(NSString *string);
 @interface NSCharacterSet (TCHelper)
 
 + (NSCharacterSet *)urlComponentAllowedCharacters;
++ (NSCharacterSet *)illegalFileNameCharacters;
 
 @end
 

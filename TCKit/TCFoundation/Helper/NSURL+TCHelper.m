@@ -10,8 +10,8 @@
 #import "NSString+TCHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-extern NSString * TCPercentEscapedStringFromString(NSString *string) {
-    NSCharacterSet * allowedCharacterSet = NSCharacterSet.urlComponentAllowedCharacters;
+NSString * TCPercentEscapedStringFromString(NSString *string) {
+    NSCharacterSet *allowedCharacterSet = NSCharacterSet.urlComponentAllowedCharacters;
     
     // FIXME: https://github.com/AFNetworking/AFNetworking/pull/3028
     // return [string stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
@@ -38,20 +38,52 @@ extern NSString * TCPercentEscapedStringFromString(NSString *string) {
     return escaped;
 }
 
+NSString * TCPercentEscapedStringFromFileName(NSString *string) {
+    return [[string componentsSeparatedByCharactersInSet:NSCharacterSet.illegalFileNameCharacters] componentsJoinedByString:@""];
+}
+
 @implementation NSCharacterSet (TCHelper)
 
+//+ (NSCharacterSet *) chineseAndEngSet
+//{
+//    static NSCharacterSet *chineseNameSet;
+//    if (chineseNameSet == nil)
+//    {
+//        NSMutableCharacterSet *aCharacterSet = [[NSMutableCharacterSet alloc] init];
+//
+//        NSRange lcEnglishRange;
+//        lcEnglishRange.location = (unsigned int)0x4e00;
+//        lcEnglishRange.length = (unsigned int)0x9fa5 - (unsigned int)0x4e00;
+//        [aCharacterSet addCharactersInRange:lcEnglishRange];
+//        [aCharacterSet addCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+//        chineseNameSet = aCharacterSet;
+//    }
+//    return chineseNameSet;
+//}
+
 + (NSCharacterSet *)urlComponentAllowedCharacters
+{
+    static NSString *const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
+    static NSString *const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
+    
+    static NSCharacterSet *set = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableCharacterSet *allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy;
+        [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
+        set = allowedCharacterSet;
+    });
+    
+    return set;
+}
+
++ (NSCharacterSet *)illegalFileNameCharacters
 {
     static NSCharacterSet *set = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
-        static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
-        
-        NSMutableCharacterSet * allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy;
-        [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
-        
-        set = allowedCharacterSet;
+        NSMutableCharacterSet *notAllowedCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>:"];
+        set = notAllowedCharacterSet;
     });
     
     return set;
