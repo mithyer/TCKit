@@ -612,7 +612,7 @@ static char const kBtnExtraKey;
         tempNavigationBar.items = @[tempNavigationItem];
         tempNavigationItem.rightBarButtonItems = @[tempBarButtonItem];
         [tempNavigationBar snapshotViewAfterScreenUpdates:YES];
-        
+        [tempNavigationBar layoutIfNeeded];
         UIView *barButtonItemView = [tempBarButtonItem valueForKey:@"view"];
         if ([barButtonItemView isKindOfClass:UIButton.class]) {
             barButtonSystemItemImage = [(UIButton *)barButtonItemView imageForState:UIControlStateNormal];

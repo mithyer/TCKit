@@ -50,7 +50,7 @@
 
 - (nullable NSString *)bundleIdentifier
 {
-    return [self objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    return [self objectForInfoDictionaryKey:(id)kCFBundleIdentifierKey];
 }
 
 - (nullable NSString *)displayName
