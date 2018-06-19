@@ -60,4 +60,35 @@ static char const kAlignmentRectInsetsKey;
 
 @end
 
+@implementation UISearchBar (TCHelper)
+
+- (nullable __kindof UITextField *)tc_textField
+{
+    UITextField *searchTf = nil;
+    for (__kindof UIView *subView in self.subviews) {
+        if ([subView isKindOfClass:UITextField.class]) {
+            searchTf = subView;
+            break;
+        }
+    }
+    
+    if (nil == searchTf) {
+        for (UIView *subView in self.subviews) {
+            for (__kindof UIView *subView2 in subView.subviews) {
+                if ([subView2 isKindOfClass:UITextField.class]) {
+                    searchTf = subView2;
+                    break;
+                }
+                
+                if (nil != searchTf) {
+                    break;
+                }
+            }
+        }
+    }
+    return searchTf;
+}
+
+@end
+
 #endif

@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIView (TCHelper)
 
 + (CGFloat)pointWithPixel:(NSUInteger)pixel;
@@ -19,5 +21,14 @@
 - (nullable UIViewController *)nearestController;
 
 @end
+
+@interface UISearchBar (TCHelper)
+
+- (nullable __kindof UITextField *)tc_textField;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
 
 #endif
