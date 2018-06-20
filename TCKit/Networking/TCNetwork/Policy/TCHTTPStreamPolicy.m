@@ -27,10 +27,10 @@
     if (nil == _downloadResumeCacheDirectory) {
         
         NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:@"TCHTTPRequestResumeCache"];
-        if (![[NSFileManager defaultManager] createDirectoryAtPath:dir
-                                       withIntermediateDirectories:YES
-                                                        attributes:nil
-                                                             error:NULL]) {
+        if (![NSFileManager.defaultManager createDirectoryAtPath:dir
+                                     withIntermediateDirectories:YES
+                                                      attributes:nil
+                                                           error:NULL]) {
             NSAssert(false, @"create directory failed.");
             dir = nil;
         }

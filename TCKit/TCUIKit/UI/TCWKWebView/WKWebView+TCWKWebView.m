@@ -309,7 +309,7 @@
     } else {
         NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject;
         NSString *cookiesPath = [libraryPath stringByAppendingPathComponent:@"Cookies"];
-        [[NSFileManager defaultManager] removeItemAtPath:cookiesPath error:NULL];
+        [NSFileManager.defaultManager removeItemAtPath:cookiesPath error:NULL];
     }
 }
 
