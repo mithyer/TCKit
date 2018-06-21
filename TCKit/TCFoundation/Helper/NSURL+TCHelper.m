@@ -69,7 +69,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
     static NSCharacterSet *set = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSMutableCharacterSet *allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet.mutableCopy;
+        NSMutableCharacterSet *allowedCharacterSet = NSCharacterSet.URLHostAllowedCharacterSet.mutableCopy;
         [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
         set = allowedCharacterSet;
     });

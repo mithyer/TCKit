@@ -413,8 +413,8 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     }
     
     unsigned char buf[digestLen];
+    bzero(buf, digestLen);
     CCHmac(alg, key.bytes, key.length, self.bytes, self.length, buf);
-    
     return [NSData dataWithBytes:buf length:digestLen];
 }
 
