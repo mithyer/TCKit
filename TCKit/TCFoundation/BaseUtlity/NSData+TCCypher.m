@@ -281,6 +281,9 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
 - (NSData *)_runCryptor:(CCCryptorRef)cryptor result:(CCCryptorStatus *)status
 {
     size_t bufsize = CCCryptorGetOutputLength(cryptor, (size_t)self.length, true);
+    if (bufsize < 1) {
+        return nil;
+    }
     void *buf = malloc(bufsize);
     if (NULL == buf) {
         return nil;
