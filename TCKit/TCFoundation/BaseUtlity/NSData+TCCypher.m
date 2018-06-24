@@ -103,8 +103,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     
     switch (status) {
         case kCCSuccess:
-            description = NSLocalizedString(@"Success", @"Error description");
-            break;
+            return nil;
             
         case kCCParamError:
             description = NSLocalizedString(@"Parameter Error", @"Error description");
@@ -138,6 +137,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
             
         default:
             description = NSLocalizedString(@"Unknown Error", @"Error description");
+            reason = NSLocalizedString(@"Unknown Error", @"Error description");
             break;
     }
     
@@ -282,6 +282,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
 {
     size_t bufsize = CCCryptorGetOutputLength(cryptor, (size_t)self.length, true);
     if (bufsize < 1) {
+        *status = kCCAlignmentError;
         return nil;
     }
     void *buf = malloc(bufsize);
