@@ -54,8 +54,8 @@ NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
     }
     NSParameterAssert(requestUrl);
     
-    static NSString *const s_fmt = @"Method:%zd RequestUrl:%@ Parames:%@ Sensitive:%@";
-    NSString *cacheKey = [NSString stringWithFormat:s_fmt, _request.method, requestUrl, _parametersForCachePathFilter, _sensitiveDataForCachePathFilter];
+    static NSString *const s_fmt = @"Method:%@ RequestUrl:%@ Parames:%@ Sensitive:%@";
+    NSString *cacheKey = [NSString stringWithFormat:s_fmt, @(_request.method), requestUrl, _parametersForCachePathFilter, _sensitiveDataForCachePathFilter];
     _parametersForCachePathFilter = nil;
     _sensitiveDataForCachePathFilter = nil;
     _cacheFileName = [TCHTTPRequestHelper MD5_32:cacheKey];

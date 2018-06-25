@@ -211,7 +211,7 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
     }
 	
 	if (argcount != totalArgs)  {
-		NSLog(@"Invocation argument count mismatch: %zd expected, %zd sent\n", ms.numberOfArguments, argcount);
+		NSLog(@"Invocation argument count mismatch: %@ expected, %@ sent\n", @(ms.numberOfArguments), @(argcount));
 		return nil;
 	}
 	

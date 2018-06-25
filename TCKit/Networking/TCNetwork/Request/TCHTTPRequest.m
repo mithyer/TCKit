@@ -91,7 +91,7 @@
 - (NSString *)identifier
 {
     if (nil == _identifier) {
-        _identifier = [TCHTTPRequestHelper MD5_16:[NSString stringWithFormat:@"%p_%@_%zd", self.observer, self.apiUrl, self.method]];
+        _identifier = [TCHTTPRequestHelper MD5_16:[NSString stringWithFormat:@"%p_%@_%@", self.observer, self.apiUrl, @(self.method)]];
     }
     
     return _identifier;
