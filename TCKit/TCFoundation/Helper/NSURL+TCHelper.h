@@ -26,6 +26,7 @@ extern NSString * TCPercentEscapedStringFromFileName(NSString *string);
 // xx.tar.gz -> tar.gz,
 // xx.jpg?i=xx&j=oo -> jpg
 - (nullable NSString *)fixedFileExtension;
+- (nullable instancetype)URLByAppendingPathExtensionMust:(NSString *)pathExtension;
 
 // "http://bid.cn/path/?er=1" 这种为 .path 补全最后的 /
 - (nullable NSString *)fixedPath;

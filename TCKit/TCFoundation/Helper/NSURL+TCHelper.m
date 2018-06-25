@@ -93,6 +93,21 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
 
 @implementation NSURL (TCHelper)
 
+- (nullable instancetype)URLByAppendingPathExtensionMust:(NSString *)str
+{
+    if (nil == str || str.length < 1) {
+        return self;
+    }
+    
+    NSURL *tmp = [self URLByAppendingPathExtension:str];
+    if (nil != tmp) {
+        return tmp;
+    }
+    
+    NSString *fileName = self.lastPathComponent;
+    return [self.URLByDeletingLastPathComponent URLByAppendingPathComponent:[fileName stringByAppendingFormat:@".%@", str]];
+}
+
 - (nullable NSString *)fixedFileExtension
 {
     return self.absoluteString.fixedFileExtension;
