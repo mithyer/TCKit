@@ -373,6 +373,17 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                 break;
             }
                 
+            case kTCEncodingTypeClass: {
+                if (class_isMetaClass(object_getClass(value))) {
+                    ret = value;
+                } else if ([value isKindOfClass:NSString.class]) {
+                    ret = NSClassFromString(value);
+                }
+                
+                NSCAssert(nil != ret, @"property %@ type %@ doesn't match value type %@", meta->_propertyName, meta->_typeName, NSStringFromClass([value class]));
+                break;
+            }
+                
             case kTCEncodingTypeUIColor: {
                 if ([value isKindOfClass:meta->_typeClass]) {
                     ret = value;

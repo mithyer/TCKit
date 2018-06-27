@@ -425,7 +425,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
                                                           ]];
         
         static NSString *const kEds[] = {@"big5hkscs", @"big5", @"gbk", @"gb18030", @"gb2312"};
-        for (NSInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
+        for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
             NSStringEncoding ed = [self encodingForIANACharset:kEds[i]];
             if (0 != ed) {
                 [s_tryEncodings insertObject:@(ed) atIndex:1];
