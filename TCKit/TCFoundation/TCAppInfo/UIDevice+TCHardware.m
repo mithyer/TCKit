@@ -20,6 +20,14 @@ https://github.com/Ekhoo/Device/
 #import <arpa/inet.h>
 #import <netdb.h>
 
+#include <sys/param.h>
+#include <sys/mount.h>
+#import <netinet/in.h>
+//#import "route.h"      /*the very same from google-code*/
+#include <resolv.h>
+#include <dns.h>
+
+
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 
@@ -191,28 +199,6 @@ static NSString *s_device_names[kTCDeviceCount] = {
 - (NSUInteger)maxSocketBufferSize
 {
     return [self getSysInfo:KIPC_MAXSOCKBUF];
-}
-
-#pragma mark file system -- Thanks Joachim Bean!
-
-/*
- extern NSString *NSFileSystemSize;
- extern NSString *NSFileSystemFreeSize;
- extern NSString *NSFileSystemNodes;
- extern NSString *NSFileSystemFreeNodes;
- extern NSString *NSFileSystemNumber;
-*/
-
-- (NSNumber *)totalDiskSpace
-{
-    NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
-    return fattributes[NSFileSystemSize];
-}
-
-- (NSNumber *)freeDiskSpace
-{
-    NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
-    return fattributes[NSFileSystemFreeSize];
 }
 
 
@@ -646,5 +632,289 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }];
     return ip;
 }
+
+
+#pragma mark -
+
+- (void)sysDNSServersIpv4:(NSArray<NSString *> **)ipv4 ipv6: (NSArray<NSString *> **)ipv6
+{
+    if (ipv4 == NULL && ipv6 == NULL) {
+        return;
+    }
+    
+    res_state res = malloc(sizeof(struct __res_state));
+    int result = res_ninit(res);
+    if (result != 0) {
+        res_ndestroy(res);
+        free(res);
+        return;
+    }
+    
+    union res_9_sockaddr_union *addr_union = malloc((size_t)res->nscount * sizeof(union res_9_sockaddr_union));
+    if (NULL == addr_union) {
+        res_ndestroy(res);
+        free(res);
+        return;
+    }
+    res_getservers(res, addr_union, res->nscount);
+    
+    NSMutableArray *ipv4s = NSMutableArray.array;
+    NSMutableArray *ipv6s = NSMutableArray.array;
+    
+    @autoreleasepool {
+        for (int i = 0; i < res->nscount; i++) {
+            
+            if (addr_union[i].sin.sin_family == AF_INET) {
+                char str[INET_ADDRSTRLEN + 1] = {'\0'};
+                if (NULL != inet_ntop(AF_INET, &(addr_union[i].sin.sin_addr), str, INET_ADDRSTRLEN)) {
+                    NSString *address = @(str);
+                    if (address.length > 0) {
+                        [ipv4s addObject:address];
+                    }
+                }
+            } else if (addr_union[i].sin6.sin6_family == AF_INET6) {
+                char str[INET6_ADDRSTRLEN + 1] = {'\0'};
+                if (NULL != inet_ntop(AF_INET6, &(addr_union[i].sin6.sin6_addr), str, INET6_ADDRSTRLEN)) {
+                    NSString *address = @(str);
+                    if (address.length > 0) {
+                        [ipv6s addObject:address];
+                    }
+                }
+            }
+        }
+        free(addr_union);
+        res_ndestroy(res);
+        free(res);
+    }
+    if (ipv4s.count > 0 && NULL != ipv4) {
+        *ipv4 = ipv4s.copy;
+    }
+    
+    if (ipv6s.count > 0 && NULL != ipv6) {
+        *ipv6 = ipv6s.copy;
+    }
+}
+
+
+- (NSArray<NSString *> *)dnsAddresses
+{
+    NSArray *ipv4Dns = nil;
+    NSArray *ipv6Dns = nil;
+    [self sysDNSServersIpv4:&ipv4Dns ipv6:&ipv6Dns];
+    NSMutableArray *dnsServers = NSMutableArray.array;
+    [dnsServers addObjectsFromArray:ipv4Dns];
+    [dnsServers addObjectsFromArray:ipv6Dns];
+    
+    return dnsServers.count > 0 ? dnsServers : nil;
+}
+
+- (BOOL)isVPNON
+{
+    CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
+    if (NULL == dicRef) {
+        return NO;
+    }
+    NSDictionary *dic = (__bridge_transfer NSDictionary *)dicRef;
+    if (dic.count < 1) {
+        return NO;
+    }
+    NSArray *keys = [dic[@"__SCOPED__"] allKeys];
+    for (NSString *key in keys) {
+        if ([key rangeOfString:@"tap"].location != NSNotFound ||
+            [key rangeOfString:@"tun"].location != NSNotFound ||
+            [key rangeOfString:@"ipsec"].location != NSNotFound ||
+            [key rangeOfString:@"ppp"].location != NSNotFound) {
+            return YES;;
+        }
+    }
+    return NO;
+}
+
+- (void)HTTPProxy:(NSString **)host port:(NSString **)port
+{
+    CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
+    if (NULL == dicRef) {
+        return;
+    }
+    
+    NSDictionary *dic = (__bridge_transfer NSDictionary *)dicRef;
+    if (dic.count < 1) {
+        return;
+    }
+    NSString *proxy = dic[(id)kCFNetworkProxiesHTTPProxy];
+    if (proxy.length > 0) {
+        if (NULL != host) {
+            *host = proxy;
+        }
+        if (NULL != port) {
+            *port = dic[(id)kCFNetworkProxiesHTTPPort];
+        }
+        return;
+    }
+    
+    dic = [dic[@"__SCOPED__"] allValues].firstObject;
+    proxy = dic[(id)kCFNetworkProxiesHTTPProxy];
+    if (proxy.length > 0) {
+        if (NULL != host) {
+            *host = proxy;
+        }
+        if (NULL != port) {
+            *port = dic[(id)kCFNetworkProxiesHTTPPort];
+        }
+        return;
+    }
+}
+// #define ROUNDUP(a) \
+((a) > 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
+//- (NSString *)gatewayIPAddress
+//{
+//    NSString *address = nil;
+//
+//    /* net.route.0.inet.flags.gateway */
+//    int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET,
+//        NET_RT_FLAGS, RTF_GATEWAY};
+//    size_t l = 0;
+//    struct rt_msghdr * rt;
+//    struct sockaddr * sa;
+//    struct sockaddr * sa_tab[RTAX_MAX];
+//    int i;
+//    int r = -1;
+//
+//    if (sysctl(mib, sizeof(mib)/sizeof(mib[0]), 0, &l, 0, 0) < 0 || l < 1) {
+//        return address;
+//    }
+//
+//    char *buf = malloc(l);
+//    if (sysctl(mib, sizeof(mib)/sizeof(mib[0]), buf, &l, 0, 0) < 0) {
+//        return address;
+//    }
+//
+//    for (char *p=buf; p<buf+l; p+=rt->rtm_msglen) {
+//        rt = (struct rt_msghdr *)p;
+//        sa = (struct sockaddr *)(rt + 1);
+//        for (i=0; i<RTAX_MAX; i++) {
+//            if (rt->rtm_addrs & (1 << i)) {
+//                sa_tab[i] = sa;
+//                sa = (struct sockaddr *)((char *)sa + ROUNDUP(sa->sa_len));
+//            } else {
+//                sa_tab[i] = NULL;
+//            }
+//        }
+//
+//        if(((rt->rtm_addrs & (RTA_DST|RTA_GATEWAY)) == (RTA_DST|RTA_GATEWAY))
+//           && sa_tab[RTAX_DST]->sa_family == AF_INET
+//           && sa_tab[RTAX_GATEWAY]->sa_family == AF_INET) {
+//            unsigned char octet[4]  = {0,0,0,0};
+//            int i;
+//            for (i=0; i<4; i++) {
+//                octet[i] = ( ((struct sockaddr_in *)(sa_tab[RTAX_GATEWAY]))->sin_addr.s_addr >> (i*8) ) & 0xFF;
+//            }
+//            if (((struct sockaddr_in *)sa_tab[RTAX_DST])->sin_addr.s_addr == 0) {
+//                in_addr_t addr = ((struct sockaddr_in *)(sa_tab[RTAX_GATEWAY]))->sin_addr.s_addr;
+//                r = 0;
+//                address = [NSString stringWithFormat:@"%s", inet_ntoa(*((struct in_addr*)&addr))];
+//                break;
+//            }
+//        }
+//    }
+//    free(buf);
+//    return address;
+//}
+
+// https://www.cnblogs.com/mobilefeng/p/4977783.html
+- (void)fetchMemoryStatistics:(void (^)(double total, double wired, double active, double inactive, double free))block
+{
+    // Get Page Size
+    int mib[2];
+    vm_size_t page_size;
+    size_t len;
+    
+    mib[0] = CTL_HW;
+    mib[1] = HW_PAGESIZE;
+    len = sizeof(page_size);
+    
+    if (host_page_size(mach_host_self(), &page_size) != KERN_SUCCESS) {
+        NSLog(@"Failed to get page size");
+    }
+    
+    // Get Memory Size
+    mib[0] = CTL_HW;
+    mib[1] = HW_MEMSIZE;
+    long ram;
+    len = sizeof(ram);
+    if (sysctl(mib, 2, &ram, &len, NULL, 0)) {
+        NSLog(@"Failed to get ram size");
+    }
+    
+    // Get Memory Statistics
+    //    vm_statistics_data_t vm_stats;
+    //    mach_msg_type_number_t info_count = HOST_VM_INFO_COUNT;
+    vm_statistics64_data_t vm_stats;
+    mach_msg_type_number_t info_count64 = HOST_VM_INFO64_COUNT;
+    //    kern_return_t kern_return = host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vm_stats, &info_count);
+    kern_return_t kern_return = host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t)&vm_stats, &info_count64);
+    if (kern_return != KERN_SUCCESS) {
+        NSLog(@"Failed to get VM statistics!");
+    }
+    
+    //    double vm_total = vm_stats.wire_count + vm_stats.active_count + vm_stats.inactive_count + vm_stats.free_count;
+    double vm_wire = vm_stats.wire_count;
+    double vm_active = vm_stats.active_count;
+    double vm_inactive = vm_stats.inactive_count;
+    double vm_free = vm_stats.free_count;
+    
+    if (nil != block) {
+        block(ram, vm_wire * page_size, vm_active * page_size, vm_inactive * page_size, vm_free * page_size);
+    }
+}
+
+- (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
+{
+    struct statfs buf;
+    if (statfs("/var", &buf) >= 0) {
+        if (NULL != pTotal) {
+            *pTotal = (uint64_t)buf.f_bsize * buf.f_blocks;
+        }
+        if (NULL != pFree) {
+            *pFree = (uint64_t)buf.f_bsize * buf.f_bfree;
+        }
+    }
+}
+
+- (float)cpuUsage
+{
+    kern_return_t kr;
+    mach_msg_type_number_t count;
+    static host_cpu_load_info_data_t previous_info = {0, 0, 0, 0};
+    host_cpu_load_info_data_t info;
+    
+    count = HOST_CPU_LOAD_INFO_COUNT;
+    
+    kr = host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, (host_info_t)&info, &count);
+    if (kr != KERN_SUCCESS) {
+        return -1;
+    }
+    
+    natural_t user   = info.cpu_ticks[CPU_STATE_USER] - previous_info.cpu_ticks[CPU_STATE_USER];
+    natural_t nice   = info.cpu_ticks[CPU_STATE_NICE] - previous_info.cpu_ticks[CPU_STATE_NICE];
+    natural_t system = info.cpu_ticks[CPU_STATE_SYSTEM] - previous_info.cpu_ticks[CPU_STATE_SYSTEM];
+    natural_t idle   = info.cpu_ticks[CPU_STATE_IDLE] - previous_info.cpu_ticks[CPU_STATE_IDLE];
+    natural_t total  = user + nice + system + idle;
+    previous_info    = info;
+    
+    return (user + nice + system) * 100.0f / total;
+}
+
+- (NSDate *)systemUpTime
+{
+    struct timeval boottime;
+    size_t len = sizeof(boottime);
+    static int mib[] = {CTL_KERN, KERN_BOOTTIME};
+    if (sysctl(mib, sizeof(mib)/sizeof(mib[0]), &boottime, &len, NULL, 0) < 0) {
+        return nil;
+    }
+    return [NSDate dateWithTimeIntervalSince1970:boottime.tv_sec];
+}
+
 
 @end

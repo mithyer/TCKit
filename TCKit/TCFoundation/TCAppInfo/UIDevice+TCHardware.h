@@ -118,10 +118,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (unsigned long long)appUsedMemory;
 - (unsigned long long)appFreeMemory;
 
-- (nullable NSNumber *)totalDiskSpace;
-- (nullable NSNumber *)freeDiskSpace;
-
 - (nullable NSString *)macaddress;
+
+- (nullable NSArray<NSString *> *)dnsAddresses;
+- (void)sysDNSServersIpv4:(NSArray<NSString *> *_Nullable* _Nullable)ipv4 ipv6: (NSArray<NSString *> *_Nullable* _Nullable)ipv6;
+
+//- (NSString *)gatewayIPAddress;
+- (void)HTTPProxy:(NSString *_Nullable* _Nullable)host port:(NSString *_Nullable* _Nullable)port;
+
+- (void)fetchMemoryStatistics:(void (^)(double total, double wired, double active, double inactive, double free))block;
+- (NSDate *)systemUpTime;
+- (float)cpuUsage;
+- (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree;
+- (BOOL)isVPNON;
 
 - (BOOL)hasRetinaDisplay;
 - (TCDeviceFamily)deviceFamily;

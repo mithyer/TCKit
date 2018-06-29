@@ -38,6 +38,7 @@
 		B72A5FCA1F1F4093002D900D /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FA91F1F4093002D900D /* AnimatedGIFImageSerialization.m */; };
 		B72A5FCB1F1F4093002D900D /* UIImage+CGImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FAB1F1F4093002D900D /* UIImage+CGImage.m */; };
 		B72A5FCC1F1F4093002D900D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B72A5FAD1F1F4093002D900D /* UIImage+Resize.m */; };
+		B73960C620E62556000D37A5 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B73960C520E62556000D37A5 /* libresolv.tbd */; };
 		B74028F11F46798300AE681A /* TCProxyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B74028EF1F46798300AE681A /* TCProxyDelegate.h */; };
 		B74028F21F46798300AE681A /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B74028F01F46798300AE681A /* TCProxyDelegate.m */; };
 		B76A7EDD1F134F320010FBD3 /* UIWindow+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7EDC1F134F320010FBD3 /* UIWindow+TCHelper.m */; };
@@ -398,6 +399,7 @@
 		B72A5FAB1F1F4093002D900D /* UIImage+CGImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+CGImage.m"; sourceTree = "<group>"; };
 		B72A5FAC1F1F4093002D900D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		B72A5FAD1F1F4093002D900D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		B73960C520E62556000D37A5 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		B74028EF1F46798300AE681A /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
 		B74028F01F46798300AE681A /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
 		B76A7EDB1F134F320010FBD3 /* UIWindow+TCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+TCHelper.h"; sourceTree = "<group>"; };
@@ -747,6 +749,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B73960C620E62556000D37A5 /* libresolv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -970,6 +973,14 @@
 				B72A5FA91F1F4093002D900D /* AnimatedGIFImageSerialization.m */,
 			);
 			path = AnimatedGIFImageSerialization;
+			sourceTree = "<group>";
+		};
+		B73960C420E62555000D37A5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B73960C520E62556000D37A5 /* libresolv.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		B76A7F081F13568F0010FBD3 /* TCKit */ = {
@@ -1375,6 +1386,7 @@
 				B76D77561F132DFA00CF77FA /* TCApplicationLib */,
 				B72A5F581F1F4066002D900D /* TCFoundationLib */,
 				B76D74351F1315A400CF77FA /* Products */,
+				B73960C420E62555000D37A5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
