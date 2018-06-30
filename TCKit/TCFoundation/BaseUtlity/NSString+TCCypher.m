@@ -45,7 +45,8 @@
     
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
     bzero(outputBuffer, sizeof(outputBuffer));
-    CC_MD5(self.UTF8String, (CC_LONG)self.length, outputBuffer);
+    const char *input = self.UTF8String;
+    CC_MD5(input, (CC_LONG)strlen(input), outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     for (NSUInteger i = 0; i < CC_MD5_DIGEST_LENGTH; ++i) {
@@ -64,26 +65,26 @@
 - (NSString *)SHAString:(NSUInteger)len
 {
     unsigned char result[len];
-    
+    const char *input = self.UTF8String;
     switch (len) {
         case CC_SHA1_DIGEST_LENGTH:
-            CC_SHA1(self.UTF8String, (CC_LONG)self.length, result);
+            CC_SHA1(input, (CC_LONG)strlen(input), result);
             break;
             
         case CC_SHA256_DIGEST_LENGTH:
-            CC_SHA256(self.UTF8String, (CC_LONG)self.length, result);
+            CC_SHA256(input, (CC_LONG)strlen(input), result);
             break;
             
         case CC_SHA224_DIGEST_LENGTH:
-            CC_SHA224(self.UTF8String, (CC_LONG)self.length, result);
+            CC_SHA224(input, (CC_LONG)strlen(input), result);
             break;
             
         case CC_SHA384_DIGEST_LENGTH:
-            CC_SHA384(self.UTF8String, (CC_LONG)self.length, result);
+            CC_SHA384(input, (CC_LONG)strlen(input), result);
             break;
             
         case CC_SHA512_DIGEST_LENGTH:
-            CC_SHA512(self.UTF8String, (CC_LONG)self.length, result);
+            CC_SHA512(input, (CC_LONG)strlen(input), result);
             break;
             
         default:
@@ -124,7 +125,8 @@
     }
     
     unsigned char buf[digestLen];
-    CCHmac(alg, key.bytes, key.length, self.UTF8String, self.length, buf);
+    const char *input = self.UTF8String;
+    CCHmac(alg, key.bytes, key.length, input, strlen(input), buf);
     NSMutableString *outputString = [NSMutableString stringWithCapacity:digestLen * 2];
     for (NSUInteger i = 0; i < digestLen; ++i) {
         [outputString appendFormat:@"%02x", buf[i]];
