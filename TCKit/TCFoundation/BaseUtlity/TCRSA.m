@@ -69,8 +69,8 @@
             OSStatus status = SecTrustCreateWithCertificates(certificate, policy, &trust);
             CFRelease(certificate);
             CFRelease(policy);
-            
-            if (noErr == status && noErr == SecTrustEvaluate(trust, NULL)) {
+            SecTrustResultType reslt = kSecTrustResultInvalid;
+            if (noErr == status && noErr == SecTrustEvaluate(trust, &reslt)) {
                 _publicKey = SecTrustCopyPublicKey(trust);
             }
             
