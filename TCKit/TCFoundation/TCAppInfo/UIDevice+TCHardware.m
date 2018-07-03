@@ -406,19 +406,15 @@ static NSString *s_device_names[kTCDeviceCount] = {
     static BOOL s_detected = NO;
     static BOOL s_found = NO;
     
-
-    
     if (s_detected) {
         return s_found;
     }
     
     s_detected = YES;
-    
     struct ifaddrs *addrs = NULL;
     struct ifaddrs const *cursor = NULL;
     
     if (getifaddrs(&addrs) == 0) {
-        
         cursor = addrs;
         while (cursor != NULL) {
             if (NULL == cursor->ifa_name) {
