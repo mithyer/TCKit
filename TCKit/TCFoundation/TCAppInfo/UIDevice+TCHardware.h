@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sysDNSServersIpv4:(NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv4 ipv6: (NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv6;
 
 //- (NSString *)gatewayIPAddress;
-- (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSString *_Nullable __autoreleasing * _Nullable)port;
+- (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSNumber *_Nullable __autoreleasing * _Nullable)port;
 
 - (void)fetchMemoryStatistics:(void (^)(double total, double wired, double active, double inactive, double free))block;
 - (NSDate *)systemUpTime;

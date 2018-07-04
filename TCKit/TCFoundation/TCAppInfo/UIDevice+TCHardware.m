@@ -726,7 +726,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return NO;
 }
 
-- (void)HTTPProxy:(NSString **)host port:(NSString **)port
+- (void)HTTPProxy:(NSString **)host port:(NSNumber **)port
 {
     CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
     if (NULL == dicRef) {
