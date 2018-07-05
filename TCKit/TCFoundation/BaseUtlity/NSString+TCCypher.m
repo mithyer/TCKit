@@ -152,7 +152,12 @@
 
 - (nullable NSData *)base64DecodeData
 {
-    return [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [self base64DecodeDataWithOptions:NSDataBase64DecodingIgnoreUnknownCharacters];
+}
+
+- (nullable NSData *)base64DecodeDataWithOptions:(NSDataBase64DecodingOptions)options
+{
+    return [[NSData alloc] initWithBase64EncodedString:self options:options];
 }
 
 @end

@@ -470,6 +470,46 @@ static uint8_t nibbleFromChar(unichar c) {
     return [[self alloc] initWithHexString:hexString ignoreOtherCharacters:YES];
 }
 
+- (nullable NSData *)extractFromHexData:(BOOL)ignoreOtherCharacters
+{
+    const NSUInteger charLength = self.length;
+    const NSUInteger maxByteLength = charLength / 2;
+    uint8_t *const bytes = malloc(maxByteLength);
+    if (NULL == bytes) {
+        return nil;
+    }
+    uint8_t *bytePtr = bytes;
+    
+    const uint8_t *rawBytes = self.bytes;
+    
+    uint8_t hiNibble = invalidNibble;
+    for (CFIndex i = 0; i < charLength; ++i) {
+        uint8_t nextNibble = nibbleFromChar(rawBytes[i]);
+        if (nextNibble == invalidNibble && !ignoreOtherCharacters) {
+            free(bytes);
+            return nil;
+        } else if (hiNibble == invalidNibble) {
+            hiNibble = nextNibble;
+        } else if (nextNibble != invalidNibble) {
+            // Have next full byte
+            *bytePtr++ = (uint8_t)((hiNibble << 4) | nextNibble);
+            hiNibble = invalidNibble;
+        }
+    }
+    
+    if (hiNibble != invalidNibble && !ignoreOtherCharacters) { // trailing hex character
+        free(bytes);
+        return nil;
+    }
+    
+    if (bytePtr <= bytes) {
+        free(bytes);
+        return nil;
+    }
+  
+    return [NSData dataWithBytesNoCopy:bytes length:(NSUInteger)(bytePtr - bytes) freeWhenDone:YES];
+}
+
 - (nullable instancetype)initWithHexString:(NSString *)hexString ignoreOtherCharacters:(BOOL)ignoreOtherCharacters
 {
     if (nil == hexString) {
@@ -479,6 +519,9 @@ static uint8_t nibbleFromChar(unichar c) {
     const NSUInteger charLength = hexString.length;
     const NSUInteger maxByteLength = charLength / 2;
     uint8_t *const bytes = malloc(maxByteLength);
+    if (NULL == bytes) {
+        return nil;
+    }
     uint8_t *bytePtr = bytes;
     
     CFStringInlineBuffer inlineBuffer;

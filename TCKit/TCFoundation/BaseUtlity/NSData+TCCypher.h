@@ -98,6 +98,8 @@ extern NSString *const TCCommonCryptoErrorDomain;
  */
 - (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase seperator:(NSString *__nullable)seperator width:(NSUInteger)width;
 
+- (nullable NSData *)extractFromHexData:(BOOL)ignoreOtherCharacters;
+
 @end
 
 

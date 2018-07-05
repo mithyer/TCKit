@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)base64Decode;
 - (nullable NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options;
 - (nullable NSData *)base64DecodeData;
+- (nullable NSData *)base64DecodeDataWithOptions:(NSDataBase64DecodingOptions)options;
+
 @end
 
 NS_ASSUME_NONNULL_END
