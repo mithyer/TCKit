@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 //- (NSString *)gatewayIPAddress;
 - (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSNumber *_Nullable __autoreleasing * _Nullable)port;
 
-- (void)fetchMemoryStatistics:(void (^)(double total, double wired, double active, double inactive, double free))block;
+- (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block;
 - (NSDate *)systemUpTime;
 - (float)cpuUsage;
 - (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree;

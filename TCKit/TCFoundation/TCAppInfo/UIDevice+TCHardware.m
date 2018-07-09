@@ -818,12 +818,12 @@ static NSString *s_device_names[kTCDeviceCount] = {
 //}
 
 // https://www.cnblogs.com/mobilefeng/p/4977783.html
-- (void)fetchMemoryStatistics:(void (^)(double total, double wired, double active, double inactive, double free))block
+- (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block
 {
     // Get Page Size
     int mib[2];
-    vm_size_t page_size;
-    size_t len;
+    vm_size_t page_size = 0;
+    size_t len = 0;
     
     mib[0] = CTL_HW;
     mib[1] = HW_PAGESIZE;
@@ -836,7 +836,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     // Get Memory Size
     mib[0] = CTL_HW;
     mib[1] = HW_MEMSIZE;
-    long ram;
+    size_t ram = 0;
     len = sizeof(ram);
     if (sysctl(mib, 2, &ram, &len, NULL, 0)) {
         NSLog(@"Failed to get ram size");
@@ -854,10 +854,10 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
     
     //    double vm_total = vm_stats.wire_count + vm_stats.active_count + vm_stats.inactive_count + vm_stats.free_count;
-    double vm_wire = vm_stats.wire_count;
-    double vm_active = vm_stats.active_count;
-    double vm_inactive = vm_stats.inactive_count;
-    double vm_free = vm_stats.free_count;
+    size_t vm_wire = vm_stats.wire_count;
+    size_t vm_active = vm_stats.active_count;
+    size_t vm_inactive = vm_stats.inactive_count;
+    size_t vm_free = vm_stats.free_count;
     
     if (nil != block) {
         block(ram, vm_wire * page_size, vm_active * page_size, vm_inactive * page_size, vm_free * page_size);
