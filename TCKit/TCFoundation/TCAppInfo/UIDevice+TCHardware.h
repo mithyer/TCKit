@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block;
 - (NSDate *)systemUpTime;
 - (float)cpuUsage;
-- (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree;
+- (void)diskTotalSpace:(uint64_t *_Nullable)pTotal freeSpace:(uint64_t *_Nullable)pFree;
 - (BOOL)isVPNON;
 
 - (BOOL)hasRetinaDisplay;
