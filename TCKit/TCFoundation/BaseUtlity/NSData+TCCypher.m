@@ -285,7 +285,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
         *status = kCCAlignmentError;
         return nil;
     }
-    void *buf = malloc(bufsize);
+    void *buf = calloc(bufsize, 1);
     if (NULL == buf) {
         return nil;
     }
