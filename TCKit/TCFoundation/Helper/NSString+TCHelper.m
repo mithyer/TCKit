@@ -424,9 +424,10 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
                                                           @(NSShiftJISStringEncoding),
                                                           ]];
         
-        static NSString *const kEds[] = {@"big5hkscs", @"big5", @"gbk", @"gb18030", @"gb2312"};
+        static CFStringEncoding const kEds[] = {kCFStringEncodingBig5_HKSCS_1999, kCFStringEncodingBig5, kCFStringEncodingGBK_95, kCFStringEncodingGB_18030_2000, kCFStringEncodingGB_2312_80};
+        
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
-            NSStringEncoding ed = [self encodingForIANACharset:kEds[i]];
+            NSStringEncoding ed = (NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(kEds[i]);
             if (0 != ed) {
                 [s_tryEncodings insertObject:@(ed) atIndex:1];
             }
