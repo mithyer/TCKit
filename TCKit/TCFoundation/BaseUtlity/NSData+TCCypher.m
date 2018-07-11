@@ -32,8 +32,8 @@ uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer)
     uint32_t crc = UINT32_MAX;
     while (len-- > 0) {
         crc = crc ^ ((uint32_t)(*buffer++) << 24);
-        for ( int bit = 0; bit < 8; bit++ ) {
-            if ((crc & (1L << 31)) != 0) {
+        for (int bit = 0; bit < 8; bit++) {
+            if ((crc & (1U << 31)) != 0) {
                 crc = (crc << 1) ^ POLY;
             } else {
                 crc = (crc << 1);
