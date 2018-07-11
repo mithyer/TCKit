@@ -65,6 +65,15 @@ extern NSString *const TCCommonCryptoErrorDomain;
 - (nullable NSString *)HmacString:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
 
 - (nullable NSData *)MD5_32;
+- (nullable NSData *)MD4;
+- (nullable NSData *)MD2;
+
+- (nullable NSString *)MD5String;
+- (nullable NSString *)MD4String;
+- (nullable NSString *)MD2String;
+
+- (unsigned long)CRC32;
+- (nullable NSString *)CRC32String;
 
 - (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key;
 

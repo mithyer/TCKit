@@ -8,6 +8,7 @@
 
 #import "NSString+TCCypher.h"
 #import "NSData+TCCypher.h"
+#import <zlib.h>
 
 
 #if ! __has_feature(objc_arc)
@@ -60,6 +61,65 @@
 {
     NSString *str = self.MD5_32;
     return nil != str ? [str substringWithRange:NSMakeRange(8, 16)] : str;
+}
+
+- (NSString *)MD4
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    
+    unsigned char outputBuffer[CC_MD4_DIGEST_LENGTH];
+    bzero(outputBuffer, sizeof(outputBuffer));
+    const char *input = self.UTF8String;
+    CC_MD4(input, (CC_LONG)strlen(input), outputBuffer);
+    
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD4_DIGEST_LENGTH * 2];
+    for (NSUInteger i = 0; i < CC_MD4_DIGEST_LENGTH; ++i) {
+        [outputString appendFormat:@"%02x", outputBuffer[i]];
+    }
+    
+    return outputString;
+}
+
+- (NSString *)MD2
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    
+    unsigned char outputBuffer[CC_MD2_DIGEST_LENGTH];
+    bzero(outputBuffer, sizeof(outputBuffer));
+    const char *input = self.UTF8String;
+    CC_MD2(input, (CC_LONG)strlen(input), outputBuffer);
+    
+    NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD2_DIGEST_LENGTH * 2];
+    for (NSUInteger i = 0; i < CC_MD2_DIGEST_LENGTH; ++i) {
+        [outputString appendFormat:@"%02x", outputBuffer[i]];
+    }
+    
+    return outputString;
+}
+
+- (unsigned long)CRC32
+{
+    if (self.length < 1) {
+        return 0;
+    }
+    const char *input = self.UTF8String;
+    uLong crc = crc32(0L, Z_NULL, 0);
+    return crc32(crc, (const Bytef *)input, (uInt)strlen(input));
+}
+
+- (nullable NSString *)CRC32String
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    const char *input = self.UTF8String;
+    uLong crc = crc32(0L, Z_NULL, 0);
+    uLong c = crc32(crc, (const Bytef *)input, (uInt)strlen(input));
+    return [NSString stringWithFormat:@"%lx", c];;
 }
 
 - (NSString *)SHAString:(NSUInteger)len

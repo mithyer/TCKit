@@ -7,6 +7,7 @@
 //
 
 #import "NSData+TCCypher.h"
+#import <zlib.h>
 
 #if ! __has_feature(objc_arc)
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
@@ -445,6 +446,57 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     CC_MD5(self.bytes, (CC_LONG)self.length, buf);
     return [NSData dataWithBytes:buf length:CC_MD5_DIGEST_LENGTH];
 }
+
+- (NSData *)MD4
+{
+    unsigned char buf[CC_MD4_DIGEST_LENGTH];
+    bzero(buf, sizeof(buf));
+    CC_MD4(self.bytes, (CC_LONG)self.length, buf);
+    return [NSData dataWithBytes:buf length:CC_MD4_DIGEST_LENGTH];
+}
+
+- (NSData *)MD2
+{
+    unsigned char buf[CC_MD2_DIGEST_LENGTH];
+    bzero(buf, sizeof(buf));
+    CC_MD2(self.bytes, (CC_LONG)self.length, buf);
+    return [NSData dataWithBytes:buf length:CC_MD2_DIGEST_LENGTH];
+}
+
+- (unsigned long)CRC32
+{
+    if (self.length < 1) {
+        return 0;
+    }
+    uLong crc = crc32(0L, Z_NULL, 0);
+    return crc32(crc, self.bytes, (uInt)self.length);
+}
+
+- (nullable NSString *)CRC32String
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    uLong crc = crc32(0L, Z_NULL, 0);
+    uLong c = crc32(crc, self.bytes, (uInt)self.length);
+    return [NSString stringWithFormat:@"%lx", c];
+}
+
+- (nullable NSString *)MD5String
+{
+    return self.MD5_32.hexStringRepresentation;
+}
+
+- (nullable NSString *)MD4String
+{
+    return self.MD4.hexStringRepresentation;
+}
+
+- (nullable NSString *)MD2String
+{
+    return self.MD2.hexStringRepresentation;
+}
+
 
 @end
 

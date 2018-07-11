@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)MD5_32;
 - (nullable NSString *)MD5_16;
 
+- (nullable NSString *)MD2;
+- (nullable NSString *)MD4;
+- (unsigned long)CRC32;
+- (nullable NSString *)CRC32String;
+
 /**
  @brief
  case CC_SHA1_DIGEST_LENGTH:
