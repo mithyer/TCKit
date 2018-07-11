@@ -101,7 +101,8 @@
     return outputString;
 }
 
-- (unsigned long)CRC32
+// https://stackoverflow.com/questions/39005351/zlib-seems-to-be-returning-crc32b-not-crc32-in-c
+- (unsigned long)CRC32B
 {
     if (self.length < 1) {
         return 0;
@@ -111,7 +112,7 @@
     return crc32(crc, (const Bytef *)input, (uInt)strlen(input));
 }
 
-- (nullable NSString *)CRC32String
+- (nullable NSString *)CRC32BString
 {
     if (self.length < 1) {
         return nil;
@@ -119,8 +120,24 @@
     const char *input = self.UTF8String;
     uLong crc = crc32(0L, Z_NULL, 0);
     uLong c = crc32(crc, (const Bytef *)input, (uInt)strlen(input));
-    return [NSString stringWithFormat:@"%lx", c];;
+    return [NSString stringWithFormat:@"%08lx", c];;
 }
+
+- (uint32_t)CRC32
+{
+    if (self.length < 1) {
+        return 0U;
+    }
+    const char *input = self.UTF8String;
+    return tc_crc32_formula_reflect(strlen(input), (const unsigned char *)input);
+}
+
+- (nullable NSString *)CRC32String
+{
+    return [NSString stringWithFormat:@"%08x", self.CRC32];
+}
+
+
 
 - (NSString *)SHAString:(NSUInteger)len
 {

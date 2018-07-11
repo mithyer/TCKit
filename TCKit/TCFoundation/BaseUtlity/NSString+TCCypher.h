@@ -33,7 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSString *)MD2;
 - (nullable NSString *)MD4;
-- (unsigned long)CRC32;
+
+- (unsigned long)CRC32B;
+- (nullable NSString *)CRC32BString;
+- (uint32_t)CRC32;
 - (nullable NSString *)CRC32String;
 
 /**

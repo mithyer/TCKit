@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const TCCommonCryptoErrorDomain;
 
+extern uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer);
+
 @interface NSData (TCCypher)
 
 
@@ -72,7 +74,9 @@ extern NSString *const TCCommonCryptoErrorDomain;
 - (nullable NSString *)MD4String;
 - (nullable NSString *)MD2String;
 
-- (unsigned long)CRC32;
+- (unsigned long)CRC32B;
+- (nullable NSString *)CRC32BString;
+- (uint32_t)CRC32;
 - (nullable NSString *)CRC32String;
 
 - (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key;

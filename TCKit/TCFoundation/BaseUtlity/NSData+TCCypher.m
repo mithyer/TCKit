@@ -13,6 +13,40 @@
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
+static inline uint32_t tc_swap_endian_uint32(uint32_t value) {
+    return
+    (uint32_t)((value & 0x000000FFU) << 24) |
+    (uint32_t)((value & 0x0000FF00U) <<  8) |
+    (uint32_t)((value & 0x00FF0000U) >>  8) |
+    (uint32_t)((value & 0xFF000000U) >> 24) ;
+}
+
+
+uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer)
+{
+    if (NULL == buffer || len < 1) {
+        return 0U;
+    }
+    
+    static const uint32_t POLY = 0x04C11DB7;
+    uint32_t crc = UINT32_MAX;
+    while (len-- > 0) {
+        crc = crc ^ ((uint32_t)(*buffer++) << 24);
+        for ( int bit = 0; bit < 8; bit++ ) {
+            if ((crc & (1L << 31)) != 0) {
+                crc = (crc << 1) ^ POLY;
+            } else {
+                crc = (crc << 1);
+            }
+        }
+    }
+    
+#ifdef BIG_ENDIAN
+    return tc_swap_endian_uint32(~crc);
+#else
+    return ~crc;
+#endif
+}
 
 static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutableData *ivData)
 {
@@ -463,7 +497,8 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSData dataWithBytes:buf length:CC_MD2_DIGEST_LENGTH];
 }
 
-- (unsigned long)CRC32
+// https://stackoverflow.com/questions/39005351/zlib-seems-to-be-returning-crc32b-not-crc32-in-c
+- (unsigned long)CRC32B
 {
     if (self.length < 1) {
         return 0;
@@ -472,14 +507,28 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return crc32(crc, self.bytes, (uInt)self.length);
 }
 
-- (nullable NSString *)CRC32String
+- (nullable NSString *)CRC32BString
 {
     if (self.length < 1) {
         return nil;
     }
     uLong crc = crc32(0L, Z_NULL, 0);
     uLong c = crc32(crc, self.bytes, (uInt)self.length);
-    return [NSString stringWithFormat:@"%lx", c];
+    return [NSString stringWithFormat:@"%08lx", c];
+}
+
+- (uint32_t)CRC32
+{
+    if (self.length < 1) {
+        return 0U;
+    }
+
+    return tc_crc32_formula_reflect(self.length, self.bytes);
+}
+
+- (nullable NSString *)CRC32String
+{
+    return [NSString stringWithFormat:@"%08x", self.CRC32];
 }
 
 - (nullable NSString *)MD5String
