@@ -23,7 +23,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
                 keyData.length = kCCKeySizeAES128;
             } else if (keyLength <= kCCKeySizeAES192) {
                 keyData.length = kCCKeySizeAES192;
-            } else if (keyLength <= kCCKeySizeAES256) {
+            } else {
                 keyData.length = kCCKeySizeAES256;
             }
             
@@ -44,7 +44,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
         }
             
         case kCCAlgorithmCAST: {
-            if (keyLength <= kCCKeySizeMinCAST) {
+            if (keyLength < kCCKeySizeMinCAST) {
                 keyData.length = kCCKeySizeMinCAST;
             } else if (keyLength > kCCKeySizeMaxCAST) {
                 keyData.length = kCCKeySizeMaxCAST;
@@ -54,7 +54,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
         }
             
         case kCCAlgorithmRC4: {
-            if (keyLength <= kCCKeySizeMinRC4) {
+            if (keyLength < kCCKeySizeMinRC4) {
                 keyData.length = kCCKeySizeMinRC4;
             } else if (keyLength > kCCKeySizeMaxRC4) {
                 keyData.length = kCCKeySizeMaxRC4;
@@ -63,7 +63,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
         }
             
         case kCCAlgorithmRC2: {
-            if (keyLength <= kCCKeySizeMinRC2) {
+            if (keyLength < kCCKeySizeMinRC2) {
                 keyData.length = kCCKeySizeMinRC2;
             } else if (keyLength > kCCKeySizeMaxRC2) {
                 keyData.length = kCCKeySizeMaxRC2;
@@ -73,7 +73,7 @@ static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutab
         }
             
         case kCCAlgorithmBlowfish: {
-            if (keyLength <= kCCKeySizeMinBlowfish) {
+            if (keyLength < kCCKeySizeMinBlowfish) {
                 keyData.length = kCCKeySizeMinBlowfish;
             } else if (keyLength > kCCKeySizeMaxBlowfish) {
                 keyData.length = kCCKeySizeMaxBlowfish;
