@@ -717,6 +717,121 @@ static uint8_t nibbleFromChar(unichar c) {
     return str;
 }
 
+#pragma mark - quoted-printable
+
+// https://github.com/etoile/Inbox/blob/fd2adfb1059a3572a7d86b587ba7e68003db299d/Pantomime/Framework/Pantomime/NSData%2BExtensions.m
+
+- (NSData *)encodeQuotedPrintableWithLineLength:(NSUInteger)theLength inHeader:(BOOL)aBOOL
+{
+    static const char *const hexDigit = "0123456789ABCDEF";
+    
+    if (self.length < 1) {
+        return self;
+    }
+    
+    NSUInteger length = self.length;
+    NSMutableData *aMutableData = [NSMutableData dataWithCapacity:length];
+    const unsigned char  *b = self.bytes;
+    
+    char buf[4] = {'=', '\0', '\0', '\0'};
+    NSUInteger line = 0;
+    
+    for (NSUInteger i = 0; i < length; i++, b++) {
+        if (theLength > 0 && line >= theLength) {
+            [aMutableData appendBytes:"=\n" length:2];
+            line = 0;
+        }
+        
+        // RFC says must encode space and tab right before end of line
+        if ((*b == ' ' || *b == '\t') && i < length - 1 && b[1] == '\n') {
+            buf[1] = hexDigit[(*b)>>4];
+            buf[2] = hexDigit[(*b)&15];
+            [aMutableData appendBytes:buf length:3];
+            line += 3;
+        }
+        // FIXME: really always pass \n through here?
+        else if (!aBOOL &&
+                 (*b == '\n' || *b == ' ' || *b == '\t'
+                  || (*b >= 33 && *b <= 60)
+                  || (*b >= 62 && *b <= 126))) {
+                     [aMutableData appendBytes:b length:1];
+                     if (*b == '\n') {
+                         line = 0;
+                     } else {
+                         line++;
+                     }
+                 }
+        else if (aBOOL && ((*b >= 'a' && *b <= 'z') || (*b >= 'A' && *b <= 'Z'))) {
+            [aMutableData appendBytes:b length:1];
+            if (*b == '\n') {
+                line = 0;
+            } else {
+                line++;
+            }
+        }
+        else if (aBOOL && *b == ' ') {
+            [aMutableData appendBytes:"_"  length:1];
+        }
+        else {
+            buf[1] = hexDigit[(*b)>>4];
+            buf[2] = hexDigit[(*b)&15];
+            [aMutableData appendBytes: buf length:3];
+            line += 3;
+        }
+    }
+    
+    return aMutableData;
+}
+
+- (nullable NSData *)decodeQuotedPrintableInHeader:(BOOL)aBOOL
+{
+    NSUInteger len = self.length;
+    if (len < 1) {
+        return nil;
+    }
+    
+    const unsigned char *bytes = self.bytes;
+    const unsigned char *b = bytes;
+    
+    unsigned char ch = '\0';
+    NSMutableData *result = [NSMutableData dataWithCapacity:len];
+    
+    for (NSUInteger i = 0; i < len; i++, b++) {
+        if (b[0] == '=' && i+1 < len && b[1] == '\n') {
+            b++,i++;
+            continue;
+        } else if (*b == '=' && i+2 < len) {
+            b++, i++;
+            if (*b >= 'A' && *b <= 'F') {
+                ch = 16*(*b-'A'+10);
+            } else if (*b >= 'a' && *b <= 'f') {
+                ch = 16*(*b-'a'+10);
+            } else if (*b>='0' && *b<='9') {
+                ch = 16*(*b-'0');
+            }
+            
+            b++, i++;
+            
+            if (*b >= 'A' && *b <= 'F') {
+                ch += *b-'A'+10;
+            } else if (*b >= 'a' && *b <= 'f') {
+                ch += *b-'a'+10;
+            } else if (*b >= '0' && *b <= '9') {
+                ch += *b-'0';
+            }
+            
+            [result appendBytes:&ch length:1];
+        } else if (aBOOL && *b == '_') {
+            ch = 0x20;
+            [result appendBytes:&ch length:1];
+        } else {
+            [result appendBytes:b length:1];
+        }
+    }
+    
+    return result.length > 0 ? result : nil;
+}
+
 @end
 
 

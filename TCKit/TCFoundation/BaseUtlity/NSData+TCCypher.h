@@ -115,6 +115,11 @@ extern uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer
 
 - (nullable NSData *)extractFromHexData:(BOOL)ignoreOtherCharacters;
 
+
+// MARK: quoted-printable
+- (NSData *)encodeQuotedPrintableWithLineLength:(NSUInteger)theLength inHeader:(BOOL)aBOOL;
+- (nullable NSData *)decodeQuotedPrintableInHeader:(BOOL)aBOOL;
+
 @end
 
 
