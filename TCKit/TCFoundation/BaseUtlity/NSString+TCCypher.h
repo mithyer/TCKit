@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)CRC32BString;
 - (uint32_t)CRC32;
 - (nullable NSString *)CRC32String;
+- (unsigned long)adler32;
+- (nullable NSString *)adler32String;
 
 /**
  @brief

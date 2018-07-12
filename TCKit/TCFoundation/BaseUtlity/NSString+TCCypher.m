@@ -137,6 +137,28 @@
     return [NSString stringWithFormat:@"%08x", self.CRC32];
 }
 
+- (unsigned long)adler32
+{
+    if (self.length < 1) {
+        return 0;
+    }
+    
+    const char *input = self.UTF8String;
+    uLong crc = adler32(0L, Z_NULL, 0);
+    return adler32(crc, (const Bytef *)input, (uInt)strlen(input));
+}
+
+- (nullable NSString *)adler32String
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    
+    const char *input = self.UTF8String;
+    uLong crc = adler32(0L, Z_NULL, 0);
+    uLong c = adler32(crc, (const Bytef *)input, (uInt)strlen(input));
+    return [NSString stringWithFormat:@"%08lx", c];
+}
 
 
 - (NSString *)SHAString:(NSUInteger)len

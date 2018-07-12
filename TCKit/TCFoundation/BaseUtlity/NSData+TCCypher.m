@@ -531,6 +531,26 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSString stringWithFormat:@"%08x", self.CRC32];
 }
 
+- (unsigned long)adler32
+{
+    if (self.length < 1) {
+        return 0;
+    }
+    uLong crc = adler32(0L, Z_NULL, 0);
+    return adler32(crc, self.bytes, (uInt)self.length);
+}
+
+- (nullable NSString *)adler32String
+{
+    if (self.length < 1) {
+        return nil;
+    }
+    uLong crc = adler32(0L, Z_NULL, 0);
+    uLong c = adler32(crc, self.bytes, (uInt)self.length);
+    return [NSString stringWithFormat:@"%08lx", c];
+}
+
+
 - (nullable NSString *)MD5String
 {
     return self.MD5_32.hexStringRepresentation;
