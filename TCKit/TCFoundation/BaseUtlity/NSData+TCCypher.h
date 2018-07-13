@@ -45,14 +45,32 @@ extern uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer
  kCCKeySizeMinBlowfish     = 8,
  kCCKeySizeMaxBlowfish     = 56,
  
- iv 16
+ iv always as block size
+ 
+ kCCBlockSizeAES128        = 16,
+ kCCBlockSizeDES           = 8,
+ kCCBlockSize3DES          = 8,
+ kCCBlockSizeCAST          = 8,
+ kCCBlockSizeRC2           = 8,
+ kCCBlockSizeBlowfish      = 8,
+ 
+ 
+ tweak as same lenght as key length, for kCCModeXTS only
  */
 // CBC default
-- (nullable NSData *)cryptoOperation:(CCOperation)operation algorithm:(CCAlgorithm)algorithm option:(CCOptions)option key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize error:(NSError **)error;
+- (nullable NSData *)crypto:(CCOperation)op
+                  algorithm:(CCAlgorithm)alg
+                       mode:(CCMode)mode
+                    padding:(CCPadding)padding
+                        key:(nullable NSData *)key
+                         iv:(nullable NSData *)iv
+                      tweak:(nullable NSData *)tweak
+                    keySize:(size_t)keySize
+                      error:(NSError **)error;
 
 
 /**
- @brief    
+ @brief
  case CC_SHA1_DIGEST_LENGTH:
  case CC_SHA256_DIGEST_LENGTH:
  case CC_SHA224_DIGEST_LENGTH:
@@ -81,7 +99,7 @@ extern uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer
 - (unsigned long)adler32;
 - (nullable NSString *)adler32String;
 
-- (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key;
+- (nullable NSData *)RC4:(CCOperation)op key:(nullable NSData *)key;
 
 @end
 

@@ -213,89 +213,45 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
 }
 
 
-#pragma mark - AESCrypt
+#pragma mark -
 
-//- (instancetype)AESOperation:(CCOperation)operation option:(CCOptions)option key:(NSData *)key iv:(NSData *)iv keySize:(size_t)keySize
-//{
-//    if (operation == kCCDecrypt) {
-//        if (self.length % kCCBlockSizeAES128 != 0) {
-//            return nil;
-//        }
-//    }
-//
-//    char keyPtr[keySize];
-//    bzero(keyPtr, sizeof(keyPtr));
-//    if (key.length > 0) {
-//        memcpy(keyPtr, key.bytes, key.length <= keySize ? key.length : keySize);
-//    }
-//
-//    static size_t const kIvSize = kCCBlockSizeAES128;
-//    char tmpIvPtr[kIvSize];
-//    bzero(tmpIvPtr, sizeof(tmpIvPtr));
-//
-//    char *ivPtr = NULL;
-//    if (iv.length > 0) {
-//        memcpy(tmpIvPtr, iv.bytes, iv.length <= kIvSize ? iv.length : kIvSize);
-//        ivPtr = tmpIvPtr;
-//    }
-//
-//    size_t bufferSize = 0;
-//    if (operation == kCCEncrypt) {
-//        bufferSize = (self.length/kCCBlockSizeAES128 + 1) * kCCBlockSizeAES128;
-//    } else {
-//        bufferSize = self.length;
-//    }
-//
-//    void *buffer = malloc(bufferSize);
-//    if (NULL == buffer) {
-//        return nil;
-//    }
-//    bzero(buffer, bufferSize);
-//
-//    size_t numBytesCrypted = 0;
-//    CCCryptorStatus cryptStatus = CCCrypt(operation,
-//                                          kCCAlgorithmAES,
-//                                          kCCOptionPKCS7Padding,
-//                                          keyPtr,
-//                                          keySize,
-//                                          ivPtr,
-//                                          self.bytes,
-//                                          self.length,
-//                                          buffer,
-//                                          bufferSize,
-//                                          &numBytesCrypted);
-//    if (cryptStatus == kCCSuccess) {
-//        NSData *data = [NSData dataWithBytesNoCopy:buffer length:numBytesCrypted];
-//        if (nil != data) {
-//            return data;
-//        }
-//    }
-//    free(buffer);
-//    return nil;
-//}
-
-
-- (nullable NSData *)dataUsingAlgorithm:(CCAlgorithm)algorithm
-                              operation:(CCOperation)operation
+- (nullable NSData *)dataUsingAlgorithm:(CCAlgorithm)alg
+                              operation:(CCOperation)op
                                     key:(NSData *)key
                                      iv:(NSData *)iv
-                                options:(CCOptions)options
+                                  tweak:(NSData *)tweak
+                                   mode:(CCMode)mode
+                                padding:(CCPadding)padding
                                   error:(CCCryptorStatus *)error
 {
     NSMutableData *keyData = key.mutableCopy ?: NSMutableData.data;
     NSMutableData *ivData = iv.mutableCopy;
-    fixKeyLengths(algorithm, keyData, ivData);
+    fixKeyLengths(alg, keyData, ivData);
     
+    NSData *tweakData = tweak;
+    if (kCCModeXTS == mode) {
+        ivData = nil;
+        if (tweak.length != keyData.length) {
+            NSMutableData *data = tweak.mutableCopy ?: NSMutableData.data;
+            data.length = keyData.length;
+            tweakData = data;
+        }
+    } else {
+        tweakData = nil;
+    }
+    
+    // Missing and needed for CTR mode is CCModeOptions kCCModeOptionCTR_LE or kCCModeOptionCTR_BE
     CCCryptorRef cryptor = NULL;
-    CCCryptorStatus status = CCCryptorCreate(operation,
-                                             algorithm,
-                                             options,
-                                             keyData.bytes,
-                                             keyData.length,
-                                             ivData.bytes,
-                                             &cryptor);
+    CCCryptorStatus status = CCCryptorCreateWithMode(op,
+                                                     mode, alg, padding,
+                                                     ivData.bytes,
+                                                     keyData.bytes, keyData.length,
+                                                     tweakData.bytes, tweakData.length,
+                                                     0,
+                                                     (kCCModeCTR == mode) ? kCCModeOptionCTR_BE : 0,
+                                                     &cryptor);
     
-    if (status != kCCSuccess) {
+    if (NULL == cryptor || status != kCCSuccess) {
         if (error != NULL) {
             *error = status;
         }
@@ -322,6 +278,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     }
     void *buf = calloc(bufsize, 1);
     if (NULL == buf) {
+        *status = kCCMemoryFailure;
         return nil;
     }
     
@@ -332,11 +289,10 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
         free(buf);
         return nil;
     }
-    
     bytesTotal += bufused;
     
     // From Brent Royal-Gordon (Twitter: architechies):
-    //  Need to update buf ptr past used bytes when calling CCCryptorFinal()
+    // Need to update buf ptr past used bytes when calling CCCryptorFinal()
     *status = CCCryptorFinal(cryptor, buf + bufused, bufsize - bufused, &bufused);
     if (*status != kCCSuccess) {
         free(buf);
@@ -347,20 +303,30 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return [NSData dataWithBytesNoCopy:buf length:bytesTotal];
 }
 
-- (nullable NSData *)cryptoOperation:(CCOperation)operation algorithm:(CCAlgorithm)algorithm option:(CCOptions)option key:(nullable NSData *)key iv:(nullable NSData *)iv keySize:(size_t)keySize error:(NSError **)error
+- (nullable NSData *)crypto:(CCOperation)op
+                  algorithm:(CCAlgorithm)alg
+                       mode:(CCMode)mode
+                    padding:(CCPadding)padding
+                        key:(nullable NSData *)key
+                         iv:(nullable NSData *)iv
+                      tweak:(nullable NSData *)tweak
+                    keySize:(size_t)keySize
+                      error:(NSError **)error
 {
     NSMutableData *keyData = key.mutableCopy ?: NSMutableData.data;
     if (keySize > 0) {
         keyData.length = keySize;
     }
+    
     CCCryptorStatus status = kCCSuccess;
-    NSData *result = [self dataUsingAlgorithm:algorithm
-                                    operation:operation
+    NSData *result = [self dataUsingAlgorithm:alg
+                                    operation:op
                                           key:keyData
                                            iv:iv
-                                      options:option
+                                        tweak:tweak
+                                         mode:(mode != 0 ? mode : kCCModeCBC)
+                                      padding:padding
                                         error:&status];
-    
     if (result != nil) {
         return result;
     }
@@ -371,9 +337,9 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
     return nil;
 }
 
-- (nullable NSData *)RC4:(CCOperation)operation key:(nullable NSData *)key
+- (nullable NSData *)RC4:(CCOperation)op key:(nullable NSData *)key
 {
-    return [self cryptoOperation:operation algorithm:kCCAlgorithmRC4 option:0 key:key iv:nil keySize:0 error:NULL];
+    return [self crypto:op algorithm:kCCAlgorithmRC4 mode:kCCModeRC4 padding:ccNoPadding key:key iv:nil tweak:nil keySize:0 error:NULL];
 }
 
 // SHA
