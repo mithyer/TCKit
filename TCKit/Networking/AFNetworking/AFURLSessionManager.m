@@ -88,7 +88,7 @@ static NSUInteger const AFMaximumNumberOfAttemptsToRecreateBackgroundSessionUplo
 typedef void (^AFURLSessionDidBecomeInvalidBlock)(NSURLSession *session, NSError *error);
 typedef NSURLSessionAuthChallengeDisposition (^AFURLSessionDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
 
-typedef NSURLRequest * (^AFURLSessionTaskWillPerformHTTPRedirectionBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request);
+typedef void (^AFURLSessionTaskWillPerformHTTPRedirectionBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request, void (^completionHandler)(NSURLRequest *));
 typedef NSURLSessionAuthChallengeDisposition (^AFURLSessionTaskDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
 typedef void (^AFURLSessionDidFinishEventsForBackgroundURLSessionBlock)(NSURLSession *session);
 
@@ -849,7 +849,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
     self.taskNeedNewBodyStream = block;
 }
 
-- (void)setTaskWillPerformHTTPRedirectionBlock:(NSURLRequest * (^)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request))block {
+- (void)setTaskWillPerformHTTPRedirectionBlock:(void (^)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request, void (^completionHandler)(NSURLRequest *)))block {
     self.taskWillPerformHTTPRedirection = block;
 }
 
@@ -970,11 +970,9 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
 {
     NSURLRequest *redirectRequest = request;
 
-    if (self.taskWillPerformHTTPRedirection) {
-        redirectRequest = self.taskWillPerformHTTPRedirection(session, task, response, request);
-    }
-
-    if (completionHandler) {
+    if (nil != self.taskWillPerformHTTPRedirection) {
+        self.taskWillPerformHTTPRedirection(session, task, response, request, completionHandler);
+    } else if (nil != completionHandler) {
         completionHandler(redirectRequest);
     }
 }
