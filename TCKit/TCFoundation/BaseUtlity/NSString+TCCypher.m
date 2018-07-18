@@ -147,7 +147,7 @@
     const char *input = self.UTF8String;
     uLong crc = crc32(0L, Z_NULL, 0);
     uLong c = crc32(crc, (const Bytef *)input, (uInt)strlen(input));
-    return [NSString stringWithFormat:@"%08lx", c];;
+    return [NSString stringWithFormat:@"%08lx", c];
 }
 
 - (uint32_t)CRC32
