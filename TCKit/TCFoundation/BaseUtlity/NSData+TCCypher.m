@@ -13,14 +13,6 @@
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
-static inline uint32_t tc_swap_endian_uint32(uint32_t value) {
-    return
-    (uint32_t)((value & 0x000000FFU) << 24) |
-    (uint32_t)((value & 0x0000FF00U) <<  8) |
-    (uint32_t)((value & 0x00FF0000U) >>  8) |
-    (uint32_t)((value & 0xFF000000U) >> 24) ;
-}
-
 
 uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer)
 {
@@ -41,11 +33,7 @@ uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer)
         }
     }
     
-#ifdef BIG_ENDIAN
-    return tc_swap_endian_uint32(~crc);
-#else
-    return ~crc;
-#endif
+    return ntohl(~crc);
 }
 
 static void fixKeyLengths(CCAlgorithm algorithm, NSMutableData *keyData, NSMutableData *ivData)
