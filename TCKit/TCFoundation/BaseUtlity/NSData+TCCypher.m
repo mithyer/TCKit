@@ -548,19 +548,25 @@ static uint8_t nibbleFromChar(unichar c) {
 - (nullable NSData *)extractFromHexData:(BOOL)ignoreOtherCharacters
 {
     const NSUInteger charLength = self.length;
+    if (charLength < 1) {
+        return nil;
+    }
+    
     const NSUInteger maxByteLength = charLength / 2;
     uint8_t *const bytes = malloc(maxByteLength);
     if (NULL == bytes) {
         return nil;
     }
     uint8_t *bytePtr = bytes;
-    
     const uint8_t *rawBytes = self.bytes;
     
     uint8_t hiNibble = invalidNibble;
     for (CFIndex i = 0; i < charLength; ++i) {
         uint8_t nextNibble = nibbleFromChar(rawBytes[i]);
         if (nextNibble == invalidNibble && !ignoreOtherCharacters) {
+            if (rawBytes[i] == ' ') {
+                continue;
+            }
             free(bytes);
             return nil;
         } else if (hiNibble == invalidNibble) {

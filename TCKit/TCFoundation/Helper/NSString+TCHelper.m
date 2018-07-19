@@ -457,6 +457,32 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     return [NSAttributedString attributedStringWithHTMLString:self].string;
 }
 
+- (NSString *)replaceUnicode
+{
+    if (self.length < 6) {
+        return self;
+    }
+    if ([self rangeOfString:@"\\u" options:NSCaseInsensitiveSearch].location == NSNotFound) {
+        return self;
+    }
+    
+    NSString *returnStr = nil;
+    @autoreleasepool {
+        NSData *data = nil;
+        @autoreleasepool {
+            NSMutableString *str = self.mutableCopy;
+            [str replaceOccurrencesOfString:@"\\u" withString:@"\\U" options:kNilOptions range:NSMakeRange(0, str.length)];
+            [str replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:kNilOptions range:NSMakeRange(0, str.length)];
+            [str insertString:@"\"" atIndex:0];
+            [str appendString:@"\""];
+            data = [str dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL  error:NULL];
+    }
+    return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
+}
+
+
 @end
 
 
