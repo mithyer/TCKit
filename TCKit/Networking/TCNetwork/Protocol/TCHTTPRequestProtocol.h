@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, assign) TCRequestState state;
 
 @property (nonatomic, weak, nullable) id observer;
-
+@property (atomic, assign, readonly) BOOL isCancelled;
 
 /**
  @brief	start a http request with checking available cache,
