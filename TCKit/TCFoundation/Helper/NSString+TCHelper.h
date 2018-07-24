@@ -44,6 +44,9 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 + (nullable NSString *)IANACharsetForEncoding:(NSStringEncoding)encoding;
 + (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc;
 
+
+- (nullable NSString *)stringByEscapingForHTML;
+- (nullable NSString *)stringByEscapingForAsciiHTML;
 - (nullable NSString *)stringByUnescapingHTML;
 
 - (nullable NSString *)replaceUnicode;
