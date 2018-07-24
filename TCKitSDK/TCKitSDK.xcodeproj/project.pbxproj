@@ -41,6 +41,8 @@
 		B73960C620E62556000D37A5 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B73960C520E62556000D37A5 /* libresolv.tbd */; };
 		B74028F11F46798300AE681A /* TCProxyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B74028EF1F46798300AE681A /* TCProxyDelegate.h */; };
 		B74028F21F46798300AE681A /* TCProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B74028F01F46798300AE681A /* TCProxyDelegate.m */; };
+		B760115021071CB600971CF6 /* NSURL+IDN.h in Headers */ = {isa = PBXBuildFile; fileRef = B760114E21071CB500971CF6 /* NSURL+IDN.h */; };
+		B760115121071CB600971CF6 /* NSURL+IDN.m in Sources */ = {isa = PBXBuildFile; fileRef = B760114F21071CB500971CF6 /* NSURL+IDN.m */; };
 		B76A7EDD1F134F320010FBD3 /* UIWindow+TCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7EDC1F134F320010FBD3 /* UIWindow+TCHelper.m */; };
 		B76A7FC21F13568F0010FBD3 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F0C1F13568F0010FBD3 /* AFHTTPSessionManager.m */; };
 		B76A7FC31F13568F0010FBD3 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B76A7F0F1F13568F0010FBD3 /* AFNetworkReachabilityManager.m */; };
@@ -402,6 +404,8 @@
 		B73960C520E62556000D37A5 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		B74028EF1F46798300AE681A /* TCProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCProxyDelegate.h; sourceTree = "<group>"; };
 		B74028F01F46798300AE681A /* TCProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCProxyDelegate.m; sourceTree = "<group>"; };
+		B760114E21071CB500971CF6 /* NSURL+IDN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+IDN.h"; sourceTree = "<group>"; };
+		B760114F21071CB500971CF6 /* NSURL+IDN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+IDN.m"; sourceTree = "<group>"; };
 		B76A7EDB1F134F320010FBD3 /* UIWindow+TCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+TCHelper.h"; sourceTree = "<group>"; };
 		B76A7EDC1F134F320010FBD3 /* UIWindow+TCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+TCHelper.m"; sourceTree = "<group>"; };
 		B76A7F0B1F13568F0010FBD3 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -1496,6 +1500,8 @@
 		B76D74901F13198800CF77FA /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				B760114E21071CB500971CF6 /* NSURL+IDN.h */,
+				B760114F21071CB500971CF6 /* NSURL+IDN.m */,
 				B76D74911F13198800CF77FA /* CLLocation+TCHelper.h */,
 				B76D74921F13198800CF77FA /* CLLocation+TCHelper.m */,
 				B76D74931F13198800CF77FA /* NSBundle+TCHelper.h */,
@@ -1901,6 +1907,7 @@
 				B76D74E31F13198800CF77FA /* TCAppInfo.h in Headers */,
 				B76D74EC1F13198800CF77FA /* NSObject+TCMapping.h in Headers */,
 				B76D74C71F13198800CF77FA /* FCUUID.h in Headers */,
+				B760115021071CB600971CF6 /* NSURL+IDN.h in Headers */,
 				B76D74C11F13198800CF77FA /* NSDate+TCUtilities.h in Headers */,
 				B76D74DD1F13198800CF77FA /* NSTimer+TCHelper.h in Headers */,
 				B76D74D11F13198800CF77FA /* TCRSA.h in Headers */,
@@ -2335,6 +2342,7 @@
 				B76D74FD1F13198800CF77FA /* UIImage+Resize.m in Sources */,
 				B76D74D41F13198800CF77FA /* UICKeyChainStore.m in Sources */,
 				B76D74ED1F13198800CF77FA /* NSObject+TCMapping.m in Sources */,
+				B760115121071CB600971CF6 /* NSURL+IDN.m in Sources */,
 				B76D74D21F13198800CF77FA /* TCRSA.m in Sources */,
 				B76D74F71F13198800CF77FA /* NSObject+TCMappingExtra.m in Sources */,
 				B76D74C41F13198800CF77FA /* NSObject+TCUtilities.m in Sources */,

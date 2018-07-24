@@ -31,6 +31,7 @@
 
 #import "NSString+TCHelper.h"
 #import "NSURL+TCHelper.h"
+#import "NSURL+IDN.h"
 
 
 
