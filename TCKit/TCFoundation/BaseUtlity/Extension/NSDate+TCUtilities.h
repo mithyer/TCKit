@@ -6,6 +6,16 @@
 
 #import <Foundation/Foundation.h>
 
+
+typedef NS_ENUM(NSInteger, TCDateFormatType) {
+    kTCDateFormatTypeIOS8601,
+    kTCDateFormatTypeRFC3339 = kTCDateFormatTypeIOS8601,
+    kTCDateFormatTypeRFC822,
+    kTCDateFormatTypeRFC850,
+    kTCDateFormatTypeRFC1123,
+    kTCDateFormatTypeASCTIME,
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSInteger const D_MINUTE;
@@ -18,6 +28,77 @@ extern NSInteger const D_YEAR;
 
 + (NSCalendar *)currentCalendar; // avoid bottlenecks
 + (NSDateFormatter *)dateFormatter;
+
+
+/*
+ 2010-07-09T16:13:30+12:00
+ 2011-01-11T11:11:11+0000
+ 2011-01-26T19:06:43Z
+ */
+extern NSString *const kTCDateIOS8601ReadFormat;
+
+/*
+ 2010-07-09T16:13:30.3+12:00
+ 2011-01-11T11:11:11.322+0000
+ 2011-01-26T19:06:43.554Z
+ */
+extern NSString *const kTCDateIOS8601SubReadFormat;
+
+/*
+ 2011-01-26T19:06:43Z
+ */
+extern NSString *const kTCDateIOS8601WriteZuluFormat;
+
+/*
+ 2011-01-26T19:06:43.554Z
+ */
+extern NSString *const kTCDateIOS8601WriteSubZuluFormat;
+
+/*
+ 2010-07-09T16:13:30+0000
+ */
+extern NSString *const kTCDateIOS8601WriteZoneFormat;
+
+/*
+ 2011-01-11T11:11:11.322+0000
+ */
+extern NSString *const kTCDateIOS8601WriteSubZoneFormat;
+
+/*
+ 2010-07-09T16:13:30+00:00
+ */
+extern NSString *const kTCDateIOS8601WriteColonZoneFormat;
+
+/*
+ 2011-01-11T11:11:11.322+00:00
+ */
+extern NSString *const kTCDateIOS8601WriteSubColonZoneFormat;
+
+
+/*
+ Wed, 02 Oct 2002 08:00:00 EST
+ Wed, 02 Oct 2002 13:00:00 GMT
+ Wed, 02 Oct 2002 15:00:00 +0200
+ // Mon, 15 Aug 05 15:52:01 +0000
+ */
+extern NSString *const kTCDateRFC822Format;
+
+/*
+ Monday, 15-Aug-05 15:52:01 UTC
+ */
+extern NSString *const kTCDateRFC850Format;
+
+/*
+ Mon, 15 Aug 2005 15:52:01 +0000
+ */
+extern NSString *const kTCDateRFC1123Format;
+
+/*
+ Wed Oct 2 15:00:00 2002
+ */
+extern NSString *const kTCDateASCFormat;
+
++ (NSDateFormatter *)dateFormatterForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *_Nullable)timeZone;
 
 // Relative dates from the current date
 + (instancetype)dateTomorrow;

@@ -26,8 +26,6 @@
  2010-07-09T16:13:30+12:00
  2011-01-11T11:11:11+0000
  2011-01-26T19:06:43Z
- 
- length: 20/24/25
  */
 NSDateFormatter *tcISODateFormatter(void) {
     static NSDateFormatter *formatter = nil;

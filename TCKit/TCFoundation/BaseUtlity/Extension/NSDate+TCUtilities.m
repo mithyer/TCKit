@@ -38,13 +38,83 @@ NSInteger const D_YEAR = 31556926;
 // Thanks, AshFurrow
 static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit);
 
+
+/*
+ 2010-07-09T16:13:30+12:00
+ 2011-01-11T11:11:11+0000
+ 2011-01-26T19:06:43Z
+ */
+NSString *const kTCDateIOS8601ReadFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+
+/*
+ 2010-07-09T16:13:30.3+12:00
+ 2011-01-11T11:11:11.322+0000
+ 2011-01-26T19:06:43.554Z
+ */
+NSString *const kTCDateIOS8601SubReadFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+/*
+ 2011-01-26T19:06:43Z
+ */
+NSString *const kTCDateIOS8601WriteZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+/*
+ 2011-01-26T19:06:43.554Z
+ */
+NSString *const kTCDateIOS8601WriteSubZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+/*
+ 2010-07-09T16:13:30+0000
+ */
+NSString *const kTCDateIOS8601WriteZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+
+/*
+ 2011-01-11T11:11:11.322+0000
+ */
+NSString *const kTCDateIOS8601WriteSubZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+/*
+ 2010-07-09T16:13:30+00:00
+ */
+NSString *const kTCDateIOS8601WriteColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+
+/*
+ 2011-01-11T11:11:11.322+00:00
+ */
+NSString *const kTCDateIOS8601WriteSubColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ";
+
+
+/*
+ Wed, 02 Oct 2002 08:00:00 EST
+ Wed, 02 Oct 2002 13:00:00 GMT
+ Wed, 02 Oct 2002 15:00:00 +0200
+ // Mon, 15 Aug 05 15:52:01 +0000
+ */
+NSString *const kTCDateRFC822Format = @"EEE',' dd MMM yyyy HH:mm:ss ZZZ";
+
+/*
+ Monday, 15-Aug-05 15:52:01 UTC
+ */
+NSString *const kTCDateRFC850Format = @"EEEE',' dd-MMM-yy HH:mm:ss z";
+
+/*
+ Mon, 15 Aug 2005 15:52:01 +0000
+ */
+NSString *const kTCDateRFC1123Format = @"EEE',' dd MMM yyyy HH:mm:ss z";
+
+/*
+ Wed Oct 2 15:00:00 2002
+ */
+NSString *const kTCDateASCFormat = @"EEE MMM d HH:mm:ss yyyy";
+
+
 @implementation NSDate (TCUtilities)
 
 // Courtesy of Lukasz Margielewski
 // Updated via Holger Haenisch
 + (NSCalendar *)currentCalendar
 {
-    return [NSCalendar autoupdatingCurrentCalendar];
+    return NSCalendar.autoupdatingCurrentCalendar;
 }
 
 + (NSDateFormatter *)dateFormatter
@@ -57,8 +127,40 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
         s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
     });
     s_fmt.timeZone = NSTimeZone.localTimeZone;
-    
+    s_fmt.shortWeekdaySymbols = nil;
     return s_fmt;
+}
+
++ (NSDateFormatter *)dateFormatterForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *)timeZone
+{
+    NSDateFormatter *fmter = [[NSDateFormatter alloc] init];
+    fmter.dateStyle = NSDateFormatterNoStyle;
+    fmter.timeStyle = NSDateFormatterNoStyle;
+    fmter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    fmter.dateFormat = fmt;
+    fmter.timeZone = timeZone;
+    
+    switch (type) {
+        case kTCDateFormatTypeIOS8601:
+            if ([fmt hasSuffix:@"'Z'"]) {
+                fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+            }
+            break;
+            
+        case kTCDateFormatTypeRFC822:
+            break;
+            
+        case kTCDateFormatTypeRFC1123:
+        case kTCDateFormatTypeRFC850:
+        case kTCDateFormatTypeASCTIME:
+            fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+            break;
+            
+        default:
+            break;
+    }
+    
+    return fmter;
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "NSDate+TCUtilities.h"
 
 @interface TCFoundationTests : XCTestCase
 
@@ -24,9 +25,9 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testDateFormat {
+
+    // TODO:
 }
 
 - (void)testPerformanceExample {

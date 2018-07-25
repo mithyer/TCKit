@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  UIImage -> base64 string
  UIColor -> "#1234FEA8" ARGB
  NSData -> base64 string
- NSDate -> "yyyy-MM-dd'T'HH:mm:ssZ"
+ NSDate -> "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
  NSURL -> string
  NSAttributedString -> string
  SEL -> string

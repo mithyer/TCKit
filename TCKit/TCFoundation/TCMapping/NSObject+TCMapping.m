@@ -256,25 +256,15 @@ static id valueForBaseTypeOfProperty(id value, TCMappingMeta *meta, TCMappingOpt
                         fmt.timeZone = nil;
                         fmt.dateFormat = nil;
                     } else if ([(NSString *)value rangeOfString:@"T"].location != NSNotFound) {
-                        if ([(NSString *)value hasSuffix:@"Z"]) {
-                            ret = [tcISODateFormatter() dateFromString:value];
-                        } else if ([(NSString *)value rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"-+"]].location != NSNotFound) {
+                        ret = [tcISODateFormatter() dateFromString:value];
+                        if (nil == ret) {
                             NSDateFormatter *fmt = tc_mapping_date_write_fmter();
-                            fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
+                            fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
                             ret = [fmt dateFromString:value];
-                            if (nil == ret) {
-                                fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.sZZZ";
-                                ret = [fmt dateFromString:value];
-                                if (nil == ret) {
-                                    ret = [tcISODateFormatter() dateFromString:value];
-                                }
-                            }
                             fmt.timeZone = nil;
                             fmt.dateFormat = nil;
-                        } else {
-                            ret = [tcISODateFormatter() dateFromString:value];
                         }
-                        
+
                     } else {
                         goto DATE_NUMBER;
                     }
