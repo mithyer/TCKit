@@ -11,9 +11,11 @@ typedef NS_ENUM(NSInteger, TCDateFormatType) {
     kTCDateFormatTypeIOS8601,
     kTCDateFormatTypeRFC3339 = kTCDateFormatTypeIOS8601,
     kTCDateFormatTypeRFC822,
+    kTCDateFormatTypeRFC1123 = kTCDateFormatTypeRFC822,
     kTCDateFormatTypeRFC850,
-    kTCDateFormatTypeRFC1123,
     kTCDateFormatTypeASCTIME,
+    kTCDateFormatTypeUnix,
+    kTCDateFormatTypeRuby,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -79,9 +81,20 @@ extern NSString *const kTCDateIOS8601WriteSubColonZoneFormat;
  Wed, 02 Oct 2002 08:00:00 EST
  Wed, 02 Oct 2002 13:00:00 GMT
  Wed, 02 Oct 2002 15:00:00 +0200
- // Mon, 15 Aug 05 15:52:01 +0000
+ 
+ 
+ With the short timezone formats as specified by z (=zzz) or v (=vvv), there can be a lot of ambiguity. For example, "ET" for Eastern Time" could apply to different time zones in many different regions. To improve formatting and parsing reliability, the short forms are only used in a locale if the "cu" (commonly used) flag is set for the locale. Otherwise, only the long forms are used (for both formatting and parsing).
+ 
+ For the "en" locale (= "en_US"), the cu flag is set for metazones such as Alaska, America_Central, America_Eastern, America_Mountain, America_Pacific, Atlantic, Hawaii_Aleutian, and GMT. It is not set for Europe_Central.
+ 
+ However, for the "en_GB" locale, the cu flag is set for Europe_Central.
+ 
+ So a formatter set for short timezone style "z" or "zzz" and locale "en" or "en_US" will not parse "CEST" or "CET", but if the locale is instead set to "en_GB" it will parse those. The "GMT" style will be parsed by all.
+ 
+ If the formatter is set for the long timezone style "zzzz", and the locale is any of "en", "en_US", or "en_GB", then any of the following will be parsed, because they are unambiguous: "Pacific Daylight Time" "Central European Summer Time" "Central European Time"
+ 
  */
-extern NSString *const kTCDateRFC822Format;
+extern NSString *const kTCDateRFC1123Format;
 
 /*
  Monday, 15-Aug-05 15:52:01 UTC
@@ -89,14 +102,20 @@ extern NSString *const kTCDateRFC822Format;
 extern NSString *const kTCDateRFC850Format;
 
 /*
- Mon, 15 Aug 2005 15:52:01 +0000
- */
-extern NSString *const kTCDateRFC1123Format;
-
-/*
  Wed Oct 2 15:00:00 2002
  */
 extern NSString *const kTCDateASCFormat;
+
+/*
+ Mon Jan 2 15:04:05 MST 2006
+ Mon Jun 09 21:59:59 UTC 2025
+ */
+extern NSString *const kTCDateUnixFormat;
+
+/*
+ Mon Jan 02 15:04:05 -0700 2006
+ */
+extern NSString *const kTCDateRubyFormat;
 
 + (NSDateFormatter *)dateFormatterForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *_Nullable)timeZone;
 

@@ -83,14 +83,11 @@ NSString *const kTCDateIOS8601WriteColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZ
  */
 NSString *const kTCDateIOS8601WriteSubColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ";
 
-
 /*
- Wed, 02 Oct 2002 08:00:00 EST
- Wed, 02 Oct 2002 13:00:00 GMT
  Wed, 02 Oct 2002 15:00:00 +0200
- // Mon, 15 Aug 05 15:52:01 +0000
+ Mon, 15 Aug 2005 15:52:01 +0000
  */
-NSString *const kTCDateRFC822Format = @"EEE',' dd MMM yyyy HH:mm:ss ZZZ";
+NSString *const kTCDateRFC1123Format = @"EEE',' dd MMM yyyy HH:mm:ss ZZZ";
 
 /*
  Monday, 15-Aug-05 15:52:01 UTC
@@ -98,14 +95,21 @@ NSString *const kTCDateRFC822Format = @"EEE',' dd MMM yyyy HH:mm:ss ZZZ";
 NSString *const kTCDateRFC850Format = @"EEEE',' dd-MMM-yy HH:mm:ss z";
 
 /*
- Mon, 15 Aug 2005 15:52:01 +0000
- */
-NSString *const kTCDateRFC1123Format = @"EEE',' dd MMM yyyy HH:mm:ss z";
-
-/*
  Wed Oct 2 15:00:00 2002
  */
 NSString *const kTCDateASCFormat = @"EEE MMM d HH:mm:ss yyyy";
+
+/*
+ Mon Jan 2 15:04:05 MST 2006
+ Mon Jun 09 21:59:59 UTC 2025
+ */
+NSString *const kTCDateUnixFormat = @"EEE MMM d HH:mm:ss z yyyy";
+
+/*
+ Mon Jan 02 15:04:05 -0700 2006
+ */
+NSString *const kTCDateRubyFormat = @"EEE MMM dd HH:mm:ss ZZZ yyyy";
+
 
 
 @implementation NSDate (TCUtilities)
@@ -142,15 +146,21 @@ NSString *const kTCDateASCFormat = @"EEE MMM d HH:mm:ss yyyy";
     
     switch (type) {
         case kTCDateFormatTypeIOS8601:
-            if ([fmt hasSuffix:@"'Z'"]) {
+            if ([fmt hasSuffix:@"'Z'"] || [fmt hasSuffix:@"'z'"]) {
                 fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
             }
             break;
             
-        case kTCDateFormatTypeRFC822:
+        case kTCDateFormatTypeRuby:
+            break;
+            
+        case kTCDateFormatTypeUnix:
+            fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
             break;
             
         case kTCDateFormatTypeRFC1123:
+            break;
+            
         case kTCDateFormatTypeRFC850:
         case kTCDateFormatTypeASCTIME:
             fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
