@@ -128,10 +128,9 @@ NSString *const kTCDateRubyFormat = @"EEE MMM dd HH:mm:ss ZZZ yyyy";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         s_fmt = [[NSDateFormatter alloc] init];
-        s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
     });
+    s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
     s_fmt.timeZone = NSTimeZone.localTimeZone;
-    s_fmt.shortWeekdaySymbols = nil;
     return s_fmt;
 }
 
@@ -140,7 +139,7 @@ NSString *const kTCDateRubyFormat = @"EEE MMM dd HH:mm:ss ZZZ yyyy";
     NSDateFormatter *fmter = [[NSDateFormatter alloc] init];
     fmter.dateStyle = NSDateFormatterNoStyle;
     fmter.timeStyle = NSDateFormatterNoStyle;
-    fmter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    fmter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     fmter.dateFormat = fmt;
     fmter.timeZone = timeZone;
     
