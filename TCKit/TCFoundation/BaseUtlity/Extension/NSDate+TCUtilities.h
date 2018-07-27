@@ -9,9 +9,15 @@
 
 typedef NS_ENUM(NSInteger, TCDateFormatType) {
     kTCDateFormatTypeIOS8601,
-    kTCDateFormatTypeRFC3339 = kTCDateFormatTypeIOS8601,
+    kTCDateFormatTypeATOM = kTCDateFormatTypeIOS8601, // colon
+    kTCDateFormatTypeW3C = kTCDateFormatTypeATOM, // colon
+    kTCDateFormatTypeRFC3339 = kTCDateFormatTypeATOM,
+    
     kTCDateFormatTypeRFC822,
-    kTCDateFormatTypeRFC1123 = kTCDateFormatTypeRFC822,
+    kTCDateFormatTypeRFC2822 = kTCDateFormatTypeRFC822,
+    kTCDateFormatTypeRFC1123 = kTCDateFormatTypeRFC2822,
+    kTCDateFormatTypeRFCRSS = kTCDateFormatTypeRFC1123,
+    
     kTCDateFormatTypeRFC850,
     kTCDateFormatTypeASCTIME,
     kTCDateFormatTypeUnix,
@@ -68,6 +74,7 @@ extern NSString *const kTCDateIOS8601WriteSubZoneFormat;
 
 /*
  2010-07-09T16:13:30+00:00
+ ATOM
  */
 extern NSString *const kTCDateIOS8601WriteColonZoneFormat;
 

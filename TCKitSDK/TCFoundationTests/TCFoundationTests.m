@@ -142,6 +142,7 @@
     outputDate = [rfmt dateFromString:str];
     XCTAssertEqual(outputDate.timeIntervalSince1970, floor(date.timeIntervalSince1970));
     
+    
     // Unix
     // Thu Jul 26 07:55:53 GMT 2018
     wfmt = [NSDate dateFormatterForType:kTCDateFormatTypeUnix fmt:kTCDateUnixFormat timeZone:NSTimeZone.localTimeZone];
