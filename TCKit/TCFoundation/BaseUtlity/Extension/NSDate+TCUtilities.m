@@ -44,44 +44,44 @@ static const NSUInteger kComponentFlags = (NSYearCalendarUnit | NSMonthCalendarU
  2011-01-11T11:11:11+0000
  2011-01-26T19:06:43Z
  */
-NSString *const kTCDateIOS8601ReadFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+NSString *const kTCDateISO8601ReadFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
 
 /*
  2010-07-09T16:13:30.3+12:00
  2011-01-11T11:11:11.322+0000
  2011-01-26T19:06:43.554Z
  */
-NSString *const kTCDateIOS8601SubReadFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+NSString *const kTCDateISO8601SubReadFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 /*
  2011-01-26T19:06:43Z
  */
-NSString *const kTCDateIOS8601WriteZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+NSString *const kTCDateISO8601WriteZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 /*
  2011-01-26T19:06:43.554Z
  */
-NSString *const kTCDateIOS8601WriteSubZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+NSString *const kTCDateISO8601WriteSubZuluFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
 /*
  2010-07-09T16:13:30+0000
  */
-NSString *const kTCDateIOS8601WriteZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+NSString *const kTCDateISO8601WriteZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
 
 /*
  2011-01-11T11:11:11.322+0000
  */
-NSString *const kTCDateIOS8601WriteSubZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+NSString *const kTCDateISO8601WriteSubZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 /*
  2010-07-09T16:13:30+00:00
  */
-NSString *const kTCDateIOS8601WriteColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+NSString *const kTCDateISO8601WriteColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
 /*
  2011-01-11T11:11:11.322+00:00
  */
-NSString *const kTCDateIOS8601WriteSubColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ";
+NSString *const kTCDateISO8601WriteSubColonZoneFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ";
 
 /*
  Wed, 02 Oct 2002 15:00:00 +0200
@@ -111,40 +111,19 @@ NSString *const kTCDateUnixFormat = @"EEE MMM d HH:mm:ss z yyyy";
 NSString *const kTCDateRubyFormat = @"EEE MMM dd HH:mm:ss ZZZ yyyy";
 
 
+@implementation NSDateFormatter (TCHelper)
 
-@implementation NSDate (TCUtilities)
-
-// Courtesy of Lukasz Margielewski
-// Updated via Holger Haenisch
-+ (NSCalendar *)currentCalendar
+- (void)updateFormatForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *)timeZone
 {
-    return NSCalendar.autoupdatingCurrentCalendar;
-}
-
-+ (NSDateFormatter *)dateFormatter
-{
-    static NSDateFormatter *s_fmt = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        s_fmt = [[NSDateFormatter alloc] init];
-    });
-    s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
-    s_fmt.timeZone = NSTimeZone.localTimeZone;
-    return s_fmt;
-}
-
-+ (NSDateFormatter *)dateFormatterForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *)timeZone
-{
-    NSDateFormatter *fmter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *fmter = self;
     fmter.dateStyle = NSDateFormatterNoStyle;
     fmter.timeStyle = NSDateFormatterNoStyle;
     fmter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     fmter.dateFormat = fmt;
     fmter.timeZone = timeZone;
-    
+
     switch (type) {
-        case kTCDateFormatTypeIOS8601:
+        case kTCDateFormatTypeISO8601:
             if ([fmt hasSuffix:@"'Z'"] || [fmt hasSuffix:@"'z'"]) {
                 fmter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
             }
@@ -168,8 +147,30 @@ NSString *const kTCDateRubyFormat = @"EEE MMM dd HH:mm:ss ZZZ yyyy";
         default:
             break;
     }
+}
+
+@end
+
+@implementation NSDate (TCUtilities)
+
+// Courtesy of Lukasz Margielewski
+// Updated via Holger Haenisch
++ (NSCalendar *)currentCalendar
+{
+    return NSCalendar.autoupdatingCurrentCalendar;
+}
+
++ (NSDateFormatter *)dateFormatter
+{
+    static NSDateFormatter *s_fmt = nil;
     
-    return fmter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_fmt = [[NSDateFormatter alloc] init];
+    });
+    s_fmt.locale = NSLocale.autoupdatingCurrentLocale;
+    s_fmt.timeZone = NSTimeZone.localTimeZone;
+    return s_fmt;
 }
 
 

@@ -8,8 +8,8 @@
 
 
 typedef NS_ENUM(NSInteger, TCDateFormatType) {
-    kTCDateFormatTypeIOS8601,
-    kTCDateFormatTypeATOM = kTCDateFormatTypeIOS8601, // colon
+    kTCDateFormatTypeISO8601,
+    kTCDateFormatTypeATOM = kTCDateFormatTypeISO8601, // colon
     kTCDateFormatTypeW3C = kTCDateFormatTypeATOM, // colon
     kTCDateFormatTypeRFC3339 = kTCDateFormatTypeATOM,
     
@@ -26,62 +26,51 @@ typedef NS_ENUM(NSInteger, TCDateFormatType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSInteger const D_MINUTE;
-extern NSInteger const D_HOUR;
-extern NSInteger const D_DAY;
-extern NSInteger const D_WEEK;
-extern NSInteger const D_YEAR;
-
-@interface NSDate (TCUtilities)
-
-+ (NSCalendar *)currentCalendar; // avoid bottlenecks
-+ (NSDateFormatter *)dateFormatter;
-
 
 /*
  2010-07-09T16:13:30+12:00
  2011-01-11T11:11:11+0000
  2011-01-26T19:06:43Z
  */
-extern NSString *const kTCDateIOS8601ReadFormat;
+extern NSString *const kTCDateISO8601ReadFormat;
 
 /*
  2010-07-09T16:13:30.3+12:00
  2011-01-11T11:11:11.322+0000
  2011-01-26T19:06:43.554Z
  */
-extern NSString *const kTCDateIOS8601SubReadFormat;
+extern NSString *const kTCDateISO8601SubReadFormat;
 
 /*
  2011-01-26T19:06:43Z
  */
-extern NSString *const kTCDateIOS8601WriteZuluFormat;
+extern NSString *const kTCDateISO8601WriteZuluFormat;
 
 /*
  2011-01-26T19:06:43.554Z
  */
-extern NSString *const kTCDateIOS8601WriteSubZuluFormat;
+extern NSString *const kTCDateISO8601WriteSubZuluFormat;
 
 /*
  2010-07-09T16:13:30+0000
  */
-extern NSString *const kTCDateIOS8601WriteZoneFormat;
+extern NSString *const kTCDateISO8601WriteZoneFormat;
 
 /*
  2011-01-11T11:11:11.322+0000
  */
-extern NSString *const kTCDateIOS8601WriteSubZoneFormat;
+extern NSString *const kTCDateISO8601WriteSubZoneFormat;
 
 /*
  2010-07-09T16:13:30+00:00
  ATOM
  */
-extern NSString *const kTCDateIOS8601WriteColonZoneFormat;
+extern NSString *const kTCDateISO8601WriteColonZoneFormat;
 
 /*
  2011-01-11T11:11:11.322+00:00
  */
-extern NSString *const kTCDateIOS8601WriteSubColonZoneFormat;
+extern NSString *const kTCDateISO8601WriteSubColonZoneFormat;
 
 
 /*
@@ -124,7 +113,24 @@ extern NSString *const kTCDateUnixFormat;
  */
 extern NSString *const kTCDateRubyFormat;
 
-+ (NSDateFormatter *)dateFormatterForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *_Nullable)timeZone;
+@interface NSDateFormatter (TCHelper)
+
+- (void)updateFormatForType:(TCDateFormatType)type fmt:(NSString *)fmt timeZone:(NSTimeZone *_Nullable)timeZone;
+
+@end
+
+
+extern NSInteger const D_MINUTE;
+extern NSInteger const D_HOUR;
+extern NSInteger const D_DAY;
+extern NSInteger const D_WEEK;
+extern NSInteger const D_YEAR;
+
+@interface NSDate (TCUtilities)
+
++ (NSCalendar *)currentCalendar; // avoid bottlenecks
++ (NSDateFormatter *)dateFormatter;
+
 
 // Relative dates from the current date
 + (instancetype)dateTomorrow;
