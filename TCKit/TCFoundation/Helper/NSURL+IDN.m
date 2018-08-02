@@ -327,33 +327,26 @@ static BOOL validIDNCodeValue(unsigned codepoint)
 
 + (NSString *)IDNEncodedHostname:(NSString *)aHostname;
 {
-    if ([aHostname canBeConvertedToEncoding:NSASCIIStringEncoding]) {
+    if (aHostname.length < 1 || [aHostname canBeConvertedToEncoding:NSASCIIStringEncoding]) {
         return aHostname;
     }
     
+    NSMutableArray *encodedParts = NSMutableArray.array;
     NSArray *parts = [aHostname componentsSeparatedByString:@"."];
-    NSMutableArray *encodedParts = [NSMutableArray array];
-    NSUInteger partCount = parts.count;
-    
-    for (NSUInteger partIndex = 0; partIndex < partCount; partIndex++) {
-        [encodedParts addObject:[self _punycodeEncode:[parts[partIndex] precomposedStringWithCompatibilityMapping]]];
+    for (NSString *part in parts) {
+        NSString *str = [self _punycodeEncode:part].precomposedStringWithCompatibilityMapping ?: part;
+        [encodedParts addObject:str];
     }
     return [encodedParts componentsJoinedByString:@"."];
 }
 
 + (NSString *)IDNDecodedHostname:(NSString *)anIDNHostname;
 {
-    NSArray *labels = [anIDNHostname componentsSeparatedByString:@"."];
     BOOL wasEncoded = NO;
-    
-    NSUInteger labelCount = labels.count;
-    NSMutableArray *decodedLabels = [NSMutableArray arrayWithCapacity:labelCount];
-    
-    for (NSUInteger labelIndex = 0; labelIndex < labelCount; labelIndex++) {
-        NSString *label, *decodedLabel;
-        
-        label = labels[labelIndex];
-        decodedLabel = [self _punycodeDecode:label];
+    NSMutableArray *decodedLabels = NSMutableArray.array;
+    NSArray *labels = [anIDNHostname componentsSeparatedByString:@"."];
+    for (NSString *label in labels) {
+        NSString *decodedLabel = [self _punycodeDecode:label] ?: label;
         if (!wasEncoded && ![label isEqualToString:decodedLabel]) {
             wasEncoded = YES;
         }
