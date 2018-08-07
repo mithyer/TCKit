@@ -85,7 +85,7 @@ static BOOL validIDNCodeValue(unsigned codepoint)
 {
     // setup buffers
     char outputBuffer[MAX_HOSTNAME_LEN]; 
-    size_t stringLength = [aString length];
+    size_t stringLength = aString.length;
     unichar *inputBuffer = alloca(stringLength * sizeof(unichar));
     unichar *inputPtr, *inputEnd = inputBuffer + stringLength;
     char *outputEnd = outputBuffer + MAX_HOSTNAME_LEN;
@@ -95,7 +95,6 @@ static BOOL validIDNCodeValue(unsigned codepoint)
     // there are additional checks for running over the buffer during the encoding loop
     if (stringLength > MAX_HOSTNAME_LEN)
         return aString;
-    
     [aString getCharacters:inputBuffer];
     
     // handle ASCII characters
@@ -333,8 +332,17 @@ static BOOL validIDNCodeValue(unsigned codepoint)
     
     NSMutableArray *encodedParts = NSMutableArray.array;
     NSArray *parts = [aHostname componentsSeparatedByString:@"."];
-    for (NSString *part in parts) {
-        NSString *str = [self _punycodeEncode:part].precomposedStringWithCompatibilityMapping ?: part;
+    for (NSString *tmp in parts) {
+        NSMutableString *part = NSMutableString.string;
+        [tmp enumerateSubstringsInRange:NSMakeRange(0, tmp.length) options:NSStringEnumerationByComposedCharacterSequences usingBlock:^(NSString * _Nullable substring, NSRange substringRange, NSRange enclosingRange, BOOL * _Nonnull stop) {
+            if (substring.length > 1) {
+                [part appendString:[substring substringToIndex:1]];
+            } else {
+                [part appendString:substring];
+            }
+        }];
+        
+        NSString *str = [self _punycodeEncode:part].precomposedStringWithCompatibilityMapping ?: tmp;
         [encodedParts addObject:str];
     }
     return [encodedParts componentsJoinedByString:@"."];
