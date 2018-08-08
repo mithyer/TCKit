@@ -659,8 +659,12 @@ static NSString *s_device_names[kTCDeviceCount] = {
     
     @autoreleasepool {
         for (int i = 0; i < res->nscount; i++) {
-            
             if (addr_union[i].sin.sin_family == AF_INET) {
+                in_addr_t addr = ntohl(addr_union[i].sin.sin_addr.s_addr);
+                if (addr == INADDR_ANY) {
+                    continue;
+                }
+                
                 char str[INET_ADDRSTRLEN + 1] = {'\0'};
                 if (NULL != inet_ntop(AF_INET, &(addr_union[i].sin.sin_addr), str, INET_ADDRSTRLEN)) {
                     NSString *address = @(str);
@@ -669,6 +673,11 @@ static NSString *s_device_names[kTCDeviceCount] = {
                     }
                 }
             } else if (addr_union[i].sin6.sin6_family == AF_INET6) {
+                struct in6_addr in6addr = addr_union[i].sin6.sin6_addr;
+                if (IN6_ARE_ADDR_EQUAL(&in6addr, &in6addr_any)) {
+                    continue;
+                }
+                
                 char str[INET6_ADDRSTRLEN + 1] = {'\0'};
                 if (NULL != inet_ntop(AF_INET6, &(addr_union[i].sin6.sin6_addr), str, INET6_ADDRSTRLEN)) {
                     NSString *address = @(str);
