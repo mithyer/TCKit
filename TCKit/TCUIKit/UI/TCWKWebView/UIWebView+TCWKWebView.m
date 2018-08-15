@@ -64,6 +64,12 @@
     [self tc_loadRequest:request];
 }
 
+- (id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL
+{
+    [self loadData:[NSData dataWithContentsOfURL:URL options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL ] MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:readAccessURL];
+    return URL;
+}
+
 - (id)tc_goBack
 {
     [self goBack];

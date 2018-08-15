@@ -23,6 +23,7 @@
 + (NSString *)tc_systemUserAgent;
 
 - (void)loadRequest:(NSURLRequest *)request;
+- (id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
 - (BOOL)canGoBack;
 - (id)tc_goBack;
 

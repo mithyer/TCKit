@@ -163,7 +163,7 @@
     [self tc_swizzle:@selector(loadRequest:)];
     
     // fix non-public api
-//    [self tc_swizzle:@selector(layoutSubviews)];
+    //    [self tc_swizzle:@selector(layoutSubviews)];
 }
 
 + (NSString *)tc_systemUserAgent
@@ -251,11 +251,10 @@
 
 - (nullable WKNavigation *)tc_loadRequest:(NSURLRequest *)request
 {
-    // TODO: load local request in iOS8, must move files to tmp
-    
+    // load local request on iOS8, must move files to tmp
     typeof(request) req = request;
-    if (SYSTEM_VERSION_LESS_THAN(@"9.0") && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") &&
-        nil != req.URL && [req.URL.scheme hasPrefix:@"file"] &&
+    if (SYSTEM_VERSION_LESS_THAN(@"9.0") &&
+        nil != req.URL && req.URL.isFileURL &&
         ![req.URL.path hasPrefix:NSTemporaryDirectory()]) {
     
         _LocalURLFixer *fixer = objc_getAssociatedObject(self, _cmd);
