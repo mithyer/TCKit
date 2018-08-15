@@ -404,7 +404,9 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     if (kCFStringEncodingInvalidId == cfcoding) {
         return nil;
     }
-    return (__bridge_transfer NSString *)CFStringConvertEncodingToIANACharSetName(cfcoding);
+    
+    CFStringRef cStr = CFStringConvertEncodingToIANACharSetName(cfcoding);
+    return NULL == cStr ? nil : (__bridge NSString *)cStr;
 }
 
 + (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc
