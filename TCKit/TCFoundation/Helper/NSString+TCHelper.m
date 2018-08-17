@@ -384,11 +384,13 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
 + (NSStringEncoding)encodingForIANACharset:(NSString *)iana
 {
     NSStringEncoding encoding = kCFStringEncodingInvalidId;
-    if (nil != iana) {
-        CFStringEncoding cfcoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)iana);
-        if (kCFStringEncodingInvalidId != cfcoding) {
-            encoding = CFStringConvertEncodingToNSStringEncoding(cfcoding);
-        }
+    if (nil == iana) {
+        return encoding;
+    }
+    
+    CFStringEncoding cfcoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)iana);
+    if (kCFStringEncodingInvalidId != cfcoding) {
+        encoding = CFStringConvertEncodingToNSStringEncoding(cfcoding);
     }
     
     return encoding;
