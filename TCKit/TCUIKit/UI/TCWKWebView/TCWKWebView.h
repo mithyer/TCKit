@@ -13,7 +13,7 @@
 @protocol TCWKWebView <NSObject>
 
 @required
-@property (nonatomic, strong, readonly) NSURLRequest *originalRequest;
+@property (nonatomic, strong) NSURLRequest *originalRequest;
 @property (nonatomic, assign) BOOL scalesPageToFit;
 //@property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
