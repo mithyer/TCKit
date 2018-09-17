@@ -18,6 +18,7 @@
 //@property (nonatomic, assign) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, weak) id delegate;
+@property (nonatomic, readonly, getter=isLoading) BOOL loading;
 //@property (nonatomic, strong) UIView *webHeaderView;
 
 + (NSString *)tc_systemUserAgent;
@@ -26,6 +27,7 @@
 - (id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
 - (BOOL)canGoBack;
 - (id)tc_goBack;
+- (void)tc_reload;
 
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id result, NSError *error))completionHandler;
 

@@ -166,6 +166,11 @@
     //    [self tc_swizzle:@selector(layoutSubviews)];
 }
 
+- (void)tc_reload
+{
+    [self reload];
+}
+
 + (NSString *)tc_systemUserAgent
 {
     static NSString *s_userAgent = nil;

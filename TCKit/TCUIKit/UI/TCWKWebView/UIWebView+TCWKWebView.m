@@ -70,6 +70,11 @@
     return URL;
 }
 
+- (void)tc_reload
+{
+    [self reload];
+}
+
 - (id)tc_goBack
 {
     [self goBack];
