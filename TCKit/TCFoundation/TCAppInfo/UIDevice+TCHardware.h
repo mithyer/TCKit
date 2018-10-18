@@ -127,7 +127,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSNumber *_Nullable __autoreleasing * _Nullable)port;
 
 - (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block;
-- (NSDate *)systemUpTime;
+- (nullable NSDate *)systemUpTime;
 - (float)cpuUsage;
 - (void)diskTotalSpace:(uint64_t *_Nullable)pTotal freeSpace:(uint64_t *_Nullable)pFree;
 - (BOOL)isVPNON;

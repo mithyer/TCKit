@@ -111,7 +111,7 @@ __attribute__((overloadable)) NSData * UIImageAnimatedGIFRepresentation(UIImage 
             CGImageDestinationAddImage(destination, [[image.images objectAtIndex:idx] CGImage], (__bridge CFDictionaryRef)frameProperties);
         }
         
-        BOOL success = CGImageDestinationFinalize(destination);
+        bool success = CGImageDestinationFinalize(destination);
         CFRelease(destination);
 
         if (!success) {

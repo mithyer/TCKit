@@ -26,7 +26,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 @property (nonatomic, strong, nullable) NSSet *acceptableContentTypes;
 
 @property (nonatomic, copy, readonly) NSURLSessionConfiguration *sessionConfiguration;
-@property (nonatomic, strong) AFHTTPSessionManager *requestManager;
+@property (nullable, nonatomic, strong) AFHTTPSessionManager *requestManager;
 @property (nonatomic, weak, nullable) id<TCHTTPRequestUrlFilter> urlFilter;
 
 
