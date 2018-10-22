@@ -193,7 +193,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
         return 0;
     }
     
-    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:self.path.stringByResolvingSymlinksInPath error:NULL];
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:self.path.stringByResolvingSymlinksInPath ?: self.path error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
         for (NSString *fileName in subPath) {
@@ -202,7 +202,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:self.path.stringByResolvingSymlinksInPath error:NULL].fileSize;
+    return [NSFileManager.defaultManager attributesOfItemAtPath:self.path.stringByResolvingSymlinksInPath ?: self.path error:NULL].fileSize;
 }
 
 
@@ -212,19 +212,11 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
 // http://www.cnblogs.com/visen-0/p/3160907.html
 
 #define FileHashDefaultChunkSizeForReadingData 1024*8
-static CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
+static CFStringRef FileMD5HashCreateWithPath(CFURLRef fileURL,
                                              size_t chunkSizeForReadingData) {
-    
     // Declare needed variables
     CFStringRef result = NULL;
     CFReadStreamRef readStream = NULL;
-    
-    // Get the file URL
-    CFURLRef fileURL =
-    CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                  (CFStringRef)filePath,
-                                  kCFURLPOSIXPathStyle,
-                                  (Boolean)false);
     if (!fileURL) goto done;
     
     // Create and open the read stream
@@ -283,9 +275,6 @@ done:
         CFReadStreamClose(readStream);
         CFRelease(readStream);
     }
-    if (fileURL) {
-        CFRelease(fileURL);
-    }
     return result;
 }
 
@@ -294,7 +283,8 @@ done:
     if (!self.isFileURL || self.hasDirectoryPath) {
         return nil;
     }
-    return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFStringRef)self.path.stringByResolvingSymlinksInPath, FileHashDefaultChunkSizeForReadingData);
+    NSURL *url = self.URLByResolvingSymlinksInPath ?: self;
+    return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFURLRef)url, FileHashDefaultChunkSizeForReadingData);
 }
 
 @end
