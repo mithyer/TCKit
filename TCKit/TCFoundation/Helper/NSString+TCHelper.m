@@ -420,14 +420,23 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     static NSMutableArray<NSNumber *> *s_tryEncodings = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_tryEncodings = [NSMutableArray arrayWithArray:@[
-                                                          @(NSUTF8StringEncoding),
-                                                          
-                                                          @(NSJapaneseEUCStringEncoding),
-                                                          @(NSShiftJISStringEncoding),
-                                                          ]];
+        s_tryEncodings = [NSMutableArray arrayWithObjects:
+                          @(NSUTF8StringEncoding),
+                          
+                          @(NSWindowsCP1252StringEncoding),    /* WinLatin1 */
+                          @(NSWindowsCP1250StringEncoding),    /* WinLatin2 */
+                          
+                          @(NSJapaneseEUCStringEncoding),
+                          @(NSShiftJISStringEncoding),
+                          nil];
         
-        static CFStringEncoding const kEds[] = {kCFStringEncodingBig5_HKSCS_1999, kCFStringEncodingBig5, kCFStringEncodingHZ_GB_2312, kCFStringEncodingGB_18030_2000};
+        static CFStringEncoding const kEds[] = {
+            kCFStringEncodingBig5_HKSCS_1999,
+            kCFStringEncodingBig5,
+            kCFStringEncodingHZ_GB_2312,
+            kCFStringEncodingGB_18030_2000,
+            kCFStringEncodingDOSLatinUS,
+        };
         
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
             NSStringEncoding ed = (NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(kEds[i]);
@@ -438,15 +447,28 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     });
     
     NSString *text = nil;
-    for (NSNumber *ed in s_tryEncodings) {
-        text = [[self alloc] initWithData:data encoding:ed.unsignedIntegerValue];// [NSString stringWithContentsOfURL:self.URL usedEncoding:NULL error:NULL];
-        if (nil != text) {
-            if (NULL != enc) {
-                *enc = ed.unsignedIntegerValue;
-            }
-            break;
+    NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
+                                                   encodingOptions:@{NSStringEncodingDetectionSuggestedEncodingsKey: s_tryEncodings,
+                                                                     NSStringEncodingDetectionDisallowedEncodingsKey: @[@(NSASCIIStringEncoding)],
+                                                                     NSStringEncodingDetectionAllowLossyKey: @NO}
+                                                   convertedString:&text
+                                               usedLossyConversion:NULL];
+    if (nil != text) {
+        if (NULL != enc) {
+            *enc = detectedEnc;
         }
     }
+//    else {
+//        for (NSNumber *ed in s_tryEncodings) {
+//            text = [[self alloc] initWithData:data encoding:ed.unsignedIntegerValue];
+//            if (nil != text) {
+//                if (NULL != enc) {
+//                    *enc = ed.unsignedIntegerValue;
+//                }
+//                break;
+//            }
+//        }
+//    }
     
     return text;
 }
