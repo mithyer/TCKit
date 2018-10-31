@@ -101,14 +101,13 @@ static char const kCompleteBlockKey;
 
 + (void)tcExecuteBlock:(NSTimer *)timer;
 {
-    timer.index = timer.index + 1;
+    timer.index = (timer.index % NSUIntegerMax) + 1;
     
     if (nil != timer.executeBlock) {
         timer.executeBlock(timer);
     }
     
     NSUInteger executeCount = timer.executeCount;
-    
     if (executeCount > 0 && timer.index >= executeCount) {
         if (nil != timer.completeBlock) {
             timer.completeBlock(timer);

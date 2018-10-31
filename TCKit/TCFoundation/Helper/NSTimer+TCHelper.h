@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) void (^executeBlock)(NSTimer *timer);
 @property (nullable, nonatomic, copy) void (^completeBlock)(NSTimer *timer);
 
+
+// executeCount: 0, forever
+
 + (instancetype)scheduledTimerWithTimeInterval:(NSTimeInterval)timeInterval
                                   executeBlock:(void (^__nullable)(NSTimer *timer))executeBlock
                                  completeBlock:(void (^__nullable)(NSTimer *timer))completeBlock
