@@ -436,7 +436,6 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             kCFStringEncodingBig5,
             kCFStringEncodingHZ_GB_2312,
             kCFStringEncodingGB_18030_2000,
-            kCFStringEncodingDOSLatinUS,
         };
         
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
@@ -447,29 +446,47 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         }
     });
     
+    NSMutableArray *suggest = s_tryEncodings.mutableCopy;
     NSString *text = nil;
-    NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
-                                                   encodingOptions:@{NSStringEncodingDetectionSuggestedEncodingsKey: s_tryEncodings,
-                                                                     NSStringEncodingDetectionDisallowedEncodingsKey: @[@(NSASCIIStringEncoding)],
-                                                                     NSStringEncodingDetectionAllowLossyKey: @NO}
-                                                   convertedString:&text
-                                               usedLossyConversion:NULL];
+    NSStringEncoding detectedEnc = kCFStringEncodingInvalidId;
+    
+    while (suggest.count > 0) {
+        @autoreleasepool {
+            detectedEnc = [NSString stringEncodingForData:data
+                                          encodingOptions:@{
+                                                            NSStringEncodingDetectionSuggestedEncodingsKey: suggest,
+                                                            NSStringEncodingDetectionDisallowedEncodingsKey: @[@(NSASCIIStringEncoding)],
+                                                            NSStringEncodingDetectionAllowLossyKey: @NO}
+                                          convertedString:&text
+                                      usedLossyConversion:NULL];
+            if (nil != text || detectedEnc == kCFStringEncodingInvalidId || 0 == detectedEnc) {
+                break;
+            }
+            
+            NSNumber *enc = @(detectedEnc);
+            if (![suggest containsObject:enc]) {
+                break;
+            }
+            
+            [suggest removeObject:enc];
+        }
+    }
+    
+    if (nil == text) {
+        NSMutableArray *ignore = s_tryEncodings.mutableCopy;
+        [ignore addObject:@(NSASCIIStringEncoding)];
+        detectedEnc = [NSString stringEncodingForData:data
+                                      encodingOptions:@{
+                                                        NSStringEncodingDetectionDisallowedEncodingsKey: ignore,
+                                                        NSStringEncodingDetectionAllowLossyKey: @NO}
+                                      convertedString:&text
+                                  usedLossyConversion:NULL];
+    }
     if (nil != text) {
         if (NULL != enc) {
             *enc = detectedEnc;
         }
     }
-//    else {
-//        for (NSNumber *ed in s_tryEncodings) {
-//            text = [[self alloc] initWithData:data encoding:ed.unsignedIntegerValue];
-//            if (nil != text) {
-//                if (NULL != enc) {
-//                    *enc = ed.unsignedIntegerValue;
-//                }
-//                break;
-//            }
-//        }
-//    }
     
     return text;
 }
