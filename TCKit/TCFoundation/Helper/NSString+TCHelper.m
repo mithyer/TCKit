@@ -486,13 +486,15 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
                                       convertedString:&text
                                   usedLossyConversion:NULL];
     }
+    
     if (nil != text) {
         if (NULL != enc) {
             *enc = detectedEnc;
         }
     }
     
-    return text;
+    // !!!: 兼容 NSMutableString
+    return nil != text ? [self stringWithString:text] : nil;
 }
 
 - (NSString *)replaceUnicode
