@@ -391,6 +391,11 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     CFStringEncoding cfcoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)iana);
     if (kCFStringEncodingInvalidId != cfcoding) {
         encoding = CFStringConvertEncodingToNSStringEncoding(cfcoding);
+    } else {
+        CFStringRef name = CFStringGetNameOfEncoding(kCFStringEncodingNonLossyASCII);
+        if (NULL != name && [iana isEqualToString:(__bridge NSString *)name]) {
+            encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingNonLossyASCII);
+        }
     }
     
     return encoding;
@@ -407,7 +412,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         return nil;
     }
     
-    CFStringRef cStr = CFStringConvertEncodingToIANACharSetName(cfcoding);
+    CFStringRef cStr = CFStringConvertEncodingToIANACharSetName(cfcoding) ?: CFStringGetNameOfEncoding(cfcoding);
     return NULL == cStr ? nil : (__bridge NSString *)cStr;
 }
 
@@ -462,7 +467,6 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             if (nil != text || detectedEnc == kCFStringEncodingInvalidId || 0 == detectedEnc) {
                 break;
             }
-            
             NSNumber *enc = @(detectedEnc);
             if (![suggest containsObject:enc]) {
                 break;

@@ -300,7 +300,7 @@ static BOOL validIDNCodeValue(unsigned codepoint)
             
             /* TODO: This will misbehave for code points greater than 0x0FFFF, because NSString uses a 16-bit encoding internally; the position values will be off by one afterwards [actually, we'll just get bad results because I'm using initWithCharacters:length: (BMP-only) instead of initWithCharacter: (all planes but only exists in OmniFoundation)] */
             ch[0] = (unichar)codeValue;
-            NSString *insertion = [[NSString alloc] initWithCharacters:ch length:1];
+            NSString *insertion = [NSString stringWithCharacters:ch length:1];
             [decoded replaceCharactersInRange:(NSRange){position, 0} withString:insertion];
             
             position ++;
