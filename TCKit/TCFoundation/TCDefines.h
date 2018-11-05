@@ -27,6 +27,8 @@
 #endif // DEBUG
 
 
+#define kTCMaxFileNameLen (NAME_MAX - 35)
+
 #define _URL(name) (nil == (name) ? nil : [NSURL URLWithString:(name)])
 
 

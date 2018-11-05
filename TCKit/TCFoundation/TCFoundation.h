@@ -34,7 +34,6 @@
 #import "NSURL+IDN.h"
 
 
-
 #define TC_AUTO_COPY_CODING_EQUAL_HASH \
 - (NSUInteger)hash {return self.tc_hash;} \
 - (BOOL)isEqual:(id)object {return [self tc_isEqual:object];} \
