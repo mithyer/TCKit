@@ -753,6 +753,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         
         TCEncodingType type = tc_typeForInfo(meta->_info);
         BOOL emptyCollectionToNSNull = option.mappingEmptyCollectionToNSNull;
+        BOOL mappingEmptyCollection = option.mappingEmptyCollection;
         
         if ([rawValue isKindOfClass:NSDictionary.class]) {
             __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
@@ -808,7 +809,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         value = tc_mappingWithDictionary(valueDic, propOpt, context, (nil == obj ? nil : [obj valueForKey:property]), klass);
                     }
                 }
-            } else {
+            } else if (!mappingEmptyCollection) {
                 value = emptyCollectionToNSNull ? (id)kCFNull : nil;
             }
             
@@ -850,7 +851,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                         }
                     }
                 }
-            } else {
+            } else if (!mappingEmptyCollection) {
                 value = emptyCollectionToNSNull ? (id)kCFNull : nil;
             }
             
@@ -873,11 +874,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
                 continue;
             }
         }
-        
-        if (value == (id)kCFNull) {
-            value = nil;
-        }
-        
+
         if (nil == obj && nil != value) {
             if (nil == context || ![context respondsToSelector:@selector(instanceForPrimaryKey:class:)]) {
                 obj = [[curClass alloc] init];
@@ -886,6 +883,9 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             }
         }
         
+        if (value == (id)kCFNull) {
+            value = nil;
+        }
         [obj setValue:value forKey:property meta:meta forPersistent:NO];
     }
     

@@ -71,6 +71,7 @@ typedef id __nullable (^TCValueMappingBlock)(id value);
 
 @property (nonatomic, assign) BOOL shouldMappingNSNull; // mapping NSNull -> nil or not
 @property (nonatomic, assign) BOOL mappingEmptyCollectionToNSNull; // mapping {} -> NSNull
+@property (nonatomic, assign) BOOL mappingEmptyCollection; // mapping {} -> NSNull
 
 
 @property (nullable, nonatomic, copy) void (^setUpDateFormatter)(SEL property, NSDateFormatter *fmter); // for time string -> NSDate
