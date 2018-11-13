@@ -429,9 +429,6 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
                           @(NSUTF8StringEncoding),
                           
                           @(NSUTF16StringEncoding),
-                          @(NSWindowsCP1252StringEncoding),    /* WinLatin1 */
-                          @(NSWindowsCP1250StringEncoding),    /* WinLatin2 */
-                          
                           @(NSJapaneseEUCStringEncoding),
                           @(NSShiftJISStringEncoding),
                           nil];
