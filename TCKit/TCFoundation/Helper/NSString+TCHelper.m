@@ -195,6 +195,13 @@
         return nil;
     }
     
+    if (ext.length < 1) {
+        return nil;
+    }
+    
+    if (NSNotFound != [ext rangeOfString:@"_"].location && ![ext isEqualToString:@"thor_bak"]) {
+        return nil;
+    }
     return ext.length < 1 ? nil : ext;
 }
 

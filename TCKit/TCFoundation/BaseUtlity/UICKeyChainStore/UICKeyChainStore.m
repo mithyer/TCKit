@@ -702,7 +702,7 @@ static NSString *_defaultService;
 
 - (BOOL)removeItemForKey:(NSString *)key
 {
-    return [self removeItemForKey:key error:nil];
+    return [self removeItemForKey:key error:NULL];
 }
 
 - (BOOL)removeItemForKey:(NSString *)key error:(NSError *__autoreleasing *)error
