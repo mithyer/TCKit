@@ -725,11 +725,11 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
     NSArray *keys = [dic[@"__SCOPED__"] allKeys];
     for (NSString *key in keys) {
-        if ([key rangeOfString:@"tap"].location != NSNotFound ||
-            [key rangeOfString:@"tun"].location != NSNotFound ||
-            [key rangeOfString:@"ipsec"].location != NSNotFound ||
-            [key rangeOfString:@"ppp"].location != NSNotFound) {
-            return YES;;
+        if ([key containsString:@"tap"]
+            || [key containsString:@"tun"]
+            || [key containsString:@"ipsec"]
+            || [key containsString:@"ppp"]) {
+            return YES;
         }
     }
     return NO;
