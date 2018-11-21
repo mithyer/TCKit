@@ -521,7 +521,11 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             [str appendString:@"\""];
             data = [str dataUsingEncoding:NSUTF8StringEncoding];
         }
-        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL];
+        NSError *err = nil;
+        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&err];
+        if (nil == returnStr) {
+            NSLog(@"%@", err);
+        }
     }
     return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
 }
