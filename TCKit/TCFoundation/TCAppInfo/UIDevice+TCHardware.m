@@ -1,11 +1,5 @@
-/*
- Erica Sadun, http://ericasadun.com
- iPhone Developer's Cookbook, 6.x Edition
- BSD License, Use at your own risk
- */
-
 /** Thanks to
-https://github.com/Ekhoo/Device/
+ https://github.com/Ekhoo/Device/
  https://github.com/lmirosevic/GBDeviceInfo
  */
 
@@ -58,6 +52,10 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice8PlusiPhone] = @"iPhone 8 Plus",
     [kTCDeviceXiPhone] = @"iPhone X",
     
+    [kTCDeviceXR] = @"iPhone XR",
+    [kTCDeviceXS] = @"iPhone XS",
+    [kTCDeviceXSMax] = @"iPhone XS Max",
+    
     [kTCDeviceUnknowniPhone] = @"Unknown iPhone",
     
     // iPod
@@ -74,7 +72,8 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice2GiPad] = @"iPad 2G",
     [kTCDevice3GiPad] = @"iPad 3G",
     [kTCDevice4GiPad] = @"iPad 4G",
-    [kTCDevice5GiPad] = @"iPad 5G",
+    [kTCDevice5GiPad] = @"iPad 2017",
+    [kTCDevice6GiPad] = @"iPad 2018",
     
     // iPad mini
     [kTCDevice1GiPadMini] = @"iPad Mini 1G",
@@ -93,6 +92,11 @@ static NSString *s_device_names[kTCDeviceCount] = {
     
     [kTCDevice1GiPadPro10_5] = @"iPad Pro 1G 10.5-inch",
     [kTCDevice2GiPadPro12_9] = @"iPad Pro 2G 12.9-inch",
+
+    [kTCDevice1GiPadPro11] = @"iPad Pro 3rd Gen (11 inch)",
+    [kTCDevice1GiPadPro11_1TB] = @"iPad Pro 3rd Gen (11 inch, 1TB)",
+    [kTCDevice3GiPadPro12_9] = @"iPad Pro 3rd Gen (12.9 inch)",
+    [kTCDevice3GiPadPro12_9_1TB] = @"iPad Pro 3rd Gen (12.9 inch, 1TB)",
     
     // apple TV
     [kTCDeviceAppleTV2] = @"Apple TV 2G",
@@ -256,6 +260,23 @@ static NSString *s_device_names[kTCDeviceCount] = {
                 break;
         }
     }
+    else if ([platform hasPrefix:@"iPhone11"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        switch (subVersion) {
+            case 8:
+                return kTCDeviceXR;
+                
+            case 2:
+                return kTCDeviceXS;
+                
+            case 4:
+            case 6:
+                return kTCDeviceXSMax;
+                
+            default:
+                break;
+        }
+    }
     
     // iPod
     else if ([platform hasPrefix:@"iPod1"])              return kTCDevice1GiPod;
@@ -317,6 +338,31 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice2GiPadPro12_9;
         } else if (subVersion <= 4) {
             return kTCDevice1GiPadPro10_5;
+        } else if (subVersion <= 6) {
+            return kTCDevice6GiPad;
+        }
+    }
+    else if ([platform hasPrefix:@"iPad8"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        switch (subVersion) {
+            case 1:
+            case 3:
+                return kTCDevice1GiPadPro11;
+                
+            case 2:
+            case 4:
+                return kTCDevice1GiPadPro11_1TB;
+                
+            case 5:
+            case 7:
+                return kTCDevice3GiPadPro12_9;
+                
+            case 6:
+            case 8:
+                return kTCDevice3GiPadPro12_9_1TB;
+                
+            default:
+                break;
         }
     }
     
@@ -360,22 +406,47 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return s_device_names[type];
 }
 
-- (TCDeviceScreen)deivceScreen
+- (TCDeviceScreen)screen
 {
-    CGSize size = UIScreen.mainScreen.bounds.size;
-    CGFloat screenHeight = MAX(size.height, size.width);
+    CGSize const size = UIScreen.mainScreen.bounds.size;
+    CGFloat const screenHeight = MAX(size.height, size.width);
     
     if (screenHeight == 480.0f) {
-        return kTCDeviceScreen3Dot5inch;
+        return kTCDeviceScreen3_5inch;
     } else if (screenHeight == 568.0f) {
         return kTCDeviceScreen4inch;
     } else if (screenHeight == 667.0f) {
-        return UIScreen.mainScreen.scale > 2.9f ? kTCDeviceScreen5Dot5inch : kTCDeviceScreen4Dot7inch;
+        return UIScreen.mainScreen.scale > 2.9f ? kTCDeviceScreen5_5inch : kTCDeviceScreen4_7inch;
     } else if (screenHeight == 736.0f) {
-        return kTCDeviceScreen5Dot5inch;
-    } else {
-        return kTCDeviceScreenUnknown;
+        return kTCDeviceScreen5_5inch;
+    } else if (screenHeight == 812.0f) {
+        return kTCDeviceScreen5_8inch;
+    } else if (screenHeight == 896.0f) {
+        return UIScreen.mainScreen.scale > 2.9f ? kTCDeviceScreen6_5inch : kTCDeviceScreen6_1inch;
+    } else if (screenHeight == 1024.0f) {
+        TCDevicePlatform plat = self.platformType;
+        switch (plat) {
+            case kTCDevice1GiPadMini:
+            case kTCDevice2GiPadMini:
+            case kTCDevice3GiPadMini:
+            case kTCDevice4GiPadMini:
+                return kTCDeviceScreen7_9inch;
+                
+            case kTCDevice1GiPadPro10_5:
+                return kTCDeviceScreen10_5inch;
+                
+            default:
+                return kTCDeviceScreen9_7inch;
+        }
+    } else if (screenHeight == 1112.0f) {
+        return kTCDeviceScreen10_5inch;
+    } else if (screenHeight == 1194.0f) {
+        return kTCDeviceScreen11inch;
+    } else if (screenHeight == 1366.0f) {
+        return kTCDeviceScreen12_9inch;
     }
+    
+    return kTCDeviceScreenUnknown;
 }
 
 - (BOOL)hasRetinaDisplay
@@ -414,22 +485,24 @@ static NSString *s_device_names[kTCDeviceCount] = {
     struct ifaddrs *addrs = NULL;
     struct ifaddrs const *cursor = NULL;
     
-    if (getifaddrs(&addrs) == 0) {
-        cursor = addrs;
-        while (cursor != NULL) {
-            if (NULL == cursor->ifa_name) {
-                continue;
-            }
-            if (0 == strcmp(cursor->ifa_name, "pdp_ip0")) {
-                s_found = YES;
-                break;
-            }
-            cursor = cursor->ifa_next;
+    if (getifaddrs(&addrs) != 0) {
+        return s_found;
+    }
+    
+    cursor = addrs;
+    while (cursor != NULL) {
+        if (NULL == cursor->ifa_name) {
+            continue;
         }
-        
-        if (NULL != addrs) {
-            freeifaddrs(addrs);
+        if (0 == strcmp(cursor->ifa_name, "pdp_ip0")) {
+            s_found = YES;
+            break;
         }
+        cursor = cursor->ifa_next;
+    }
+    
+    if (NULL != addrs) {
+        freeifaddrs(addrs);
     }
     return s_found;
 }
@@ -657,8 +730,8 @@ static NSString *s_device_names[kTCDeviceCount] = {
     NSMutableArray *ipv4s = NSMutableArray.array;
     NSMutableArray *ipv6s = NSMutableArray.array;
     
-    @autoreleasepool {
-        for (int i = 0; i < res->nscount; i++) {
+    for (int i = 0; i < res->nscount; i++) {
+        @autoreleasepool {
             if (addr_union[i].sin.sin_family == AF_INET) {
                 in_addr_t addr = ntohl(addr_union[i].sin.sin_addr.s_addr);
                 if (addr == INADDR_ANY) {
@@ -687,10 +760,11 @@ static NSString *s_device_names[kTCDeviceCount] = {
                 }
             }
         }
-        free(addr_union);
-        res_ndestroy(res);
-        free(res);
     }
+    free(addr_union);
+    res_ndestroy(res);
+    free(res);
+    
     if (ipv4s.count > 0 && NULL != ipv4) {
         *ipv4 = ipv4s.copy;
     }
@@ -876,36 +950,38 @@ static NSString *s_device_names[kTCDeviceCount] = {
 - (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
 {
     struct statfs buf;
-    if (statfs("/var", &buf) >= 0) {
-        if (NULL != pTotal) {
-            *pTotal = (uint64_t)buf.f_bsize * buf.f_blocks;
-        }
-        if (NULL != pFree) {
-            *pFree = (uint64_t)buf.f_bsize * buf.f_bfree;
-        }
+    if (statfs("/var", &buf) < 0) {
+        return;
+    }
+    
+    if (NULL != pTotal) {
+        *pTotal = (uint64_t)buf.f_bsize * buf.f_blocks;
+    }
+    if (NULL != pFree) {
+        *pFree = (uint64_t)buf.f_bsize * buf.f_bfree;
     }
 }
 
 - (float)cpuUsage
 {
-    kern_return_t kr;
-    mach_msg_type_number_t count;
+    mach_msg_type_number_t count = HOST_CPU_LOAD_INFO_COUNT;
     static host_cpu_load_info_data_t previous_info = {0, 0, 0, 0};
     host_cpu_load_info_data_t info;
-    
-    count = HOST_CPU_LOAD_INFO_COUNT;
-    
-    kr = host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, (host_info_t)&info, &count);
+    bzero(&info, sizeof(info));
+    kern_return_t kr = host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, (host_info_t)&info, &count);
     if (kr != KERN_SUCCESS) {
-        return -1;
+        return -1.0f;
     }
     
-    natural_t user   = info.cpu_ticks[CPU_STATE_USER] - previous_info.cpu_ticks[CPU_STATE_USER];
-    natural_t nice   = info.cpu_ticks[CPU_STATE_NICE] - previous_info.cpu_ticks[CPU_STATE_NICE];
+    natural_t user = info.cpu_ticks[CPU_STATE_USER] - previous_info.cpu_ticks[CPU_STATE_USER];
+    natural_t nice = info.cpu_ticks[CPU_STATE_NICE] - previous_info.cpu_ticks[CPU_STATE_NICE];
     natural_t system = info.cpu_ticks[CPU_STATE_SYSTEM] - previous_info.cpu_ticks[CPU_STATE_SYSTEM];
-    natural_t idle   = info.cpu_ticks[CPU_STATE_IDLE] - previous_info.cpu_ticks[CPU_STATE_IDLE];
-    natural_t total  = user + nice + system + idle;
-    previous_info    = info;
+    natural_t idle = info.cpu_ticks[CPU_STATE_IDLE] - previous_info.cpu_ticks[CPU_STATE_IDLE];
+    natural_t total = user + nice + system + idle;
+    if (total == 0) {
+        return -1.0f;
+    }
+    previous_info = info;
     
     return (user + nice + system) * 100.0f / total;
 }

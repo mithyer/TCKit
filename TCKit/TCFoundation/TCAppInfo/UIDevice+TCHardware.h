@@ -1,9 +1,3 @@
-/*
- Erica Sadun, http://ericasadun.com
- iPhone Developer's Cookbook, 6.x Edition
- BSD License, Use at your own risk
- */
-
 #import <UIKit/UIKit.h>
 #import <ifaddrs.h>
 #import <net/if.h>
@@ -42,6 +36,12 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDevice8PlusiPhone,
     kTCDeviceXiPhone,
     
+    // 2018
+    kTCDeviceXR,
+    kTCDeviceXS,
+    kTCDeviceXSMax,
+    
+    
     kTCDevice1GiPod,
     kTCDevice2GiPod,
     kTCDevice3GiPod,
@@ -69,6 +69,14 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDevice1GiPadPro10_5,
     kTCDevice2GiPadPro12_9,
     
+    // 2018
+    kTCDevice6GiPad,
+    kTCDevice1GiPadPro11,
+    kTCDevice1GiPadPro11_1TB,
+    kTCDevice3GiPadPro12_9,
+    kTCDevice3GiPadPro12_9_1TB,
+    
+    
     kTCDeviceAppleTV2,
     kTCDeviceAppleTV3,
     kTCDeviceAppleTV4,
@@ -92,10 +100,20 @@ typedef NS_ENUM(NSInteger, TCDeviceFamily) {
 
 typedef NS_ENUM(NSInteger, TCDeviceScreen) {
     kTCDeviceScreenUnknown = 0,
-    kTCDeviceScreen3Dot5inch,
+    kTCDeviceScreen3_5inch,
     kTCDeviceScreen4inch,
-    kTCDeviceScreen4Dot7inch,
-    kTCDeviceScreen5Dot5inch,
+    kTCDeviceScreen4_7inch,
+    kTCDeviceScreen5_5inch,
+    kTCDeviceScreen5_8inch,
+    
+    kTCDeviceScreen6_1inch,
+    kTCDeviceScreen6_5inch,
+    
+    kTCDeviceScreen7_9inch,
+    kTCDeviceScreen9_7inch,
+    kTCDeviceScreen10_5inch,
+    kTCDeviceScreen11inch,
+    kTCDeviceScreen12_9inch,
 };
 
 
@@ -107,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)hwmodel;
 - (TCDevicePlatform)platformType;
 - (NSString *)platformString;
-- (TCDeviceScreen)deivceScreen;
+- (TCDeviceScreen)screen;
 
 - (NSUInteger)cpuFrequency;
 - (NSUInteger)busFrequency;
