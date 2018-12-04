@@ -92,7 +92,6 @@
         } else if ((id)kCFNull == mapKey) {
             continue;
         }
-        
         [obj setValue:[coder decodeObjectForKey:mapKey] forKey:key meta:meta forPersistent:NO];
     }
     
