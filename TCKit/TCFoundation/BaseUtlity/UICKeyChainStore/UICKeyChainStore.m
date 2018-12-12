@@ -1391,17 +1391,18 @@ static NSString *_defaultService;
 
 @end
 
-@implementation UICKeyChainStore (Deprecation)
+//@implementation UICKeyChainStore (Deprecation)
+//
+//- (void)synchronize
+//{
+//    // Deprecated, calling this method is no longer required
+//}
+//
+//- (BOOL)synchronizeWithError:(NSError *__autoreleasing *)error
+//{
+//    // Deprecated, calling this method is no longer required
+//    return true;
+//}
+//
+//@end
 
-- (void)synchronize
-{
-    // Deprecated, calling this method is no longer required
-}
-
-- (BOOL)synchronizeWithError:(NSError *__autoreleasing *)error
-{
-    // Deprecated, calling this method is no longer required
-    return true;
-}
-
-@end
