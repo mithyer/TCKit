@@ -197,16 +197,20 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string) {
         return 0;
     }
     
-    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:self.path.stringByResolvingSymlinksInPath ?: self.path error:NULL];
+    NSURL *url = self.URLByResolvingSymlinksInPath;
+    if ([url isEqual:self]) {
+        url = self;
+    }
+    NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
         for (NSString *fileName in subPath) {
-            size += [self URLByAppendingPathComponent:fileName].contentSizeInByte;
+            size += [url URLByAppendingPathComponent:fileName].contentSizeInByte;
         }
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:self.path.stringByResolvingSymlinksInPath ?: self.path error:NULL].fileSize;
+    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path error:NULL].fileSize;
 }
 
 
