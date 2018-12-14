@@ -67,13 +67,21 @@
 
 - (NSString *)MD5_32
 {
+    return [self MD5_32:NSUTF8StringEncoding];
+}
+
+- (NSString *)MD5_32:(NSStringEncoding)encoding
+{
     if (self.length < 1) {
+        return nil;
+    }
+    const char *input = [self cStringUsingEncoding:encoding];
+    if (NULL == input) {
         return nil;
     }
     
     unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
     bzero(outputBuffer, sizeof(outputBuffer));
-    const char *input = self.UTF8String;
     CC_MD5(input, (CC_LONG)strlen(input), outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
@@ -84,23 +92,36 @@
     return outputString;
 }
 
+
+- (NSString *)MD5_16:(NSStringEncoding)encoding
+{
+    NSString *str = [self MD5_32:encoding];
+    return nil != str ? [str substringWithRange:NSMakeRange(8, 16)] : str;
+}
+
 - (NSString *)MD5_16
 {
-    NSString *str = self.MD5_32;
-    return nil != str ? [str substringWithRange:NSMakeRange(8, 16)] : str;
+    return [self MD5_16:NSUTF8StringEncoding];
 }
 
 - (NSString *)MD4
 {
+    return [self MD4:NSUTF8StringEncoding];
+}
+
+- (NSString *)MD4:(NSStringEncoding)encoding
+{
     if (self.length < 1) {
+        return nil;
+    }
+    const char *input = [self cStringUsingEncoding:encoding];
+    if (NULL == input) {
         return nil;
     }
     
     unsigned char outputBuffer[CC_MD4_DIGEST_LENGTH];
     bzero(outputBuffer, sizeof(outputBuffer));
-    const char *input = self.UTF8String;
     CC_MD4(input, (CC_LONG)strlen(input), outputBuffer);
-    
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD4_DIGEST_LENGTH * 2];
     for (NSUInteger i = 0; i < CC_MD4_DIGEST_LENGTH; ++i) {
         [outputString appendFormat:@"%02x", outputBuffer[i]];
@@ -111,13 +132,21 @@
 
 - (NSString *)MD2
 {
+    return [self MD2:NSUTF8StringEncoding];
+}
+
+- (NSString *)MD2:(NSStringEncoding)encoding
+{
     if (self.length < 1) {
+        return nil;
+    }
+    const char *input = [self cStringUsingEncoding:encoding];
+    if (NULL == input) {
         return nil;
     }
     
     unsigned char outputBuffer[CC_MD2_DIGEST_LENGTH];
     bzero(outputBuffer, sizeof(outputBuffer));
-    const char *input = self.UTF8String;
     CC_MD2(input, (CC_LONG)strlen(input), outputBuffer);
     
     NSMutableString *outputString = [NSMutableString stringWithCapacity:CC_MD2_DIGEST_LENGTH * 2];
@@ -134,7 +163,15 @@
     if (self.length < 1) {
         return 0;
     }
+    
     const char *input = self.UTF8String;
+    if (NULL == input) {
+        input = [self cStringUsingEncoding:NSNonLossyASCIIStringEncoding];
+    }
+    if (NULL == input) {
+        return 0;
+    }
+    
     uLong crc = crc32(0L, Z_NULL, 0);
     return crc32(crc, (const Bytef *)input, (uInt)strlen(input));
 }
@@ -144,7 +181,15 @@
     if (self.length < 1) {
         return nil;
     }
+    
     const char *input = self.UTF8String;
+    if (NULL == input) {
+        input = [self cStringUsingEncoding:NSNonLossyASCIIStringEncoding];
+    }
+    if (NULL == input) {
+        return nil;
+    }
+    
     uLong crc = crc32(0L, Z_NULL, 0);
     uLong c = crc32(crc, (const Bytef *)input, (uInt)strlen(input));
     return [NSString stringWithFormat:@"%08lx", c];
@@ -155,7 +200,14 @@
     if (self.length < 1) {
         return 0U;
     }
+
     const char *input = self.UTF8String;
+    if (NULL == input) {
+        input = [self cStringUsingEncoding:NSNonLossyASCIIStringEncoding];
+    }
+    if (NULL == input) {
+        return 0U;
+    }
     return tc_crc32_formula_reflect(strlen(input), (const unsigned char *)input);
 }
 
@@ -171,6 +223,12 @@
     }
     
     const char *input = self.UTF8String;
+    if (NULL == input) {
+        input = [self cStringUsingEncoding:NSNonLossyASCIIStringEncoding];
+    }
+    if (NULL == input) {
+        return 0;
+    }
     uLong crc = adler32(0L, Z_NULL, 0);
     return adler32(crc, (const Bytef *)input, (uInt)strlen(input));
 }
@@ -182,16 +240,31 @@
     }
     
     const char *input = self.UTF8String;
+    if (NULL == input) {
+        input = [self cStringUsingEncoding:NSNonLossyASCIIStringEncoding];
+    }
+    if (NULL == input) {
+        return nil;
+    }
+    
     uLong crc = adler32(0L, Z_NULL, 0);
     uLong c = adler32(crc, (const Bytef *)input, (uInt)strlen(input));
     return [NSString stringWithFormat:@"%08lx", c];
 }
 
-
 - (NSString *)SHAString:(NSUInteger)len
 {
+    return [self SHAString:len encoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)SHAString:(NSUInteger)len encoding:(NSStringEncoding)encoding
+{
     unsigned char result[len];
-    const char *input = self.UTF8String;
+    const char *input = [self cStringUsingEncoding:encoding];
+    if (NULL == input) {
+        return nil;
+    }
+    
     switch (len) {
         case CC_SHA1_DIGEST_LENGTH:
             CC_SHA1(input, (CC_LONG)strlen(input), result);
@@ -226,6 +299,11 @@
 
 - (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key
 {
+    return [self Hmac:alg key:key encoding:NSUTF8StringEncoding];
+}
+
+- (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key encoding:(NSStringEncoding)encoding
+{
     NSUInteger digestLen = 0;
     switch (alg) {
         case kCCHmacAlgSHA1:
@@ -250,8 +328,12 @@
             return nil;
     }
     
+    const char *input = [self cStringUsingEncoding:encoding];
+    if (NULL == input) {
+        return nil;
+    }
+    
     unsigned char buf[digestLen];
-    const char *input = self.UTF8String;
     CCHmac(alg, key.bytes, key.length, input, strlen(input), buf);
     NSMutableString *outputString = [NSMutableString stringWithCapacity:digestLen * 2];
     for (NSUInteger i = 0; i < digestLen; ++i) {
@@ -260,20 +342,35 @@
     return outputString;
 }
 
+- (NSString *)base64Encode:(NSStringEncoding)encoding
+{
+    return [[self dataUsingEncoding:encoding] base64EncodedStringWithOptions:kNilOptions];
+}
+
 - (NSString *)base64Encode
 {
-    return  [[self dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:kNilOptions];
+    return [self base64Encode:NSUTF8StringEncoding];
+}
+
+- (NSString *)base64Decode:(NSStringEncoding)encoding
+{
+    return [self base64DecodeWithOptions:NSDataBase64DecodingIgnoreUnknownCharacters encoding:encoding];
 }
 
 - (NSString *)base64Decode
 {
-    return [self base64DecodeWithOptions:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [self base64Decode:NSUTF8StringEncoding];
+}
+
+- (NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options encoding:(NSStringEncoding)encoding
+{
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:options];
+    return nil != data ? [[NSString alloc] initWithData:data encoding:encoding] : nil;
 }
 
 - (NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options
 {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:self options:options];
-    return nil != data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : nil;
+    return [self base64DecodeWithOptions:options encoding:NSUTF8StringEncoding];
 }
 
 - (nullable NSData *)base64DecodeData

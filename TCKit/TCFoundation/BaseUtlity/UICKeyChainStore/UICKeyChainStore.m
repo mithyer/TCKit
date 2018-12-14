@@ -443,7 +443,7 @@ static NSString *_defaultService;
 
 - (NSData *)dataForKey:(NSString *)key
 {
-    return [self dataForKey:key error:nil];
+    return [self dataForKey:key error:NULL];
 }
 
 - (NSData *)dataForKey:(NSString *)key error:(NSError *__autoreleasing *)error
@@ -458,10 +458,8 @@ static NSString *_defaultService;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &data);
     
     if (status == errSecSuccess) {
-        NSData *ret = [NSData dataWithData:(__bridge NSData *)data];
-        if (data) {
-            CFRelease(data);
-            return ret;
+        if (NULL != data) {
+            return (__bridge_transfer NSData *)data;
         } else {
             NSError *e = [self.class unexpectedError:NSLocalizedString(@"Unexpected error has occurred.", nil)];
             if (error) {

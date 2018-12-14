@@ -31,8 +31,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)MD5_32;
 - (nullable NSString *)MD5_16;
 
+- (nullable NSString *)MD5_32:(NSStringEncoding)encoding;
+- (nullable NSString *)MD5_16:(NSStringEncoding)encoding;
+
 - (nullable NSString *)MD2;
 - (nullable NSString *)MD4;
+
+- (nullable NSString *)MD2:(NSStringEncoding)encoding;
+- (nullable NSString *)MD4:(NSStringEncoding)encoding;
 
 - (unsigned long)CRC32B;
 - (nullable NSString *)CRC32BString;
@@ -50,8 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
  case CC_SHA512_DIGEST_LENGTH:
  */
 - (nullable NSString *)SHAString:(NSUInteger)len;
+- (nullable NSString *)SHAString:(NSUInteger)len encoding:(NSStringEncoding)encoding;
 
 - (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key;
+- (nullable NSString *)Hmac:(CCHmacAlgorithm)alg key:(nullable NSData *)key encoding:(NSStringEncoding)encoding;
 
 // base64
 - (nullable NSString *)base64Encode;
@@ -59,6 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options;
 - (nullable NSData *)base64DecodeData;
 - (nullable NSData *)base64DecodeDataWithOptions:(NSDataBase64DecodingOptions)options;
+
+- (nullable NSString *)base64Encode:(NSStringEncoding)encoding;
+- (nullable NSString *)base64Decode:(NSStringEncoding)encoding;
+- (nullable NSString *)base64DecodeWithOptions:(NSDataBase64DecodingOptions)options encoding:(NSStringEncoding)encoding;
 
 @end
 
