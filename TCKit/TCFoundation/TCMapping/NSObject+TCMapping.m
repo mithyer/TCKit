@@ -705,12 +705,12 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
     }
     
     TCMappingOption *option = opt ?: ([curClass respondsToSelector:@selector(tc_mappingOption)] ? [curClass tc_mappingOption] : nil);
-    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *metaDic = tc_propertiesUntilRootClass(curClass, nil != opt ? opt.autoMapUntilRoot : YES);
-    NSDictionary<NSString *, id> *nameDic = nameMappingDicFor(option.nameMapping, metaDic.allKeys);
+    __unsafe_unretained NSDictionary<NSString *, TCMappingMeta *> *const metaDic = tc_propertiesUntilRootClass(curClass, nil != opt ? opt.autoMapUntilRoot : YES);
+    NSDictionary<NSString *, id> *const nameDic = nameMappingDicFor(option.nameMapping, metaDic.allKeys);
     
     NSObject *obj = target;
-    BOOL isNSNullValid = option.shouldMappingNSNull;
-    NSDictionary *typeDic = option.typeMapping;
+    BOOL const isNSNullValid = option.shouldMappingNSNull;
+    NSDictionary *const typeDic = option.typeMapping;
 
     
     for (__unsafe_unretained NSString *property in nameDic) {
@@ -751,9 +751,9 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         
         NSObject *rawValue = value;
         
-        TCEncodingType type = tc_typeForInfo(meta->_info);
-        BOOL emptyCollectionToNSNull = option.mappingEmptyCollectionToNSNull;
-        BOOL mappingEmptyCollection = option.mappingEmptyCollection;
+        TCEncodingType const type = tc_typeForInfo(meta->_info);
+        BOOL const emptyCollectionToNSNull = option.mappingEmptyCollectionToNSNull;
+        BOOL const mappingEmptyCollection = option.mappingEmptyCollection;
         
         if ([rawValue isKindOfClass:NSDictionary.class]) {
             __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
