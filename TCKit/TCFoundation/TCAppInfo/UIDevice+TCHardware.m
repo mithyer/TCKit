@@ -140,15 +140,21 @@ static NSString *s_device_names[kTCDeviceCount] = {
 - (NSString *)getSysInfoByName:(char *)typeSpecifier
 {
     size_t size = 0;
-    sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
+    if (0 != sysctlbyname(typeSpecifier, NULL, &size, NULL, 0) || size < 1) {
+        return nil;
+    }
     
-    char *answer = malloc(size);
-    sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
-    
-    NSString *results = @(answer);
+    char answer[size];
+    answer[0] = '\0';
+    if (0 != sysctlbyname(typeSpecifier, answer, &size, NULL, 0)) {
+        return nil;
+    }
+    return @(answer);
+}
 
-    free(answer);
-    return results;
+- (NSString *)versionModel
+{
+    return [self getSysInfoByName:"kern.osversion"];
 }
 
 - (NSString *)platform

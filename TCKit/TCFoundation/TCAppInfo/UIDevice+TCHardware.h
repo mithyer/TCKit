@@ -121,10 +121,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIDevice (TCHardware)
 
-- (NSString *)platform;
-- (NSString *)hwmodel;
+- (nullable NSString *)versionModel;
+- (nullable NSString *)platform;
+- (nullable NSString *)hwmodel;
 - (TCDevicePlatform)platformType;
-- (NSString *)platformString;
+- (nullable NSString *)platformString;
 - (TCDeviceScreen)screen;
 
 - (NSUInteger)cpuFrequency;
