@@ -724,7 +724,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
         }
         
         NSObject *value = nil;
-        id mapProp = nameDic[property];
+        id const mapProp = nameDic[property];
         TCMappingOption *propOpt = nil;
         if ([mapProp isKindOfClass:TCMappingOption.class]) {
             propOpt = mapProp;
@@ -749,14 +749,14 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             value = ((NSMapTable *)value).dictionaryRepresentation;
         } 
         
-        NSObject *rawValue = value;
+        NSObject *const rawValue = value;
         
         TCEncodingType const type = tc_typeForInfo(meta->_info);
         BOOL const emptyCollectionToNSNull = option.mappingEmptyCollectionToNSNull;
         BOOL const mappingEmptyCollection = option.mappingEmptyCollection;
         
         if ([rawValue isKindOfClass:NSDictionary.class]) {
-            __unsafe_unretained NSDictionary *valueDic = (typeof(valueDic))rawValue;
+            __unsafe_unretained NSDictionary *const valueDic = (typeof(valueDic))rawValue;
             
             if (valueDic.count > 0) {
                 if (type == kTCEncodingTypeNSDictionary) {
@@ -814,7 +814,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
             }
             
         } else if ([rawValue isKindOfClass:NSArray.class]) {
-            __unsafe_unretained NSArray *valueArry = (typeof(valueArry))rawValue;
+            __unsafe_unretained NSArray *const valueArry = (typeof(valueArry))rawValue;
             
             if (valueArry.count > 0) {
                 if (Nil == meta->_typeClass || (type != kTCEncodingTypeNSArray && type != kTCEncodingTypeNSSet && type != kTCEncodingTypeNSOrderedSet)) {
