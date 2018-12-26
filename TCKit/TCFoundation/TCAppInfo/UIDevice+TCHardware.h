@@ -168,7 +168,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)stringFromSockAddr:(const struct sockaddr *)addr includeService:(BOOL)includeService;
 
 typedef NS_ENUM(NSInteger, TCNetworkInterfaceType) {
-    kTCNetworkInterfaceTypeLoopback, // lo0
+    kTCNetworkInterfaceTypeUnknown = -1,
+    kTCNetworkInterfaceTypeLoopback = 0, // lo0
     kTCNetworkInterfaceTypeCellular, // pdp_ip0
     kTCNetworkInterfaceTypeWiFi, // en0
     kTCNetworkInterfaceTypeHotspot, // bridge100

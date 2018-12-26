@@ -216,7 +216,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 - (TCDevicePlatform)platformType
 {
-    NSString *platform = self.platform;
+    NSString *const platform = self.platform;
 
     // iPhone
     if ([platform isEqualToString:@"iPhone1,1"])         return kTCDevice1GiPhone;
