@@ -456,14 +456,16 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     });
     
     for (NSNumber *value in s_tryEncodings) {
-        NSStringEncoding detectedEnc = value.unsignedIntegerValue;
-        // !!!: 兼容 NSMutableString
-        __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
-        if (nil != text) {
-            if (NULL != enc) {
-                *enc = detectedEnc;
+        @autoreleasepool {
+            NSStringEncoding detectedEnc = value.unsignedIntegerValue;
+            // !!!: 兼容 NSMutableString
+            __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
+            if (nil != text) {
+                if (NULL != enc) {
+                    *enc = detectedEnc;
+                }
+                return text;
             }
-            return text;
         }
     }
     
