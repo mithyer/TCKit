@@ -38,10 +38,17 @@ NSString * TCPercentEscapedStringFromString(NSString *string) {
     return escaped;
 }
 
-NSString * TCPercentEscapedStringFromFileName(NSString *string) {
+NSString * TCPercentEscapedStringFromFileName(NSString *string)
+{
+    if (string.length < 1) {
+        return string;
+    }
+    
     NSString *name = [[string componentsSeparatedByCharactersInSet:NSCharacterSet.illegalFileNameCharacters] componentsJoinedByString:@"_"];
     if (name.length > NAME_MAX) {
         name = [name substringFromIndex:name.length - NAME_MAX];
+    } else if ([name isEqualToString:@"_"]) {
+        name = @"";
     }
     return name;
 }

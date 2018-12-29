@@ -228,12 +228,15 @@
         return nil;
     }
     
-    id value = self[key];
-    if (nil == value) {
-        value = self[key.lowercaseString];
+    NSString *usedKey = nil;
+    for (NSString *rawKey in self.allKeys) {
+        if (0 == [rawKey compare:key options:NSCaseInsensitiveSearch]) {
+            usedKey = rawKey;
+            break;
+        }
     }
     
-    return value;
+    return nil != usedKey ? self[usedKey] : nil;
 }
 
 @end
