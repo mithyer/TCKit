@@ -104,6 +104,16 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
 
 @implementation NSURL (TCHelper)
 
+- (NSURL *)safeURLByResolvingSymlinksInPath
+{
+    NSURL *url = self.URLByResolvingSymlinksInPath;
+    if (nil == url || [url isEqual:self]) {
+        return self;
+    }
+    
+    return url;
+}
+
 - (nullable instancetype)URLByAppendingPathExtensionMust:(NSString *)str
 {
     if (nil == str || str.length < 1) {
@@ -204,10 +214,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
         return 0;
     }
     
-    NSURL *url = self.URLByResolvingSymlinksInPath;
-    if ([url isEqual:self]) {
-        url = self;
-    }
+    NSURL *url = self.safeURLByResolvingSymlinksInPath;
     NSArray<NSString *> *subPath = [NSFileManager.defaultManager subpathsOfDirectoryAtPath:url.path error:NULL];
     if (subPath.count > 0) {
         unsigned long long size = 0;
@@ -298,7 +305,7 @@ done:
     if (!self.isFileURL || self.hasDirectoryPath) {
         return nil;
     }
-    NSURL *url = self.URLByResolvingSymlinksInPath ?: self;
+    NSURL *url = self.safeURLByResolvingSymlinksInPath;
     return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFURLRef)url, FileHashDefaultChunkSizeForReadingData);
 }
 

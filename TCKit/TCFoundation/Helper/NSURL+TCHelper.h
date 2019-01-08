@@ -33,6 +33,8 @@ extern NSString * TCPercentEscapedStringFromFileName(NSString *string);
 
 - (nullable NSString *)tc_fileMD5;
 
+- (NSURL *)safeURLByResolvingSymlinksInPath;
+
 @end
 
 @interface NSCharacterSet (TCHelper)
