@@ -28,6 +28,7 @@
         dispatch_block_t block = ^{
             s_userAgent = [[[self alloc] init] stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
         };
+        NSParameterAssert(NSThread.isMainThread);
         if (NSThread.isMainThread) {
             block();
         } else {
