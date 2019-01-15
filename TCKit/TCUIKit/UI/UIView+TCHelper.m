@@ -1,9 +1,9 @@
 //
 //  UIView+TCHelper.m
-//  SudiyiClient
+//  TCKit
 //
 //  Created by cdk on 15/5/12.
-//  Copyright (c) 2015年 Sudiyi. All rights reserved.
+//  Copyright (c) 2015年 TCKit. All rights reserved.
 //
 
 #if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
