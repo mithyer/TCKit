@@ -167,9 +167,6 @@ static BOOL validIDNCodeValue(unsigned codepoint)
     if (outputPtr >= outputEnd)
         return aString;
     *outputPtr = '\0';
-#ifdef DEBUG_toon    
-    NSLog(@"Punycode encoded \"%@\" into \"%s\"", aString, outputBuffer);
-#endif    
     return [ACEPrefix stringByAppendingString:@(outputBuffer)];
 }
 
@@ -319,9 +316,9 @@ static BOOL validIDNCodeValue(unsigned codepoint)
     if ([normalized compare:decoded options:NSLiteralSearch] != NSOrderedSame) {
         // Decoded string was not normalized, therefore could not have been the result of decoding a correctly encoded IDN.
         return aString;
-    } else {
-        return normalized;
     }
+    
+    return normalized;
 }
 
 + (NSString *)IDNEncodedHostname:(NSString *)aHostname;
