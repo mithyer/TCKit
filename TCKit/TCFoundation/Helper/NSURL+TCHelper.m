@@ -141,12 +141,14 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
 
 - (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf
 {
-    return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:decodeInf];
+    NSString *query = [self.query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+    return [query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:decodeInf];
 }
 
 - (NSMutableDictionary *)parseQueryToDictionary
 {
-    return [self.query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:YES];
+    NSString *query = [self.query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+    return [query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:YES];
 }
 
 - (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode
