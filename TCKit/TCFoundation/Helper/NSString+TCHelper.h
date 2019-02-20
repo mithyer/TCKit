@@ -42,7 +42,7 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
  */
 + (NSStringEncoding)encodingForIANACharset:(NSString *)iana;
 + (nullable NSString *)IANACharsetForEncoding:(NSStringEncoding)encoding;
-+ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc;
++ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc force:(BOOL)force;
 
 
 - (nullable NSString *)stringByEscapingForHTML;

@@ -423,9 +423,9 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     return NULL == cStr ? nil : (__bridge NSString *)cStr;
 }
 
-+ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc
++ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc force:(BOOL)force
 {
-    if (nil == data) {
+    if (data.length < 1) {
         return nil;
     }
     
@@ -467,6 +467,10 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
                 return text;
             }
         }
+    }
+    
+    if (!force) {
+        return nil;
     }
     
     NSMutableArray *ignore = s_tryEncodings.mutableCopy;
