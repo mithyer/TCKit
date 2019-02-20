@@ -953,23 +953,49 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
 }
 
+//- (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
+//{
+//    struct statfs buf;
+//    if (statfs("/var", &buf) < 0) {
+//        return;
+//    }
+//
+//    /*
+//     f_bfree和f_bavail两个值的区别，前者是硬盘所有剩余空间，后者为非root用户剩余空间。一般ext3文件系统会给root留5%的独享空间。
+//     所以如果计算出来的剩余空间总比df显示的要大，那一定是你用了f_bfree。
+//     5%的空间大小这个值是仅仅给root用的，普通用户用不了，目的是防止文件系统的碎片。
+//     */
+//    if (NULL != pTotal) {
+//        *pTotal = (uint64_t)buf.f_bsize * buf.f_blocks;
+//    }
+//    if (NULL != pFree) {
+//        *pFree = (uint64_t)buf.f_bsize * buf.f_bavail;
+//    }
+//}
+
 - (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
 {
-    struct statfs buf;
-    if (statfs("/var", &buf) < 0) {
+    if (NULL == pTotal && NULL == pFree) {
         return;
     }
     
-    /*
-     f_bfree和f_bavail两个值的区别，前者是硬盘所有剩余空间，后者为非root用户剩余空间。一般ext3文件系统会给root留5%的独享空间。
-     所以如果计算出来的剩余空间总比df显示的要大，那一定是你用了f_bfree。
-     5%的空间大小这个值是仅仅给root用的，普通用户用不了，目的是防止文件系统的碎片。
-     */
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *attributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:paths.lastObject
+                                                                                     error:&error];
     if (NULL != pTotal) {
-        *pTotal = (uint64_t)buf.f_bsize * buf.f_blocks;
+        *pTotal = [attributes[NSFileSystemSize] unsignedLongLongValue];
     }
+    
     if (NULL != pFree) {
-        *pFree = (uint64_t)buf.f_bsize * buf.f_bavail;
+        *pFree = [attributes[NSFileSystemFreeSize] unsignedLongLongValue];
+        // iOS 11 新方法修正
+        if (@available(iOS 11.0, *)) {
+            NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:NSTemporaryDirectory()];
+            NSDictionary *results = [fileURL resourceValuesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey]
+                                                             error:&error];
+            *pFree = [results[NSURLVolumeAvailableCapacityForImportantUsageKey] unsignedLongLongValue];
+        }
     }
 }
 
