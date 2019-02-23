@@ -24,7 +24,7 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 
 - (NSString *)firstCharacter;
 
-// 去除标点符号, 空白符, 换行符, 空格
+// 去除标点符号, 空白符, 换行符, 空格, emoji
 - (NSString *)clearSymbolAndWhiteString;
 
 - (BOOL)isInteger;

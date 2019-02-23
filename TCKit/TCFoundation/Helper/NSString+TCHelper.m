@@ -215,20 +215,23 @@
 
 - (NSString *)clearSymbolAndWhiteString
 {
-    NSMutableCharacterSet *trimSet = [[NSMutableCharacterSet alloc] init];
-    [trimSet formUnionWithCharacterSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-    [trimSet formUnionWithCharacterSet:NSCharacterSet.punctuationCharacterSet];
-    [trimSet formUnionWithCharacterSet:NSCharacterSet.controlCharacterSet];
-    [trimSet formUnionWithCharacterSet:NSCharacterSet.symbolCharacterSet];
+    static NSCharacterSet *charSet = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableCharacterSet *trimSet = [[NSMutableCharacterSet alloc] init];
+        [trimSet formUnionWithCharacterSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        [trimSet formUnionWithCharacterSet:NSCharacterSet.punctuationCharacterSet];
+        [trimSet formUnionWithCharacterSet:NSCharacterSet.controlCharacterSet];
+        [trimSet formUnionWithCharacterSet:NSCharacterSet.symbolCharacterSet];
+        [trimSet addCharactersInString:@"　"]; // 全角空格
+        charSet = trimSet.copy;
+    });
     
-    // 去掉前后空格、换行符、标点等
-    NSString *trimText = [self stringByTrimmingCharactersInSet:trimSet];
-    // 去掉中间的空格
-    trimText = [trimText stringByReplacingOccurrencesOfString:@"\x20" withString:@""];
-    // 去掉中间的全角空格
-    trimText = [trimText stringByReplacingOccurrencesOfString:@"　" withString:@""];
-    
-    return trimText;
+    NSArray<NSString *> *coms = [self componentsSeparatedByCharactersInSet:charSet];
+    if (coms.count < 2) {
+        return self;
+    }
+    return [coms componentsJoinedByString:@""];
 }
 
 - (BOOL)isPureNumber
@@ -282,15 +285,19 @@
     }
     
     // 地区合法性
-    NSArray *const areaCodes = @[@"11", @"12", @"13",@"14", @"15",
-                                 @"21", @"22", @"23",
-                                 @"31", @"32", @"33", @"34", @"35", @"36", @"37",
-                                 @"41", @"42", @"43", @"44", @"45", @"46",
-                                 @"50", @"51", @"52", @"53", @"54",
-                                 @"61", @"62", @"63", @"64", @"65",
-                                 @"71",
-                                 @"81", @"82",
-                                 @"91"];
+    static NSArray<NSString *> *areaCodes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        areaCodes = @[@"11", @"12", @"13",@"14", @"15",
+                      @"21", @"22", @"23",
+                      @"31", @"32", @"33", @"34", @"35", @"36", @"37",
+                      @"41", @"42", @"43", @"44", @"45", @"46",
+                      @"50", @"51", @"52", @"53", @"54",
+                      @"61", @"62", @"63", @"64", @"65",
+                      @"71",
+                      @"81", @"82",
+                      @"91"];
+    });
     
     NSString *area = [code substringToIndex:2];
     if (![areaCodes containsObject:area]) {
