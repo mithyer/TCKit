@@ -80,3 +80,138 @@ static NSString const *kDefaultDomain = @"TCKit";
 
 
 @end
+
+
+// MARK: _TCEndian_readf
+
+//#define HOST_ENDIANESS BYTE_ORDER
+//#if __LITTLE_ENDIAN__
+//#define HOST_ENDIANESS CG_ENDIAN_LITTLE
+//#else
+//#define HOST_ENDIANESS CG_ENDIAN_BIG
+//#endif
+
+static void _TCEndian_swap(void *buffer, size_t size) {
+    char tmp = '\0';
+    char *src = (char *)buffer;
+    char *dst = (char *)buffer + size - 1;
+    while (src < dst) {
+        tmp = *src;
+        *src = *dst;
+        *dst = tmp;
+        ++src; --dst;
+    }
+}
+
+static void _TCEndian_swapArray(void *buffer, size_t size, size_t count) {
+    for (size_t c = 0; c < count; ++c) {
+        _TCEndian_swap((char *)buffer + c * size, size);
+    }
+}
+
+size_t _TCEndian_readf(FILE *stream, const char *format, ...)
+{
+    const char *c = format;
+    bool cont = true;
+    size_t items = 0;
+    
+    va_list args;
+    va_start(args, format);
+    
+    while (cont && *c) {
+        void *buffer = NULL;
+        int order = LITTLE_ENDIAN;
+        size_t size = 0, count = 0;
+        size_t read = 0;
+        
+        while (isspace((unsigned char)*c)) {
+            ++c;
+        }
+        
+        /* extract optional repetition count */
+        if (isdigit((unsigned char)*c)) {
+            count = 0;
+            
+            while (isdigit((unsigned char)*c)) {
+                count *= 10;
+                count += (size_t)(*c - '0');
+                ++c;
+            }
+            
+            while (isspace((unsigned char)*c))
+                ++c;
+            
+        } else {
+            count = 1;
+        }
+        
+        assert(*c != 0);
+        
+        /* extract field size and byte order */
+        switch (*c++) {
+            case 'b':
+                size  = 1;
+                order = LITTLE_ENDIAN;
+                break;
+                
+            case 'B':
+                size  = 1;
+                order = BIG_ENDIAN;
+                break;
+                
+            case 'w':
+                size  = 2;
+                order = LITTLE_ENDIAN;
+                break;
+                
+            case 'W':
+                size  = 2;
+                order = BIG_ENDIAN;
+                break;
+                
+            case 'd':
+                size  = 4;
+                order = LITTLE_ENDIAN;
+                break;
+                
+            case 'D':
+                size  = 4;
+                order = BIG_ENDIAN;
+                break;
+                
+            case 'q':
+                size  = 8;
+                order = LITTLE_ENDIAN;
+                break;
+                
+            case 'Q':
+                size  = 8;
+                order = BIG_ENDIAN;
+                break;
+                
+            default:
+                return 0;
+        }
+        
+        buffer = va_arg(args, void *);
+        
+        if (NULL != buffer) {
+            read = fread(buffer, size, count, stream);
+            items += read;
+            
+            if ((size > 1) && (order != BYTE_ORDER)) {
+                _TCEndian_swapArray(buffer, size, read);
+            }
+            
+            cont = read == count;
+            
+        } else {
+            items += count;
+            cont = fseek(stream, (long)(count * size), SEEK_CUR) != -1;
+        }
+    }
+    
+    va_end(args);
+    
+    return items;
+}

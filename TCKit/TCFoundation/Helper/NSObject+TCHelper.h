@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern size_t _TCEndian_readf(FILE *stream, const char *format, ...);
+
 @interface NSObject (TCHelper)
 
 @property (nullable, nonatomic, copy) NSString *humanDescription;
