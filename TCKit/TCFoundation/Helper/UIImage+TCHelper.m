@@ -46,5 +46,18 @@
     return [self.class imageWithCGImage:self.CGImage scale:scale orientation:self.imageOrientation];
 }
 
+- (BOOL)hasAlpha
+{
+    switch (CGImageGetAlphaInfo(self.CGImage)) {
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaLast:
+        case kCGImageAlphaFirst:
+            return YES;
+            
+        default:
+            return NO;
+    }
+}
 
 @end
