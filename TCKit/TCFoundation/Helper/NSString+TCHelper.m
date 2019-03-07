@@ -435,25 +435,27 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     if (data.length < 1) {
         return nil;
     }
-    
+
     static NSMutableArray<NSNumber *> *s_tryEncodings = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         s_tryEncodings = [NSMutableArray arrayWithObjects:
                           @(NSUTF8StringEncoding),
-
-                          @(NSUTF16StringEncoding),
+//                          @(NSUTF16StringEncoding), // textView crash
                           @(NSJapaneseEUCStringEncoding),
-                          @(NSShiftJISStringEncoding),
                           nil];
-        
+
         static CFStringEncoding const kEds[] = {
             kCFStringEncodingBig5_HKSCS_1999,
             kCFStringEncodingBig5,
+
             kCFStringEncodingHZ_GB_2312,
             kCFStringEncodingGB_18030_2000,
+            
+            kCFStringEncodingShiftJIS,
+            kCFStringEncodingDOSJapanese,
         };
-        
+
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
             NSStringEncoding ed = (NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(kEds[i]);
             if (kCFStringEncodingInvalidId != ed) {
@@ -461,7 +463,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             }
         }
     });
-    
+
     for (NSNumber *value in s_tryEncodings) {
         @autoreleasepool {
             NSStringEncoding detectedEnc = value.unsignedIntegerValue;
@@ -475,12 +477,12 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             }
         }
     }
-    
+
     if (!force) {
         return nil;
     }
     
-    NSMutableArray *ignore = s_tryEncodings.mutableCopy;
+    NSMutableArray<NSNumber *> *ignore = s_tryEncodings.mutableCopy;
     [ignore addObject:@(NSASCIIStringEncoding)];
     NSString *text = nil;
     // 此方法巨慢
@@ -498,7 +500,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     }
     
     // !!!: 兼容 NSMutableString
-    return nil != text ? [self stringWithString:text] : nil;
+    return nil == text ? nil : ([text isKindOfClass:self] ? text : [self stringWithString:text]);
 }
 
 - (NSString *)replaceUnicode
