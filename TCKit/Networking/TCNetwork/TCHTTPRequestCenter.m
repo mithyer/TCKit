@@ -409,12 +409,12 @@
 {
     __weak typeof(self) wSelf = self;
     void (^successBlock)(NSURLSessionTask *task, id responseObject) = ^(NSURLSessionTask *task, id responseObject) {
-        NSAssert(NSThread.isMainThread, @"not main thread");
+        NSCAssert(NSThread.isMainThread, @"not main thread");
         request.rawResponseObject = responseObject;
         [wSelf handleRequestResult:request success:YES error:nil];
     };
     void (^failureBlock)(NSURLSessionTask *task, NSError *error) = ^(NSURLSessionTask *task, NSError *error) {
-        NSAssert(NSThread.isMainThread, @"not main thread");
+        NSCAssert(NSThread.isMainThread, @"not main thread");
         [wSelf handleRequestResult:request success:NO error:error];
     };
     
@@ -763,7 +763,7 @@
     dispatch_async(self.responseQueue, ^{
         @autoreleasepool {
             if (nil != path && ![NSKeyedArchiver archiveRootObject:response toFile:path]) {
-                NSAssert(false, @"write response failed.");
+                NSCAssert(false, @"write response failed.");
             }
             
             if (nil != block) {

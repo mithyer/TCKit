@@ -120,7 +120,7 @@ static NSString *tc_md5_32(NSString *str)
                             NSString *cachePath = [sSelf.tc_resumeCacheDirectory stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent];
                             [NSFileManager.defaultManager removeItemAtPath:cachePath error:NULL];
                             [NSFileManager.defaultManager moveItemAtPath:tmpDownloadFile toPath:cachePath error:&error];
-                            NSAssert(nil == error, @"%@", error);
+                            NSCAssert(nil == error, @"%@", error);
                         }
                     }
                 }
