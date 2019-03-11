@@ -160,7 +160,7 @@ extern NSDateFormatter *tcISODateFormatter(void);
 
 @interface TCMappingMeta : NSObject
 {
-@public
+@package
     NSString *_typeName;
     NSString *_propertyName;
     __unsafe_unretained Class _typeClass;

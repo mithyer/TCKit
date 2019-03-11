@@ -20,7 +20,7 @@
 
 @interface _TCButtonExtra : NSObject
 {
-    @public
+@package
     __weak UIButton *_target;
 }
 
