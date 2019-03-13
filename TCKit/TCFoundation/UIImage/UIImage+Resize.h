@@ -24,6 +24,8 @@ extern size_t TC_FixedWidth(size_t width);
 
 - (UIImage *)fixOrientationToUpAndBGRA;
 
+- (UIImage *)fixOrientationToUp;
+
 
 /**
  @brief	比例缩放图片至希望的像素 (有最大边限制)

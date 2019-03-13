@@ -25,6 +25,73 @@ size_t TC_FixedWidth(size_t width)
     return width > kTCWidthPixelAlign * 10 ? (width - width % kTCWidthPixelAlign) : width;
 }
 
+
+static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destBitmapInfo)
+{
+    CGSize pixelSize = CGSizeMake(img.size.width * img.scale, img.size.height * img.scale);
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    UIImageOrientation orientation = img.imageOrientation;
+    switch (orientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, pixelSize.width, pixelSize.height);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, pixelSize.width, 0);
+            transform = CGAffineTransformRotate(transform, (CGFloat)M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, pixelSize.height);
+            transform = CGAffineTransformRotate(transform, (CGFloat)-M_PI_2);
+            break;
+        default:
+            break;
+    }
+    
+    switch (orientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, pixelSize.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, pixelSize.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        default:
+            break;
+    }
+    
+    if (CGAffineTransformIsIdentity(transform)) {
+        return CGImageRetain(img.CGImage);
+    }
+    
+    CGImageRef imageRef = img.CGImage;
+    CGFloat width = CGImageGetWidth(imageRef);
+    CGFloat height = CGImageGetHeight(imageRef);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef ctx = CGBitmapContextCreate(NULL, (size_t)pixelSize.width, (size_t)pixelSize.height, 8, ((size_t)pixelSize.width) * 4, colorSpace, destBitmapInfo);
+    CGColorSpaceRelease(colorSpace);
+    CGContextConcatCTM(ctx, transform);
+    
+    CGContextSetInterpolationQuality(ctx, kCGInterpolationNone);
+    CGContextDrawImage(ctx, CGRectMake(0, 0, width, height), imageRef);
+    CGContextSetInterpolationQuality(ctx, kCGInterpolationDefault);
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    CGContextRelease(ctx);
+    return cgimg;
+}
+
 @implementation UIImage (Resize)
 
 
@@ -48,6 +115,18 @@ size_t TC_FixedWidth(size_t width)
         NSAssert(false, @"input image is not BGRA");
     }
 #endif
+    return resutImg;
+}
+
+- (UIImage *)fixOrientationToUp
+{
+    if (self.imageOrientation == UIImageOrientationUp) {
+        return self;
+    }
+    CGImageRef cgimg = TC_CGImageCreateOrientationUp(self, CGImageGetBitmapInfo(self.CGImage));
+    UIImage *resutImg = [UIImage imageWithCGImage:cgimg scale:self.scale orientation:UIImageOrientationUp];
+    CGImageRelease(cgimg);
+    
     return resutImg;
 }
 
