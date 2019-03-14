@@ -553,7 +553,7 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
     
     do {
         @autoreleasepool {
-            data = UIImageJPEGRepresentation(self, compressQuality);
+            data = UIImageJPEGRepresentation(self.fixOrientationToUp, compressQuality);
             if (data.length <= bytes) {
                 break;
             }

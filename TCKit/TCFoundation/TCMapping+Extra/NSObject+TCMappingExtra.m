@@ -10,6 +10,7 @@
 #import "UIColor+TCUtilities.h"
 #import "AnimatedGIFImageSerialization.h"
 #import "NSData+TCCypher.h"
+#import "UIImage+Resize.h"
 
 
 @implementation NSObject (TCMappingExtra)
@@ -71,9 +72,9 @@
     kCGImageAlphaNoneSkipFirst == alphaInfo;
     
     if (noAlpha) {
-        return UIImageJPEGRepresentation(img, 0.8f);
+        return UIImageJPEGRepresentation(img.fixOrientationToUp, 0.8f);
     }
-    return UIImagePNGRepresentation(img);
+    return UIImagePNGRepresentation(img.fixOrientationToUp);
 }
 
 + (UIImage *)tc_transformImageFromData:(NSData *)data
