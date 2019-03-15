@@ -49,7 +49,7 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 - (nullable NSString *)stringByEscapingForAsciiHTML;
 - (nullable NSString *)stringByUnescapingHTML;
 
-- (nullable NSString *)replaceUnicode;
+- (NSString *)replaceUnicode;
 
 @end
 

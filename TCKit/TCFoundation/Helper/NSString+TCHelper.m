@@ -505,31 +505,33 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
 
 - (NSString *)replaceUnicode
 {
-    if (self.length < 6) {
-        return self;
-    }
-    if ([self rangeOfString:@"\\u" options:NSCaseInsensitiveSearch].location == NSNotFound) {
-        return self;
-    }
+//    if (self.length < 6) {
+//        return self;
+//    }
+//    if ([self rangeOfString:@"\\u" options:NSCaseInsensitiveSearch].location == NSNotFound) {
+//        return self;
+//    }
+//
+//    NSString *returnStr = nil;
+//    @autoreleasepool {
+//        NSData *data = nil;
+//        @autoreleasepool {
+//            NSMutableString *str = self.mutableCopy;
+//            [str replaceOccurrencesOfString:@"\\u" withString:@"\\U" options:kNilOptions range:NSMakeRange(0, str.length)];
+//            [str replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:kNilOptions range:NSMakeRange(0, str.length)];
+//            [str insertString:@"\"" atIndex:0];
+//            [str appendString:@"\""];
+//            data = [str dataUsingEncoding:NSUTF8StringEncoding];
+//        }
+//        NSError *err = nil;
+//        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&err];
+//        if (nil == returnStr) {
+//            NSLog(@"%@", err);
+//        }
+//    }
+//    return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
     
-    NSString *returnStr = nil;
-    @autoreleasepool {
-        NSData *data = nil;
-        @autoreleasepool {
-            NSMutableString *str = self.mutableCopy;
-            [str replaceOccurrencesOfString:@"\\u" withString:@"\\U" options:kNilOptions range:NSMakeRange(0, str.length)];
-            [str replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:kNilOptions range:NSMakeRange(0, str.length)];
-            [str insertString:@"\"" atIndex:0];
-            [str appendString:@"\""];
-            data = [str dataUsingEncoding:NSUTF8StringEncoding];
-        }
-        NSError *err = nil;
-        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&err];
-        if (nil == returnStr) {
-            NSLog(@"%@", err);
-        }
-    }
-    return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
+    return [self stringByApplyingTransform:@"Any-Hex/Java" reverse:YES] ?: self;
 }
 
 
