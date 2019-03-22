@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)tc_goBack;
 - (void)tc_reload;
 
-- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id _Nullable result, NSError *error))completionHandler;
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^_Nullable)(id _Nullable result, NSError *error))completionHandler;
 
 // refer: http://www.jianshu.com/p/d2c478bbcca5?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
 - (void)clearCookies;
