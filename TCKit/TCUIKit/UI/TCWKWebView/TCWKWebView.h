@@ -10,6 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol TCWKWebView <NSObject>
 
 @required
@@ -24,16 +26,20 @@
 + (NSString *)tc_systemUserAgent;
 
 - (void)loadRequest:(NSURLRequest *)request;
-- (id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
+- (nullable id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(nullable NSURL *)readAccessURL;
+- (nullable id)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL;
+
 - (BOOL)canGoBack;
 - (id)tc_goBack;
 - (void)tc_reload;
 
-- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id result, NSError *error))completionHandler;
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id _Nullable result, NSError *error))completionHandler;
 
 // refer: http://www.jianshu.com/p/d2c478bbcca5?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
 - (void)clearCookies;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

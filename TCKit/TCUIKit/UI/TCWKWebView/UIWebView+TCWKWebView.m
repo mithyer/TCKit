@@ -52,7 +52,6 @@
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler
 {
     NSString *string = [self stringByEvaluatingJavaScriptFromString:javaScriptString];
-    
     if (nil != completionHandler) {
         completionHandler(string, nil);
     }
@@ -69,6 +68,12 @@
 {
     [self loadData:[NSData dataWithContentsOfURL:URL options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL ] MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:readAccessURL];
     return URL;
+}
+
+- (nullable id)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL
+{
+    [self loadHTMLString:string baseURL:baseURL];
+    return self;
 }
 
 - (void)tc_reload
