@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)loadRequest:(NSURLRequest *)request;
 - (nullable id)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(nullable NSURL *)readAccessURL;
-- (nullable id)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL;
+- (nullable id)tc_loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL;
 
 - (BOOL)canGoBack;
 - (id)tc_goBack;

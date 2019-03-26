@@ -166,6 +166,11 @@
     //    [self tc_swizzle:@selector(layoutSubviews)];
 }
 
+- (nullable id)tc_loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL
+{
+    return [self loadHTMLString:string baseURL:baseURL];
+}
+
 - (void)tc_reload
 {
     [self reload];

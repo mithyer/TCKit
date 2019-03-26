@@ -70,10 +70,10 @@
     return URL;
 }
 
-- (nullable id)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL
+- (nullable id)tc_loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL
 {
     [self loadHTMLString:string baseURL:baseURL];
-    return self;
+    return string;
 }
 
 - (void)tc_reload
