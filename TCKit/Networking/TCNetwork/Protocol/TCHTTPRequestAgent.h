@@ -10,6 +10,8 @@
 #import "TCHTTPRequestProtocol.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol TCHTTPRequestAgent <NSObject>
 
 @required
@@ -24,15 +26,14 @@
 - (NSString *)cachePathForResponse;
 
 - (void)storeCachedResponse:(id)response forCachePolicy:(TCHTTPCachePolicy *)cachePolicy finish:(dispatch_block_t)block;
-- (void)cachedResponseForRequest:(id<TCHTTPRequest>)request result:(void(^)(id response))result;
+- (void)cachedResponseForRequest:(id<TCHTTPRequest>)request result:(void(^)(id _Nullable response))result;
 
 - (id<TCHTTPRespValidator>)responseValidatorForRequest:(id<TCHTTPRequest>)request;
 
 @optional
-- (NSArray<id<TCHTTPRequest>> *)requestsForObserver:(id)observer;
-- (id<TCHTTPRequest>)requestForObserver:(id)observer forIdentifier:(id)identifier;
+- (nullable NSArray<id<TCHTTPRequest>> *)requestsForObserver:(id _Nullable)observer;
+- (nullable id<TCHTTPRequest>)requestForObserver:(id _Nullable)observer forIdentifier:(id)identifier;
 
 @end
 
-
-
+NS_ASSUME_NONNULL_END
