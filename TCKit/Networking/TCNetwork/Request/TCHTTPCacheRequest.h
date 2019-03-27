@@ -22,7 +22,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPCacheRequest : TCHTTPRequest
  @brief	fire a request regardless of cache available
  if cache is available, callback then fire a request.
  */
-- (BOOL)forceStart:(NSError * _Nullable *)error;
+- (BOOL)forceStart:(NSError * _Nullable __strong * _Nullable)error;
 - (void)cachedResponseByForce:(BOOL)force result:(void(^)(id response, TCCachedRespState state))result;
 
 @end

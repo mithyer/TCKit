@@ -66,7 +66,7 @@ extern uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer
                          iv:(nullable NSData *)iv
                       tweak:(nullable NSData *)tweak
                     keySize:(size_t)keySize
-                      error:(NSError **)error;
+                      error:(NSError * _Nullable __strong * _Nullable)error;
 
 
 /**

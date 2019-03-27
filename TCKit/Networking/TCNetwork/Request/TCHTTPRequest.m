@@ -107,14 +107,14 @@
 }
 
 
-- (BOOL)canStart:(NSError **)error
+- (BOOL)canStart:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(self.requestAgent);
     return [self.requestAgent canAddRequest:self error:error];
 }
 
 
-- (BOOL)start:(NSError **)error
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(self.requestAgent);
     if (self.isCancelled) {
@@ -138,7 +138,7 @@
     return [self.requestAgent addRequest:self error:error];
 }
 
-- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError **)error
+- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError * _Nullable __strong * _Nullable)error
 {
     self.resultBlock = resultBlock;
     return [self start:error];
@@ -237,7 +237,7 @@
 
 #pragma mark - Cache
 
-- (BOOL)forceStart:(NSError **)error
+- (BOOL)forceStart:(NSError * _Nullable __strong * _Nullable)error
 {
     return [self start:error];
 }

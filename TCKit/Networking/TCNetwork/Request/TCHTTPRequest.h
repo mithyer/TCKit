@@ -55,9 +55,9 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequest : NSObject <TCHTTPRequest, 
  @param error [OUT] param invalid, etc...
  
  */
-- (BOOL)start:(NSError * _Nullable *)error;
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error;
 
-- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError * _Nullable *)error;
+- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError * _Nullable __strong * _Nullable)error;
 
 // delegate, resulteBlock always called, even if request was cancelled.
 - (void)cancel;

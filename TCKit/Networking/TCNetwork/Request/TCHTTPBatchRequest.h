@@ -19,7 +19,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPBatchRequest : TCHTTPRequest
 + (instancetype)requestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 - (instancetype)initWithRequests:(NSArray<id<TCHTTPRequest>> *)requests;
 
-- (BOOL)start:(NSError * _Nullable *)error;
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error;
 
 
 @end

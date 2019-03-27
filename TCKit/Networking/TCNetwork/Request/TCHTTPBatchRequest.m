@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-- (BOOL)start:(NSError **)error
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(self.requestAgent);
     

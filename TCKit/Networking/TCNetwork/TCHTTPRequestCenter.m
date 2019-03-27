@@ -250,7 +250,7 @@
 }
 
 
-- (BOOL)canAddRequest:(id<TCHTTPRequest>)request error:(NSError **)error
+- (BOOL)canAddRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(request.observer);
     
@@ -284,7 +284,7 @@
     return YES;
 }
 
-- (BOOL)addRequest:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request error:(NSError **)error
+- (BOOL)addRequest:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request error:(NSError * _Nullable __strong * _Nullable)error
 {
     if (![self canAddRequest:request error:error]) {
         return NO;

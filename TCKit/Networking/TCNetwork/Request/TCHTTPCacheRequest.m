@@ -128,7 +128,7 @@
 }
 
 
-- (BOOL)start:(NSError **)error
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error
 {
     if (self.isForceStart) {
         return [self forceStart:error];
@@ -168,7 +168,7 @@
     return [super start:error];
 }
 
-- (BOOL)forceStart:(NSError **)error
+- (BOOL)forceStart:(NSError * _Nullable __strong * _Nullable)error
 {
     self.isForceStart = YES;
     

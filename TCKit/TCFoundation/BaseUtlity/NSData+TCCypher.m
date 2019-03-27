@@ -299,7 +299,7 @@ NSString *const TCCommonCryptoErrorDomain = @"TCCommonCryptoErrorDomain";
                          iv:(nullable NSData *)iv
                       tweak:(nullable NSData *)tweak
                     keySize:(size_t)keySize
-                      error:(NSError **)error
+                      error:(NSError * _Nullable __strong * _Nullable)error
 {
     NSMutableData *keyData = key.mutableCopy ?: NSMutableData.data;
     if (keySize > 0) {

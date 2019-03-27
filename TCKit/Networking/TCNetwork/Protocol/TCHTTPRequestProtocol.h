@@ -70,10 +70,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param error [OUT] param invalid, etc...
  
  */
-- (BOOL)start:(NSError **)error;
-- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError **_Nullable)error;
+- (BOOL)start:(NSError * _Nullable __strong * _Nullable)error;
+- (BOOL)startWithResult:(void (^)(id<TCHTTPRequest> request, BOOL success))resultBlock error:(NSError * _Nullable __strong * _Nullable)error;
 
-- (BOOL)canStart:(NSError **)error;
+- (BOOL)canStart:(NSError * _Nullable __strong * _Nullable)error;
 // delegate, resulteBlock always called, even if request was cancelled.
 - (void)cancel;
 
@@ -132,7 +132,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return <#return value description#>
  */
-- (BOOL)forceStart:(NSError **_Nullable)error;
+- (BOOL)forceStart:(NSError * _Nullable __strong * _Nullable)error;
 
 - (void)cachedResponseByForce:(BOOL)force result:(void(^)(id _Nullable response, TCCachedRespState state))result;
 

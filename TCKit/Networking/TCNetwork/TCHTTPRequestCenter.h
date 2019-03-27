@@ -35,7 +35,7 @@ NS_CLASS_AVAILABLE_IOS(7_0) @interface TCHTTPRequestCenter : NSObject <TCHTTPReq
 - (instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration;
 - (AFSecurityPolicy *)securityPolicy;
 
-- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable *)error;
+- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable __strong * _Nullable)error;
 
 - (void)removeRequestObserver:(__unsafe_unretained id)observer forIdentifier:(nullable id<NSCoding>)identifier;
 - (void)removeRequestObserver:(__unsafe_unretained id)observer;

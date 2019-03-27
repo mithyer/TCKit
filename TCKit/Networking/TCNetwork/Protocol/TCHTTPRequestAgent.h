@@ -16,8 +16,8 @@
 - (void)addRequestToPool:(id<TCHTTPRequest>)request;
 - (void)removeRequestFromPool:(id<TCHTTPRequest>)request;
 
-- (BOOL)canAddRequest:(id<TCHTTPRequest>)request error:(NSError **)error;
-- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError **)error;
+- (BOOL)canAddRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable __strong * _Nullable)error;
+- (BOOL)addRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable __strong * _Nullable)error;
 - (NSURL *)buildRequestUrlForRequest:(id<TCHTTPRequest>)request;
 
 // cache 

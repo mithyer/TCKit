@@ -556,7 +556,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 
 #pragma mark - JSON file
 
-+ (instancetype)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError **)error
++ (instancetype)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(path);
     
@@ -564,9 +564,14 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     if (nil == data) {
         return nil;
     }
+    
+    NSError *err = nil;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
                                                         options:kNilOptions
-                                                          error:error];
+                                                          error:&err];
+    if (NULL != error) {
+        *error = err;
+    }
     
     if ([dic isKindOfClass:NSDictionary.class] && [self isSubclassOfClass:NSDictionary.class]) {
         if ([self isSubclassOfClass:NSMutableDictionary.class]) {
@@ -579,7 +584,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     return [self tc_mappingWithDictionary:dic];
 }
 
-+ (NSMutableArray *)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError **)error
++ (NSMutableArray *)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(path);
     
@@ -587,9 +592,14 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     if (nil == data) {
         return nil;
     }
+    
+    NSError *err = nil;
     NSArray *arry = [NSJSONSerialization JSONObjectWithData:data
                                                     options:kNilOptions
-                                                      error:error];
+                                                      error:&err];
+    if (NULL != error) {
+        *error = err;
+    }
     
     if ([arry isKindOfClass:NSArray.class] && [self isSubclassOfClass:NSArray.class]) {
         __unsafe_unretained Class klass = self;

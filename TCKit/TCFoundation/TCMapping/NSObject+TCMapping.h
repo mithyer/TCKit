@@ -67,8 +67,8 @@ extern NSNumberFormatter *tc_mapping_number_fmter(void);
 
 #pragma mark - JSON file
 
-+ (instancetype __nullable)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError ** __nullable)error;
-+ (NSMutableArray * __nullable)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError ** __nullable)error;
++ (instancetype __nullable)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error;
++ (NSMutableArray * __nullable)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error;
 
 
 #pragma mark - async
