@@ -2162,7 +2162,7 @@
 		B76D742B1F1315A400CF77FA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = PixelCyber;
 				TargetAttributes = {
 					B72A5F561F1F4066002D900D = {
@@ -2209,10 +2209,11 @@
 			};
 			buildConfigurationList = B76D742E1F1315A400CF77FA /* Build configuration list for PBXProject "TCKitSDK" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = B76D742A1F1315A400CF77FA;
 			productRefGroup = B76D74351F1315A400CF77FA /* Products */;
