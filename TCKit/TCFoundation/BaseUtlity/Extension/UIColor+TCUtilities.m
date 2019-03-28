@@ -66,13 +66,13 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
         CGFloat radius = width * (i + 1.0f);
         CGFloat saturation = (i + 1.0f) / 6.0f;
         
-        for (CGFloat theta = 0; theta < M_PI * 2; theta += (M_PI / 6)) {
+        for (CGFloat theta = 0; theta < M_PI * 2; theta += (CGFloat)(M_PI / 6)) {
             CGFloat hue = (CGFloat)(theta / (2 * M_PI));
             UIColor *c = [UIColor colorWithHue:hue saturation:saturation brightness:1 alpha:1.0f];
             
             CGFloat angle = (CGFloat)(theta - M_PI_2);
             if (angle < 0) {
-                angle += 2 * M_PI;
+                angle += (CGFloat)(2 * M_PI);
             }
             
             path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:angle endAngle:(CGFloat)(angle + M_PI / 6) clockwise:YES];
@@ -1004,14 +1004,14 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 {
     CGFloat startingHue = cgfmin(self.hue, secondColor.hue);
     CGFloat distance = ABS(self.hue - secondColor.hue);
-    if (distance > 0.5) {
+    if (distance > 0.5f) {
         distance = 1 - distance;
         startingHue = cgfmax(self.hue, secondColor.hue);
     }
     
-    CGFloat target = startingHue + distance * 0.5F;
+    CGFloat target = startingHue + distance * 0.5f;
     if (distance < 0.5) {
-        target += 0.5;
+        target += (CGFloat)0.5f;
     }
     
     while (target > 1) {
