@@ -469,7 +469,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             NSStringEncoding detectedEnc = value.unsignedIntegerValue;
             // !!!: 兼容 NSMutableString
             __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
-            if (nil != text) {
+            if (nil != text && ![text containsString:@""]) {
                 if (NULL != enc) {
                     *enc = detectedEnc;
                 }
