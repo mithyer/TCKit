@@ -74,14 +74,14 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
 
 + (NSCharacterSet *)urlComponentAllowedCharacters
 {
-    static NSString *const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
-    static NSString *const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
+    static NSString *const kTCCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
+    static NSString *const kTCCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
     
     static NSCharacterSet *set = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSMutableCharacterSet *allowedCharacterSet = NSCharacterSet.URLHostAllowedCharacterSet.mutableCopy;
-        [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
+        [allowedCharacterSet removeCharactersInString:[kTCCharactersGeneralDelimitersToEncode stringByAppendingString:kTCCharactersSubDelimitersToEncode]];
         set = allowedCharacterSet;
     });
     
