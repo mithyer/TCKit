@@ -489,7 +489,9 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
                                                    encodingOptions:@{
                                                                      NSStringEncodingDetectionDisallowedEncodingsKey: ignore,
-                                                                     NSStringEncodingDetectionAllowLossyKey: @NO}
+                                                                     NSStringEncodingDetectionAllowLossyKey: @NO,
+                                                                     NSStringEncodingDetectionFromWindowsKey: @YES,
+                                                                     }
                                                    convertedString:&text
                                                usedLossyConversion:NULL];
     
