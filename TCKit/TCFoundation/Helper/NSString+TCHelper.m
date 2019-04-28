@@ -464,29 +464,46 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         }
     });
 
-    for (NSNumber *value in s_tryEncodings) {
-        @autoreleasepool {
-            NSStringEncoding detectedEnc = value.unsignedIntegerValue;
-            // !!!: 兼容 NSMutableString
-            __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
-            if (nil != text && ![text containsString:@""]) {
-                if (NULL != enc) {
-                    *enc = detectedEnc;
-                }
-                return text;
-            }
+//    for (NSNumber *value in s_tryEncodings) {
+//        @autoreleasepool {
+//            NSStringEncoding detectedEnc = value.unsignedIntegerValue;
+//            // !!!: 兼容 NSMutableString
+//            __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
+//            if (nil != text && ![text containsString:@""]) {
+//                if (NULL != enc) {
+//                    *enc = detectedEnc;
+//                }
+//                return text;
+//            }
+//        }
+//    }
+    NSString *text = nil;
+    // 此方法巨慢
+    NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
+                                                   encodingOptions:@{
+                                                                     NSStringEncodingDetectionSuggestedEncodingsKey: s_tryEncodings,
+                                                                     NSStringEncodingDetectionAllowLossyKey: @NO,
+                                                                     NSStringEncodingDetectionUseOnlySuggestedEncodingsKey: @YES,
+                                                                     }
+                                                   convertedString:&text
+                                               usedLossyConversion:NULL];
+    
+    
+    if (nil != text) {
+        if (NULL != enc) {
+            *enc = detectedEnc;
         }
+        return [text isKindOfClass:self] ? text : [self stringWithString:text];
     }
-
+    
     if (!force) {
         return nil;
     }
     
     NSMutableArray<NSNumber *> *ignore = s_tryEncodings.mutableCopy;
     [ignore addObject:@(NSASCIIStringEncoding)];
-    NSString *text = nil;
     // 此方法巨慢
-    NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
+    detectedEnc = [NSString stringEncodingForData:data
                                                    encodingOptions:@{
                                                                      NSStringEncodingDetectionDisallowedEncodingsKey: ignore,
                                                                      NSStringEncodingDetectionAllowLossyKey: @NO,
