@@ -464,19 +464,6 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         }
     });
 
-//    for (NSNumber *value in s_tryEncodings) {
-//        @autoreleasepool {
-//            NSStringEncoding detectedEnc = value.unsignedIntegerValue;
-//            // !!!: 兼容 NSMutableString
-//            __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
-//            if (nil != text && ![text containsString:@""]) {
-//                if (NULL != enc) {
-//                    *enc = detectedEnc;
-//                }
-//                return text;
-//            }
-//        }
-//    }
     NSString *text = nil;
     // 此方法巨慢
     NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
@@ -497,6 +484,19 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     }
     
     if (!force) {
+        for (NSNumber *value in s_tryEncodings) {
+            @autoreleasepool {
+                NSStringEncoding detectedEnc = value.unsignedIntegerValue;
+                // !!!: 兼容 NSMutableString
+                __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
+                if (nil != text) {
+                    if (NULL != enc) {
+                        *enc = detectedEnc;
+                    }
+                    return text;
+                }
+            }
+        }
         return nil;
     }
     
