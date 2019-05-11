@@ -223,7 +223,7 @@
 
 - (id)valueForCaseInsensitiveKey:(NSString *)key
 {
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (nil == key) {
         return nil;
     }
@@ -245,13 +245,20 @@
 
 - (void)removeValueForCaseInsensitiveKey:(NSString *)key
 {
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (nil == key) {
         return;
     }
     
-    [self removeObjectForKey:key];
-    [self removeObjectForKey:key.lowercaseString];
+    NSString *usedKey = key;
+    for (NSString *rawKey in self.allKeys) {
+        if (0 == [rawKey compare:key options:NSCaseInsensitiveSearch]) {
+            usedKey = rawKey;
+            break;
+        }
+    }
+    
+    [self removeObjectForKey:usedKey];
 }
 
 @end
