@@ -9,6 +9,7 @@
 #import "NSURL+TCHelper.h"
 #import "NSString+TCHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
+#import <sys/stat.h>
 
 NSString * TCPercentEscapedStringFromString(NSString *string) {
     NSCharacterSet *allowedCharacterSet = NSCharacterSet.urlComponentAllowedCharacters;
@@ -226,7 +227,13 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
         return size;
     }
     
-    return [NSFileManager.defaultManager attributesOfItemAtPath:url.path error:NULL].fileSize;
+    unsigned long long fileSize = 0;
+    struct stat statbuf;
+    if (stat(url.fileSystemRepresentation, &statbuf) == 0) {
+        fileSize = (unsigned long long)statbuf.st_size;
+    }
+    
+    return fileSize;
 }
 
 

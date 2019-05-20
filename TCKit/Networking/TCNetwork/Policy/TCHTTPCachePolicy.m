@@ -9,6 +9,7 @@
 #import "TCHTTPCachePolicy.h"
 #import "TCHTTPRequestHelper.h"
 #import "TCHTTPStreamPolicy.h"
+#import <sys/stat.h>
 
 
 NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
@@ -128,12 +129,12 @@ NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
         return kTCCachedRespNone;
     }
     
-    NSDictionary *attributes = [fileMngr attributesOfItemAtPath:path error:NULL];
-    if (nil == attributes || attributes.count < 1) {
+    struct stat statbuf;
+    if (stat(path.fileSystemRepresentation, &statbuf) != 0) {
         return kTCCachedRespExpired;
     }
-    
-    NSTimeInterval timeIntervalSinceNow = attributes.fileModificationDate.timeIntervalSinceNow;
+    NSDate *modificationDate = [NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime];
+    NSTimeInterval timeIntervalSinceNow = modificationDate.timeIntervalSinceNow;
     if (timeIntervalSinceNow >= 0) { // deal with wrong system time
         return kTCCachedRespExpired;
     }
@@ -162,7 +163,12 @@ NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
 {
     TCCachedRespState state = self.cacheState;
     if (kTCCachedRespExpired == state || kTCCachedRespValid == state) {
-        return [NSFileManager.defaultManager attributesOfItemAtPath:self.cacheFilePath error:NULL].fileModificationDate;
+        struct stat statbuf;
+        if (stat(self.cacheFilePath.fileSystemRepresentation, &statbuf) != 0) {
+            return nil;
+        }
+        NSDate *modificationDate = [NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime];
+        return modificationDate;
     }
     
     return nil;

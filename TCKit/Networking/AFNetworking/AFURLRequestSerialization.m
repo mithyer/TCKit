@@ -27,6 +27,8 @@
 #import <CoreServices/CoreServices.h>
 #endif
 
+#import <sys/stat.h>
+
 NSString * const AFURLRequestSerializationErrorDomain = @"com.alamofire.error.serialization.request";
 NSString * const AFNetworkingOperationFailingURLRequestErrorKey = @"com.alamofire.serialization.request.error.response";
 
@@ -725,11 +727,12 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
         return NO;
     }
-
-    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:error];
-    if (!fileAttributes) {
+    
+    struct stat statbuf;
+    if (stat(fileURL.fileSystemRepresentation, &statbuf) != 0) {
         return NO;
     }
+    unsigned long long  fileSize = (unsigned long long)statbuf.st_size;
 
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
@@ -740,7 +743,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     bodyPart.headers = mutableHeaders;
     bodyPart.boundary = self.boundary;
     bodyPart.body = fileURL;
-    bodyPart.bodyContentLength = [fileAttributes[NSFileSize] unsignedLongLongValue];
+    bodyPart.bodyContentLength = fileSize;
     [self.bodyStream appendHTTPBodyPart:bodyPart];
 
     return YES;
