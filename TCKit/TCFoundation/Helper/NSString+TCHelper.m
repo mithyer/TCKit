@@ -435,27 +435,27 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     if (data.length < 1) {
         return nil;
     }
-
+    
     static NSMutableArray<NSNumber *> *s_tryEncodings = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         s_tryEncodings = [NSMutableArray arrayWithObjects:
                           @(NSUTF8StringEncoding),
-//                          @(NSUTF16StringEncoding), // textView crash
+                          //                          @(NSUTF16StringEncoding), // textView crash
                           @(NSJapaneseEUCStringEncoding),
                           nil];
-
+        
         static CFStringEncoding const kEds[] = {
             kCFStringEncodingBig5_HKSCS_1999,
             kCFStringEncodingBig5,
-
+            
             kCFStringEncodingHZ_GB_2312,
             kCFStringEncodingGB_18030_2000,
             
             kCFStringEncodingShiftJIS,
             kCFStringEncodingDOSJapanese,
         };
-
+        
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
             NSStringEncoding ed = (NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(kEds[i]);
             if (kCFStringEncodingInvalidId != ed) {
@@ -463,7 +463,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
             }
         }
     });
-
+    
     NSString *text = nil;
     // 此方法巨慢
     NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
@@ -480,7 +480,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         if (NULL != enc) {
             *enc = detectedEnc;
         }
-        return [text isKindOfClass:self] ? text : [self stringWithString:text];
+        return ([text isKindOfClass:self] && ![self isSubclassOfClass:NSMutableString.class]) ? text : [self stringWithString:text];
     }
     
     if (!force) {
@@ -504,13 +504,13 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
     [ignore addObject:@(NSASCIIStringEncoding)];
     // 此方法巨慢
     detectedEnc = [NSString stringEncodingForData:data
-                                                   encodingOptions:@{
-                                                                     NSStringEncodingDetectionDisallowedEncodingsKey: ignore,
-                                                                     NSStringEncodingDetectionAllowLossyKey: @NO,
-                                                                     NSStringEncodingDetectionFromWindowsKey: @YES,
-                                                                     }
-                                                   convertedString:&text
-                                               usedLossyConversion:NULL];
+                                  encodingOptions:@{
+                                                    NSStringEncodingDetectionDisallowedEncodingsKey: ignore,
+                                                    NSStringEncodingDetectionAllowLossyKey: @NO,
+                                                    NSStringEncodingDetectionFromWindowsKey: @YES,
+                                                    }
+                                  convertedString:&text
+                              usedLossyConversion:NULL];
     
     if (nil != text) {
         if (NULL != enc) {
@@ -518,37 +518,37 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         }
     }
     
-    // !!!: 兼容 NSMutableString
-    return nil == text ? nil : ([text isKindOfClass:self] ? text : [self stringWithString:text]);
+    // !!!: 兼容 NSMutableString，即使是 NSMutableString，内部存储也可能不可修改
+    return nil == text ? nil : (([text isKindOfClass:self] && ![self isSubclassOfClass:NSMutableString.class]) ? text : [self stringWithString:text]);
 }
 
 - (NSString *)replaceUnicode
 {
-//    if (self.length < 6) {
-//        return self;
-//    }
-//    if ([self rangeOfString:@"\\u" options:NSCaseInsensitiveSearch].location == NSNotFound) {
-//        return self;
-//    }
-//
-//    NSString *returnStr = nil;
-//    @autoreleasepool {
-//        NSData *data = nil;
-//        @autoreleasepool {
-//            NSMutableString *str = self.mutableCopy;
-//            [str replaceOccurrencesOfString:@"\\u" withString:@"\\U" options:kNilOptions range:NSMakeRange(0, str.length)];
-//            [str replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:kNilOptions range:NSMakeRange(0, str.length)];
-//            [str insertString:@"\"" atIndex:0];
-//            [str appendString:@"\""];
-//            data = [str dataUsingEncoding:NSUTF8StringEncoding];
-//        }
-//        NSError *err = nil;
-//        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&err];
-//        if (nil == returnStr) {
-//            NSLog(@"%@", err);
-//        }
-//    }
-//    return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
+    //    if (self.length < 6) {
+    //        return self;
+    //    }
+    //    if ([self rangeOfString:@"\\u" options:NSCaseInsensitiveSearch].location == NSNotFound) {
+    //        return self;
+    //    }
+    //
+    //    NSString *returnStr = nil;
+    //    @autoreleasepool {
+    //        NSData *data = nil;
+    //        @autoreleasepool {
+    //            NSMutableString *str = self.mutableCopy;
+    //            [str replaceOccurrencesOfString:@"\\u" withString:@"\\U" options:kNilOptions range:NSMakeRange(0, str.length)];
+    //            [str replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:kNilOptions range:NSMakeRange(0, str.length)];
+    //            [str insertString:@"\"" atIndex:0];
+    //            [str appendString:@"\""];
+    //            data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    //        }
+    //        NSError *err = nil;
+    //        returnStr = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&err];
+    //        if (nil == returnStr) {
+    //            NSLog(@"%@", err);
+    //        }
+    //    }
+    //    return [returnStr stringByReplacingOccurrencesOfString:@"\\r\\n" withString:@"\n"];
     
     return [self stringByApplyingTransform:@"Any-Hex/Java" reverse:YES] ?: self;
 }
@@ -985,7 +985,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
 {
     NSRange range = NSMakeRange(0, self.length);
     NSRange subrange = [self rangeOfString:@"&" options:NSBackwardsSearch range:range];
-
+    
     // if no ampersands, we've got a quick way out
     if (subrange.length == 0) return self;
     NSMutableString *finalString = [NSMutableString stringWithString:self];
@@ -1017,7 +1017,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
                         NSString *charString = [NSString stringWithCharacters:&uchar length:1];
                         [finalString replaceCharactersInRange:escapeRange withString:charString];
                     }
-
+                    
                 } else {
                     // Decimal Sequences &#123;
                     NSString *numberSequence = [escapeString substringWithRange:NSMakeRange(2, length - 3)];
