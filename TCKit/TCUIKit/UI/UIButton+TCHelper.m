@@ -300,12 +300,12 @@ static char const kBtnExtraKey;
     self.btnExtra.paddingBetweenTitleAndImage = paddingBetweenTitleAndImage;
 }
 
-- (void(^)(CGSize layoutSize))layoutSizeNeedChangeBlock
+- (void(^)(__kindof UIButton *sender, CGSize layoutSize))layoutSizeNeedChangeBlock
 {
-    return (void(^)(CGSize layoutSize))objc_getAssociatedObject(self, @selector(setLayoutSizeNeedChange:));
+    return (void(^)(__kindof UIButton *sender, CGSize layoutSize))objc_getAssociatedObject(self, @selector(setLayoutSizeNeedChange:));
 }
 
-- (void)setLayoutSizeNeedChange:(void(^)(CGSize layoutSize))block
+- (void)setLayoutSizeNeedChange:(void(^)(__kindof UIButton *sender, CGSize layoutSize))block
 {
     objc_setAssociatedObject(self, _cmd, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
@@ -403,7 +403,7 @@ static char const kBtnExtraKey;
         CGSize dstSize = CGSizeMake(MAX(imageSize.width, titleSize.width) + border * 2, imageSize.height + titleSize.height + self.paddingBetweenTitleAndImage + border * 2);
         if (!CGSizeEqualToSize(size, dstSize)) {
             if (nil != self.layoutSizeNeedChangeBlock) {
-                self.layoutSizeNeedChangeBlock(dstSize);
+                self.layoutSizeNeedChangeBlock(self, dstSize);
             }
         }
         
@@ -439,7 +439,7 @@ static char const kBtnExtraKey;
             if (width != size.width) {
                 if (nil != self.layoutSizeNeedChangeBlock) {
                     size.width = width;
-                    self.layoutSizeNeedChangeBlock(size);
+                    self.layoutSizeNeedChangeBlock(self, size);
                 } else {
                     self.contentEdgeInsets = UIEdgeInsetsMake(0, expand, 0, expand);
                 }
@@ -471,7 +471,7 @@ static char const kBtnExtraKey;
             if (width != size.width) {
                 if (nil != self.layoutSizeNeedChangeBlock) {
                     size.width = width;
-                    self.layoutSizeNeedChangeBlock(size);
+                    self.layoutSizeNeedChangeBlock(self, size);
                 } else {
                     self.contentEdgeInsets = UIEdgeInsetsMake(0, expand, 0, expand);
                 }
