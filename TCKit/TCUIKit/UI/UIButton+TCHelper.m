@@ -360,7 +360,6 @@ static char const kBtnExtraKey;
 - (void)imageAndTitleToFitVertical:(BOOL)up
 {
     if (nil != self.titleLabel && nil != self.imageView) {
-        
         self.titleEdgeInsets = UIEdgeInsetsZero;
         self.imageEdgeInsets = UIEdgeInsetsZero;
         
@@ -376,7 +375,7 @@ static char const kBtnExtraKey;
         
         CGSize size = contentRect.size;
         CGFloat pad = self.paddingBetweenTitleAndImage * 0.5f;
-        CGFloat r = (titleSize.height + imageSize.height) * 0.5f - MIN(titleSize.height, imageSize.height);
+        CGFloat r = (titleSize.height + imageSize.height) * 0.5f - MAX(titleSize.height, imageSize.height);
         CGFloat border = self.layer.borderWidth;
         
         if (up) {
