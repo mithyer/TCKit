@@ -30,6 +30,7 @@
 @property (nonatomic, strong) NSMutableDictionary *borderColorDic;
 @property (nonatomic, assign) TCButtonLayoutStyle layoutStyle;
 @property (nonatomic, assign) BOOL isFrameObserved;
+@property (nonatomic, assign) BOOL enableUnderline;
 
 - (void)addFrameObserver:(UIButton *)target;
 - (void)removeFrameObserver:(UIButton *)target;
@@ -221,6 +222,7 @@ static char const kBtnExtraKey;
 
 - (void)setEnableUnderline:(BOOL)enableUnderline
 {
+    self.btnExtra.enableUnderline = enableUnderline;
     if (enableUnderline) {
         NSString *title = [self titleForState:UIControlStateNormal];
         if (nil != title) {
@@ -332,6 +334,10 @@ static char const kBtnExtraKey;
             
         default:
             break;
+    }
+    
+    if (self.btnExtra.enableUnderline) {
+        self.enableUnderline = YES;
     }
 }
 
