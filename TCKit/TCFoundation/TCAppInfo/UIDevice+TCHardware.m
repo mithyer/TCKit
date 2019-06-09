@@ -65,6 +65,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice4GiPod] = @"iPod touch 4G",
     [kTCDevice5GiPod] = @"iPod touch 5G",
     [kTCDevice6GiPod] = @"iPod touch 6G",
+    [kTCDevice7GiPod] = @"iPod touch 7G",
     [kTCDeviceUnknowniPod] = @"Unknown iPod",
     
     // iPad
@@ -80,10 +81,12 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDevice2GiPadMini] = @"iPad Mini 2G",
     [kTCDevice3GiPadMini] = @"iPad Mini 3G",
     [kTCDevice4GiPadMini] = @"iPad Mini 4G",
+    [kTCDevice5GiPadMini] = @"iPad Mini 5G",
     
     // ipad Air
     [kTCDevice1GiPadAir] = @"iPad Air 1G",
     [kTCDevice2GiPadAir] = @"iPad Air 2G",
+    [kTCDevice3GiPadAir] = @"iPad Air 3G",
     [kTCDeviceUnknowniPad] = @"Unknown iPad",
     
     // ipad pro
@@ -221,10 +224,10 @@ static NSString *s_device_names[kTCDeviceCount] = {
     // iPhone
     if ([platform isEqualToString:@"iPhone1,1"])         return kTCDevice1GiPhone;
     else if ([platform isEqualToString:@"iPhone1,2"])    return kTCDevice3GiPhone;
-    else if ([platform hasPrefix:@"iPhone2"])            return kTCDevice3GSiPhone;
-    else if ([platform hasPrefix:@"iPhone3"])            return kTCDevice4iPhone;
-    else if ([platform hasPrefix:@"iPhone4"])            return kTCDevice4SiPhone;
-    else if ([platform hasPrefix:@"iPhone5"]) {
+    else if ([platform hasPrefix:@"iPhone2,"])            return kTCDevice3GSiPhone;
+    else if ([platform hasPrefix:@"iPhone3,"])            return kTCDevice4iPhone;
+    else if ([platform hasPrefix:@"iPhone4,"])            return kTCDevice4SiPhone;
+    else if ([platform hasPrefix:@"iPhone5,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 2) {
             return kTCDevice5iPhone;
@@ -232,14 +235,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice5CiPhone;
         }
     }
-    else if ([platform hasPrefix:@"iPhone6"])            return kTCDevice5SiPhone;
+    else if ([platform hasPrefix:@"iPhone6,"])            return kTCDevice5SiPhone;
     else if ([platform hasPrefix:@"iPhone7,1"])          return kTCDevice6PlusiPhone;
     else if ([platform hasPrefix:@"iPhone7,2"])          return kTCDevice6iPhone;
     else if ([platform hasPrefix:@"iPhone8,1"])          return kTCDevice6SiPhone;
     else if ([platform hasPrefix:@"iPhone8,2"])          return kTCDevice6SPlusiPhone;
     else if ([platform hasPrefix:@"iPhone8,4"])          return kTCDeviceSEiPhone;
     
-    else if ([platform hasPrefix:@"iPhone9"]) {
+    else if ([platform hasPrefix:@"iPhone9,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (1 == subVersion || 3 == subVersion) {
             return kTCDevice7iPhone;
@@ -247,7 +250,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice7PlusiPhone;
         }
     }
-    else if ([platform hasPrefix:@"iPhone10"]) {
+    else if ([platform hasPrefix:@"iPhone10,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         switch (subVersion) {
             case 1:
@@ -266,7 +269,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
                 break;
         }
     }
-    else if ([platform hasPrefix:@"iPhone11"]) {
+    else if ([platform hasPrefix:@"iPhone11,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         switch (subVersion) {
             case 8:
@@ -285,16 +288,18 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
     
     // iPod
-    else if ([platform hasPrefix:@"iPod1"])              return kTCDevice1GiPod;
-    else if ([platform hasPrefix:@"iPod2"])              return kTCDevice2GiPod;
-    else if ([platform hasPrefix:@"iPod3"])              return kTCDevice3GiPod;
-    else if ([platform hasPrefix:@"iPod4"])              return kTCDevice4GiPod;
-    else if ([platform hasPrefix:@"iPod5"])              return kTCDevice5GiPod;
-    else if ([platform hasPrefix:@"iPod7"])              return kTCDevice6GiPod;
+    else if ([platform hasPrefix:@"iPod1,"])              return kTCDevice1GiPod;
+    else if ([platform hasPrefix:@"iPod2,"])              return kTCDevice2GiPod;
+    else if ([platform hasPrefix:@"iPod3,"])              return kTCDevice3GiPod;
+    else if ([platform hasPrefix:@"iPod4,"])              return kTCDevice4GiPod;
+    else if ([platform hasPrefix:@"iPod5,"])              return kTCDevice5GiPod;
+    else if ([platform hasPrefix:@"iPod7,"])              return kTCDevice6GiPod;
+    else if ([platform hasPrefix:@"iPod9,"])              return kTCDevice7GiPod;
+    
 
     // iPad
-    else if ([platform hasPrefix:@"iPad1"])              return kTCDevice1GiPad;
-    else if ([platform hasPrefix:@"iPad2"]) {
+    else if ([platform hasPrefix:@"iPad1,"])              return kTCDevice1GiPad;
+    else if ([platform hasPrefix:@"iPad2,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 4) {
             return kTCDevice2GiPad;
@@ -302,7 +307,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice1GiPadMini;
         }
     }
-    else if ([platform hasPrefix:@"iPad3"]) {
+    else if ([platform hasPrefix:@"iPad3,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 3) {
             return kTCDevice3GiPad;
@@ -310,7 +315,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice4GiPad;
         }
     }
-    else if ([platform hasPrefix:@"iPad4"]) {
+    else if ([platform hasPrefix:@"iPad4,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 3) {
             return kTCDevice1GiPadAir;
@@ -320,7 +325,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice3GiPadMini;
         }
     }
-    else if ([platform hasPrefix:@"iPad5"]) {
+    else if ([platform hasPrefix:@"iPad5,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 2) {
             return kTCDevice4GiPadMini;
@@ -328,7 +333,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice2GiPadAir;
         }
     }
-    else if ([platform hasPrefix:@"iPad6"]) {
+    else if ([platform hasPrefix:@"iPad6,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 4) {
             return kTCDevice1GiPadPro9_7;
@@ -338,7 +343,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice5GiPad;
         }
     }
-    else if ([platform hasPrefix:@"iPad7"]) {
+    else if ([platform hasPrefix:@"iPad7,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         if (subVersion <= 2) {
             return kTCDevice2GiPadPro12_9;
@@ -348,7 +353,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
             return kTCDevice6GiPad;
         }
     }
-    else if ([platform hasPrefix:@"iPad8"]) {
+    else if ([platform hasPrefix:@"iPad8,"]) {
         NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
         switch (subVersion) {
             case 1:
@@ -366,6 +371,20 @@ static NSString *s_device_names[kTCDeviceCount] = {
             case 6:
             case 8:
                 return kTCDevice3GiPadPro12_9_1TB;
+                
+            default:
+                break;
+        }
+    } else if ([platform hasPrefix:@"iPad11,"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        switch (subVersion) {
+            case 1:
+            case 2:
+                return kTCDevice5GiPadMini;
+                
+            case 3:
+            case 4:
+                return kTCDevice3GiPadAir;
                 
             default:
                 break;
