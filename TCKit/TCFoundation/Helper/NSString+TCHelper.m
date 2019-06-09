@@ -85,6 +85,19 @@
     return returnDictionary;
 }
 
+- (NSString *)stringByDeletingFixedPathExtension:(NSString **)ext
+{
+    NSString *pathExt = self.fixedFileExtension;
+    if (nil == pathExt) {
+        return self;
+    }
+    
+    if (NULL != ext) {
+        *ext = pathExt;
+    }
+    return [self substringToIndex:self.length - pathExt.length - 1];
+}
+
 - (NSString *)stringByAppendingPathExtensionMust:(NSString *)str
 {
     if (nil == str || str.length < 1) {
