@@ -118,7 +118,13 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
             return obj;
         }
         
-        return opt.codingNSDateToIntSeconds ? @((time_t)(((NSDate *)obj).timeIntervalSince1970)) :  [tcISODateFormatter() stringFromDate:(NSDate *)obj];
+        if (opt.codingNSDateToIntSeconds) {
+            return @((time_t)(((NSDate *)obj).timeIntervalSince1970));
+        } else if (opt.codingNSDateToIntMicroSeconds) {
+            return @((time_t)(((NSDate *)obj).timeIntervalSince1970 * 1000));
+        }
+        
+        return [tcISODateFormatter() stringFromDate:(NSDate *)obj];
         
     } else if ([obj isKindOfClass:NSData.class]) { // -> Base64 string
         if (emptyNil && ((NSData *)obj).length < 1) {
