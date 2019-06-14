@@ -381,7 +381,7 @@ static char const kBtnExtraKey;
         
         CGSize size = contentRect.size;
         CGFloat pad = self.paddingBetweenTitleAndImage * 0.5f;
-        CGFloat r = (titleSize.height + imageSize.height) * 0.5f - MIN(titleSize.height, imageSize.height);
+        CGFloat r = (titleSize.height + imageSize.height) * 0.5f - titleSize.height;// MIN(titleSize.height, imageSize.height);
         CGFloat border = self.layer.borderWidth;
         
         if (up) {
