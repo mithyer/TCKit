@@ -24,4 +24,13 @@
 
 @end
 
+@interface NSURL (IDN)
+
++ (NSString *)IDNEncodedHostname:(NSString *)aHostname;
++ (NSString *)IDNDecodedHostname:(NSString *)anIDNHostname;
++ (NSString *)IDNEncodedURL:(NSString *)aURL;
++ (NSString *)IDNDecodedURL:(NSString *)anIDNURL;
+
+@end
+
 #endif // __TCKit__

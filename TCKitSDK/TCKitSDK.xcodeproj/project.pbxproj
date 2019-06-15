@@ -336,6 +336,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		29B818D422B4EDAE007988A7 /* TCNetwork-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TCNetwork-Prefix.pch"; sourceTree = "<group>"; };
 		B72A5F571F1F4066002D900D /* libTCFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTCFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B72A5F661F1F4093002D900D /* NSArray+TCUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+TCUtilities.h"; sourceTree = "<group>"; };
 		B72A5F671F1F4093002D900D /* NSArray+TCUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+TCUtilities.m"; sourceTree = "<group>"; };
@@ -1722,6 +1723,7 @@
 				B76D77491F13295500CF77FA /* TCNetwork.h */,
 				B76D76BE1F13240600CF77FA /* Networking */,
 				B76D76A81F1323B000CF77FA /* Info.plist */,
+				29B818D422B4EDAE007988A7 /* TCNetwork-Prefix.pch */,
 			);
 			path = TCNetwork;
 			sourceTree = "<group>";
@@ -2744,6 +2746,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch";
 				INFOPLIST_FILE = TCNetwork/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2925,6 +2928,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch";
 				INFOPLIST_FILE = TCNetwork/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3382,6 +3386,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch";
 				INFOPLIST_FILE = TCNetwork/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3399,6 +3404,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch";
 				INFOPLIST_FILE = TCNetwork/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3416,6 +3422,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch";
 				INFOPLIST_FILE = TCNetwork/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

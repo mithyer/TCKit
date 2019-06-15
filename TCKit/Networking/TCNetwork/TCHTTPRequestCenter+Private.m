@@ -9,7 +9,7 @@
 #import "TCHTTPRequestCenter+Private.h"
 #import "TCHTTPRequest+Public.h"
 #import "NSURLSessionTask+TCResumeDownload.h"
-
+#import "TCHTTPRequestHelper.h"
 
 @implementation TCHTTPRequestCenter (Private)
 
@@ -45,8 +45,13 @@
 {
     TCHTTPRequest *request = nil == policy ? [TCHTTPRequest requestWithMethod:method] : [TCHTTPRequest cacheRequestWithMethod:method cachePolicy:policy];
     request.requestAgent = self;
-    request.apiUrl = apiUrl;
-    request.baseUrl = host;
+    
+    if (host.length > 0) {
+        request.baseUrl = [NSURL IDNEncodedURL:host] ?: host;
+        request.apiUrl = apiUrl;
+    } else if (apiUrl.length > 0) {
+        request.apiUrl = [NSURL IDNEncodedURL:apiUrl] ?: apiUrl;
+    }
     
     return request;
 }
