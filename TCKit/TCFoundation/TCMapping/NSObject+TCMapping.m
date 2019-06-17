@@ -560,7 +560,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 {
     NSParameterAssert(path);
     
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL];
     if (nil == data) {
         return nil;
     }
