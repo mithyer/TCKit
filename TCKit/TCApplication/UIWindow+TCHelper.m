@@ -28,6 +28,9 @@
             // this is a UITransitionView
             if (subView.subviews.count > 0) {
                 UIView *subSubView = subView.subviews.firstObject; // this should be the UILayoutContainerView
+                if ([NSStringFromClass(subSubView.class) rangeOfString:[NSStringFromClass(UILayoutGuide.class) substringToIndex:8]].location == NSNotFound) {
+                    subSubView = subSubView.subviews.firstObject;
+                }
                 responder = subSubView.nextResponder;
             }
         }

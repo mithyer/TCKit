@@ -13,6 +13,14 @@
 #error this file is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
+#ifdef __IPHONE_13_0
+
+enum {
+    kCCModeXTS = 8,
+};
+
+#endif
+
 
 uint32_t tc_crc32_formula_reflect(size_t len, const unsigned char *buffer)
 {
