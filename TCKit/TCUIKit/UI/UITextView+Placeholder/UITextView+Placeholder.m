@@ -62,7 +62,8 @@
     dispatch_once(&onceToken, ^{
         UITextField *textField = [[UITextField alloc] init];
         textField.placeholder = @" ";
-        color = [textField valueForKeyPath:@"_placeholderLabel.textColor"];
+        color = [textField.attributedPlaceholder attributesAtIndex:0 effectiveRange:NULL][NSForegroundColorAttributeName];
+//        color = [textField valueForKeyPath:@"_placeholderLabel.textColor"];
     });
     return color;
 }
