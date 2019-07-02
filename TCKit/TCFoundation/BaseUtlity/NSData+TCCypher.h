@@ -11,6 +11,16 @@
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonHMAC.h>
 
+
+#ifdef __IPHONE_13_0
+
+enum {
+    kCCModeXTS = 8,
+};
+
+#endif
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 
