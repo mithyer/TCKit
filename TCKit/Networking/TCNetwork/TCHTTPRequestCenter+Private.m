@@ -89,9 +89,9 @@
 {
     NSParameterAssert(url);
     NSParameterAssert(streamPolicy);
-    NSParameterAssert(streamPolicy.constructingBodyBlock);
+//    NSParameterAssert(streamPolicy.constructingBodyBlock);
     
-    if (nil == url || nil == streamPolicy || nil == streamPolicy.constructingBodyBlock) {
+    if (nil == url || nil == streamPolicy/* || nil == streamPolicy.constructingBodyBlock*/) {
         return nil;
     }
     

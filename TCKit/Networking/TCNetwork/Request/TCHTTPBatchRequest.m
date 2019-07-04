@@ -151,7 +151,7 @@
 
 - (BOOL)allRequestFinished:(BOOL *)success
 {
-    BOOL suc = NO;
+    BOOL suc = YES;
     BOOL finished = YES;
     for (TCHTTPRequest *request in self.batchRequests) {
         NSNumber *res = self.finishDic[@((NSUInteger)request)];
