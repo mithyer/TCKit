@@ -163,6 +163,9 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
 - (CGSize)calculateSizeScaleToPixel:(CGFloat)pixelSize maxWidth:(NSInteger)maxWidth
 {
     CGSize size = CGSizeMake(self.size.width * self.scale, self.size.height * self.scale);
+    if (maxWidth == NSIntegerMax && size.width * size.height <= pixelSize) {
+        return size;
+    }
     return [self.class calculateSize:size scaleToPixel:pixelSize maxWidth:maxWidth];
 }
 
