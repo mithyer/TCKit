@@ -221,7 +221,6 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
 {
     CGFloat width = self.size.width * self.scale;
     CGFloat height = self.size.height * self.scale;
-    
     CGFloat ratio = minSize / MIN(width, height);
     
     if (ratio >= 1) {
@@ -230,7 +229,6 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
     
     width *= ratio;
     height *= ratio;
-    
     
     CGFloat w = CGImageGetWidth(self.CGImage);
     CGFloat h = CGImageGetHeight(self.CGImage);
@@ -276,9 +274,9 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
         return nil;
     }
     
-    BOOL horizon = self.size.width / self.size.height >= 1.0f;
+    BOOL horizon = imgSize.width / imgSize.height >= 1.0f;
 
-    CGFloat scale = UIScreen.mainScreen.scale;
+    CGFloat scale = self.scale;
     CGSize dstSize = CGSizeMake(size.width * scale, size.height * scale);
     UIImage *img = [self scaleToMinSize:horizon ? dstSize.height : dstSize.width pixelAlign:NO];
     if (nil == img) {
