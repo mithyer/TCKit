@@ -50,6 +50,17 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 @implementation UIColor (TCUtilities)
 
++ (instancetype)colorWithLight:(UIColor *)light dark:(UIColor *)dark
+{
+    if (@available(iOS 13, *)) {
+        return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trait) {
+            return trait.userInterfaceStyle == UIUserInterfaceStyleDark ? (dark ?: light) : (light ?: dark);
+        }];
+    }
+    
+    return light ?: dark;
+}
+
 // Generate a color wheel. You supply the size, e.g.
 // UIImage *image = [UIColor colorWheelOfSize:500];
 

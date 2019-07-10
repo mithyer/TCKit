@@ -55,6 +55,8 @@ extern UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat percent);
 
 @interface UIColor (TCUtilities)
 
++ (nullable instancetype)colorWithLight:(UIColor *_Nullable)light dark:(UIColor *_Nullable)dark;
+
 #pragma mark - Color Wheel
 + (nullable UIImage *)colorWheelOfSize:(CGFloat)side border:(BOOL)yorn;
 
