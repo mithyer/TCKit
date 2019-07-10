@@ -1,4 +1,5 @@
 #import "UIColor+TCUtilities.h"
+#import <Availability.h>
 
 #define MAKEBYTE(_VALUE_) (int)(_VALUE_ * 0xFF) & 0xFF
 
@@ -52,11 +53,13 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 + (instancetype)colorWithLight:(UIColor *)light dark:(UIColor *)dark
 {
+#ifdef __IPHONE_13_0
     if (@available(iOS 13, *)) {
         return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trait) {
             return trait.userInterfaceStyle == UIUserInterfaceStyleDark ? (dark ?: light) : (light ?: dark);
         }];
     }
+#endif
     
     return light ?: dark;
 }
