@@ -529,6 +529,20 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         if (NULL != enc) {
             *enc = detectedEnc;
         }
+    } else {
+        for (NSNumber *value in s_tryEncodings) {
+            @autoreleasepool {
+                NSStringEncoding detectedEnc = value.unsignedIntegerValue;
+                // !!!: 兼容 NSMutableString
+                __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
+                if (nil != text) {
+                    if (NULL != enc) {
+                        *enc = detectedEnc;
+                    }
+                    return text;
+                }
+            }
+        }
     }
     
     // !!!: 兼容 NSMutableString，即使是 NSMutableString，内部存储也可能不可修改
