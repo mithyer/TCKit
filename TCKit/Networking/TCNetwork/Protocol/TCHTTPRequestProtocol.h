@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (nonatomic, copy) NSString *identifier;
+- (BOOL)hasIdentifier;
+
 @property (nonatomic, strong, nullable) NSDictionary *userInfo;
 @property (atomic, assign) TCRequestState state;
 
