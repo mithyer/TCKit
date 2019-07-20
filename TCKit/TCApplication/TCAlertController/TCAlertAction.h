@@ -22,19 +22,25 @@ typedef NS_ENUM(NSInteger, TCAlertActionStyle) {
 #endif
 };
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface TCAlertAction : NSObject //<NSCopying>
 
-+ (instancetype)actionWithTitle:(NSString *)title style:(TCAlertActionStyle)style handler:(void (^)(TCAlertAction *action))handler;
++ (instancetype)actionWithTitle:(NSString *__nullable)title style:(TCAlertActionStyle)style handler:(void (^__nullable)(TCAlertAction *action))handler;
 
-+ (instancetype)defaultActionWithTitle:(NSString *)title handler:(void (^)(TCAlertAction *action))handler;
-+ (instancetype)cancelActionWithTitle:(NSString *)title handler:(void (^)(TCAlertAction *action))handler;
-+ (instancetype)destructiveActionWithTitle:(NSString *)title handler:(void (^)(TCAlertAction *action))handler;
++ (instancetype)defaultActionWithTitle:(NSString *)title handler:(void (^__nullable)(TCAlertAction *action))handler;
++ (instancetype)cancelActionWithTitle:(NSString *)title handler:(void (^__nullable)(TCAlertAction *action))handler;
++ (instancetype)destructiveActionWithTitle:(NSString *)title handler:(void (^__nullable)(TCAlertAction *action))handler;
 
-@property (nonatomic, copy, readonly) NSString *title;
+@property (nullable, nonatomic, copy, readonly) NSString *title;
 @property (nonatomic, assign, readonly) TCAlertActionStyle style;
-@property (nonatomic, copy) void (^handler)(TCAlertAction *action);
+@property (nullable, nonatomic, copy) void (^handler)(TCAlertAction *action);
+
+- (UIAlertAction *)toUIAlertAction;
 
 @end
+
+
+NS_ASSUME_NONNULL_END
 
 #endif

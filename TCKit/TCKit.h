@@ -9,7 +9,9 @@
 #ifndef TCKit_h
 #define TCKit_h
 
+#ifndef __TCKit__
 #define __TCKit__
+#endif
 
 #import "TCFoundation.h"
 

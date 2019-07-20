@@ -9,6 +9,7 @@
 #ifndef TARGET_IS_EXTENSION
 
 #import "TCAlertAction.h"
+#import <objc/runtime.h>
 
 
 @interface TCAlertAction ()
@@ -45,6 +46,23 @@
     return [self actionWithTitle:title style:kTCAlertActionStyleDestructive handler:handler];
 }
 
+- (UIAlertAction *)toUIAlertAction
+{
+    void (^handler)(UIAlertAction *action) = nil;
+    if (nil != self.handler) {
+        // !!!: no weak self in purpose
+        handler = ^(UIAlertAction *action) {
+            self.handler(self);
+            self.handler = nil;
+        };
+    }
+    
+    return [UIAlertAction actionWithTitle:self.title style:(UIAlertActionStyle)self.style handler:handler];
+}
+
+
 @end
+
+
 
 #endif
