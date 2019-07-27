@@ -282,7 +282,14 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
     
-    self.downloadProgress.totalUnitCount = totalBytesExpectedToWrite;
+    if (totalBytesExpectedToWrite == NSURLSessionTransferSizeUnknown) {
+        if (totalBytesWritten > 0 && (self.downloadProgress.totalUnitCount == NSURLSessionTransferSizeUnknown || self.downloadProgress.totalUnitCount <= totalBytesWritten)) {
+            self.downloadProgress.totalUnitCount = 10 * totalBytesWritten;
+        }
+    } else {
+        self.downloadProgress.totalUnitCount = totalBytesExpectedToWrite;
+    }
+    
     self.downloadProgress.completedUnitCount = totalBytesWritten;
 }
 
@@ -290,7 +297,14 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
  didResumeAtOffset:(int64_t)fileOffset
 expectedTotalBytes:(int64_t)expectedTotalBytes{
     
-    self.downloadProgress.totalUnitCount = expectedTotalBytes;
+    if (expectedTotalBytes == NSURLSessionTransferSizeUnknown) {
+        if (fileOffset > 0 && (self.downloadProgress.totalUnitCount == NSURLSessionTransferSizeUnknown || self.downloadProgress.totalUnitCount <= fileOffset)) {
+            self.downloadProgress.totalUnitCount = 10 * fileOffset;
+        }
+    } else {
+        self.downloadProgress.totalUnitCount = expectedTotalBytes;
+    }
+    
     self.downloadProgress.completedUnitCount = fileOffset;
 }
 

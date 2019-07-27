@@ -445,6 +445,11 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
 
 + (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc force:(BOOL)force
 {
+    return [self stringWithData:data usedEncoding:enc force:force fast:NO];
+}
+
++ (nullable instancetype)stringWithData:(NSData *)data usedEncoding:(nullable NSStringEncoding *)enc force:(BOOL)force fast:(BOOL)fast
+{
     if (data.length < 1) {
         return nil;
     }
@@ -477,6 +482,22 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         }
     });
     
+    if (fast) {
+        for (NSNumber *value in s_tryEncodings) {
+            @autoreleasepool {
+                NSStringEncoding detectedEnc = value.unsignedIntegerValue;
+                // !!!: 兼容 NSMutableString
+                __kindof NSString *text = [[self alloc] initWithData:data encoding:detectedEnc];
+                if (nil != text) {
+                    if (NULL != enc) {
+                        *enc = detectedEnc;
+                    }
+                    return text;
+                }
+            }
+        }
+    }
+    
     NSString *text = nil;
     // 此方法巨慢
     NSStringEncoding detectedEnc = [NSString stringEncodingForData:data
@@ -496,7 +517,7 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         return ([text isKindOfClass:self] && ![self isSubclassOfClass:NSMutableString.class]) ? text : [self stringWithString:text];
     }
     
-    if (!force) {
+    if (!force && !fast) {
         for (NSNumber *value in s_tryEncodings) {
             @autoreleasepool {
                 NSStringEncoding detectedEnc = value.unsignedIntegerValue;
