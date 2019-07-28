@@ -55,6 +55,21 @@ extern UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat percent);
 
 @interface UIColor (TCUtilities)
 
+#ifndef __IPHONE_13_0
+
+@property (class, nonatomic, readonly) UIColor *systemBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *secondarySystemBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *tertiarySystemBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *secondarySystemGroupedBackgroundColor;
+
+@property (class, nonatomic, readonly) UIColor *separatorColor;
+
+
++ (UIColor *)colorWithDynamicProvider:(UIColor * (^)(UITraitCollection *traitCollection))dynamicProvider;
+
+#endif
+
+
 + (nullable instancetype)colorWithLight:(UIColor *_Nullable)light dark:(UIColor *_Nullable)dark;
 
 #pragma mark - Color Wheel

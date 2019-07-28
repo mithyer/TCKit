@@ -50,6 +50,14 @@
 
 @end
 
+#ifndef __IPHONE_13_0
+@implementation UISearchBar (Xcode10)
+
+@dynamic searchTextField;
+
+@end
+#endif
+
 
 @implementation UITextField (TCHelper)
 
@@ -111,7 +119,7 @@
 @end
 
 
-
+/*
 static char const kInputFormatKey;
 static char const kInputTextKey;
 static char const kNumberOfSepecialCharactersKey;
@@ -255,5 +263,7 @@ static char const kNumberOfSepecialCharactersKey;
 }
 
 @end
+ 
+ */
 
 #endif

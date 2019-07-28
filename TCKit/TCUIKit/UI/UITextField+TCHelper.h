@@ -12,6 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
 @protocol TCTextFieldHelperDelegate <NSObject>
 
 @optional
@@ -27,18 +28,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-// FIXME: WTF
+#ifndef __IPHONE_13_0
+@interface UISearchBar (Xcode10)
 
-@interface UITextField (InputFormat)
-
-@property (nullable, nonatomic, copy) NSString *inputFormat;
-@property (nullable, nonatomic, copy) NSString *inputText;
-@property (nonatomic, assign) NSInteger numberOfSepecialCharacters;
-
-- (NSString *)generateFormattedTextInRange:(NSRange)range withString:(NSString *)string;
-- (NSString *)formattedString:(NSString *)string;
+@property (nonatomic, readonly) UITextField *searchTextField;
 
 @end
+#endif
+
+// FIXME: WTF
+
+//@interface UITextField (InputFormat)
+//
+//@property (nullable, nonatomic, copy) NSString *inputFormat;
+//@property (nullable, nonatomic, copy) NSString *inputText;
+//@property (nonatomic, assign) NSInteger numberOfSepecialCharacters;
+//
+//- (NSString *)generateFormattedTextInRange:(NSRange)range withString:(NSString *)string;
+//- (NSString *)formattedString:(NSString *)string;
+//
+//@end
 
 
 NS_ASSUME_NONNULL_END

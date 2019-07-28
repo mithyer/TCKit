@@ -49,17 +49,29 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 
+#ifndef __IPHONE_13_0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
+#endif
+
 @implementation UIColor (TCUtilities)
+
+#ifndef __IPHONE_13_0
+@dynamic systemBackgroundColor;
+@dynamic secondarySystemBackgroundColor;
+@dynamic tertiarySystemBackgroundColor;
+@dynamic secondarySystemGroupedBackgroundColor;
+
+@dynamic separatorColor;
+#endif
 
 + (instancetype)colorWithLight:(UIColor *)light dark:(UIColor *)dark
 {
-#ifdef __IPHONE_13_0
     if (@available(iOS 13, *)) {
         return [self colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trait) {
             return trait.userInterfaceStyle == UIUserInterfaceStyleDark ? (dark ?: light) : (light ?: dark);
         }];
     }
-#endif
     
     return light ?: dark;
 }
@@ -1624,6 +1636,10 @@ static NSDictionary *s_kelvin = nil;
 }
 
 @end
+
+#ifndef __IPHONE_13_0
+#pragma clang diagnostic pop
+#endif
 
 
 @implementation UIImage (UIColor_Expanded)
