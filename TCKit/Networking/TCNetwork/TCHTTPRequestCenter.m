@@ -484,7 +484,7 @@
             
         case kTCHTTPMethodDownload: {
             NSParameterAssert(request.streamPolicy.downloadDestinationPath);
-            NSURL *downloadURL = [url appendParamIfNeed:param];
+            NSURL *downloadURL = [url appendParamIfNeed:param orderKey:nil];
             NSParameterAssert(downloadURL);
             
             if (nil == downloadURL || request.streamPolicy.downloadDestinationPath.length < 1) {

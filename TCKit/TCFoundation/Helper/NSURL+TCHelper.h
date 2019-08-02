@@ -15,18 +15,16 @@ extern NSString * TCPercentEscapedStringFromFileName(NSString *string);
 
 @interface NSURL (TCHelper)
 
-- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionary; // decodeInf: YES
-- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf;
-- (nullable instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode;
-- (nullable instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force;
-- (nullable instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param;
+- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf orderKey:(NSArray<NSString *> *_Nullable *_Nullable)orderKey;
+- (NSURL *)appendParam:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *_Nullable)orderKey overwrite:(BOOL)force encodeQuering:(BOOL)encode;
+- (NSURL *)appendParamIfNeed:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *_Nullable)orderKey;
 
 - (unsigned long long)contentSizeInByte;
 
 // xx.tar.gz -> tar.gz,
 // xx.jpg?i=xx&j=oo -> jpg
 - (nullable NSString *)fixedFileExtension;
-- (nullable instancetype)URLByAppendingPathExtensionMust:(NSString *)pathExtension;
+- (nullable NSURL *)URLByAppendingPathExtensionMust:(NSString *)pathExtension;
 
 // "http://bid.cn/path/?er=1" 这种为 .path 补全最后的 /
 - (nullable NSString *)fixedPath;

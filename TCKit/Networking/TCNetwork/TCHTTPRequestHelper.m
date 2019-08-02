@@ -60,7 +60,7 @@
 
 @implementation NSURL (TCHTTPRequestHelper)
 
-- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param
+- (NSURL *)appendParamIfNeed:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *)orderKey
 {
     if (param.count < 1) {
         return self;
@@ -68,22 +68,30 @@
     
     // NSURLComponents auto url encoding, property auto decoding
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
+    
     NSMutableString *query = NSMutableString.string;
     NSString *rawQuery = com.percentEncodedQuery;
     if (rawQuery.length > 0) {
         [query appendString:rawQuery];
     }
+    if (nil == orderKey) {
+        orderKey = param.allKeys;
+    }
     
-    for (NSString *key in param) {
+    for (NSString *key in orderKey) {
         if (nil == com.percentEncodedQuery || [com.percentEncodedQuery rangeOfString:key].location == NSNotFound) {
-            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [AFPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", AFPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]])]];
+            NSString *value = AFPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]]);
+            if (encode) {
+                value = AFPercentEscapedStringFromString(value);
+            }
+            [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [AFPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", value]];
         } else {
             NSAssert(false, @"conflict query param");
         }
     }
     com.percentEncodedQuery = query;
     
-    return com.URL;
+    return com.URL ?: self;
 }
 
 @end

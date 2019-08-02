@@ -34,7 +34,7 @@
     return reversedString;
 }
 
-- (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue decodeInf:(BOOL)decodeInf
+- (NSMutableDictionary *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue orderKey:(NSArray<NSString *> **)orderKey decodeInf:(BOOL)decodeInf
 {
     // Explode based on outter glue
     NSArray<NSString *> *firstExplode = [self componentsSeparatedByString:outterGlue];
@@ -45,8 +45,9 @@
         }
     }
     
+    NSMutableArray<NSString *> *order = NSMutableArray.array;
     // Explode based on inner glue
-    NSMutableDictionary *returnDictionary = NSMutableDictionary.dictionary;
+    NSMutableDictionary<NSString *, NSString *> *returnDictionary = NSMutableDictionary.dictionary;
     for (NSUInteger i = 0; i < firstExplode.count; ++i) {
         NSArray<NSString *> *secondExplode = [firstExplode[i] componentsSeparatedByString:innerGlue];
         if (secondExplode.count >= 2) {
@@ -78,8 +79,13 @@
                 continue;
             }
             
+            [order addObject:key];
             returnDictionary[key] = value;
         }
+    }
+    
+    if (NULL != orderKey) {
+        *orderKey = order;
     }
     
     return returnDictionary;

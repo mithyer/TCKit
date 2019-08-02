@@ -56,7 +56,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
 
 @implementation NSCharacterSet (TCHelper)
 
-//+ (NSCharacterSet *) chineseAndEngSet
+//+ (NSCharacterSet *)chineseAndEngSet
 //{
 //    static NSCharacterSet *chineseNameSet;
 //    if (chineseNameSet == nil)
@@ -115,7 +115,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
     return url;
 }
 
-- (nullable instancetype)URLByAppendingPathExtensionMust:(NSString *)str
+- (nullable NSURL *)URLByAppendingPathExtensionMust:(NSString *)str
 {
     if (nil == str || str.length < 1) {
         return self;
@@ -140,19 +140,13 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
     return (self.hasDirectoryPath && self.path.length > 1) ? [self.path stringByAppendingString:@"/"] : self.path;
 }
 
-- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf
+- (nullable NSMutableDictionary<NSString *, NSString *> *)parseQueryToDictionaryWithDecodeInf:(BOOL)decodeInf orderKey:(NSArray<NSString *> **)orderKey
 {
     NSString *query = [self.query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-    return [query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:decodeInf];
+    return [query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" orderKey:orderKey decodeInf:decodeInf];
 }
 
-- (NSMutableDictionary *)parseQueryToDictionary
-{
-    NSString *query = [self.query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-    return [query explodeToDictionaryInnerGlue:@"=" outterGlue:@"&" decodeInf:YES];
-}
-
-- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force encodeQuering:(BOOL)encode
+- (NSURL *)appendParam:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *)orderKey overwrite:(BOOL)force encodeQuering:(BOOL)encode
 {
     if (param.count < 1) {
         return self;
@@ -162,14 +156,25 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
     NSURLComponents *com = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
     
     if (force) {
-        NSMutableDictionary *dic = [self parseQueryToDictionaryWithDecodeInf:NO];
+        NSArray<NSString *> *rawOrder = nil;
+        NSMutableDictionary *dic = [self parseQueryToDictionaryWithDecodeInf:NO orderKey:&rawOrder];
         if (nil == dic) {
             dic = NSMutableDictionary.dictionary;
         }
         [dic addEntriesFromDictionary:param];
+        NSMutableArray<NSString *> *order = NSMutableArray.array;
+        if (nil == orderKey) {
+            orderKey = param.allKeys;
+        }
+        if (rawOrder.count > 0 && orderKey.count > 0) {
+            [order filterUsingPredicate:[NSPredicate predicateWithFormat:@"NOT SELF IN %@", orderKey]];
+        }
+        if (nil != orderKey) {
+            [order addObjectsFromArray:orderKey];
+        }
         
         NSMutableString *query = NSMutableString.string;
-        for (NSString *key in dic) {
+        for (NSString *key in order) {
             NSString *value = TCPercentEscapedStringFromString([NSString stringWithFormat:@"%@", dic[key]]);
             if (encode) {
                 value = TCPercentEscapedStringFromString(value);
@@ -183,8 +188,11 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
         if (rawQuery.length > 0) {
             [query appendString:rawQuery];
         }
+        if (nil == orderKey) {
+            orderKey = param.allKeys;
+        }
         
-        for (NSString *key in param) {
+        for (NSString *key in orderKey) {
             if (nil == com.percentEncodedQuery || [com.percentEncodedQuery rangeOfString:key].location == NSNotFound) {
                 NSString *value = TCPercentEscapedStringFromString([NSString stringWithFormat:@"%@", param[key]]);
                 if (encode) {
@@ -198,17 +206,12 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
         com.percentEncodedQuery = query;
     }
     
-    return com.URL;
+    return com.URL ?: self;
 }
 
-- (instancetype)appendParam:(NSDictionary<NSString *, id> *)param override:(BOOL)force
+- (NSURL *)appendParamIfNeed:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *_Nullable)orderKey
 {
-    return [self appendParam:param override:force encodeQuering:NO];
-}
-
-- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param
-{
-    return [self appendParam:param override:NO];
+    return [self appendParam:param orderKey:orderKey overwrite:NO encodeQuering:NO];
 }
 
 - (unsigned long long)contentSizeInByte

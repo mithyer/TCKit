@@ -16,7 +16,7 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 
 - (NSString *)reversedString;
 
-- (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue decodeInf:(BOOL)decodeInf;
+- (nullable NSMutableDictionary<NSString *, NSString *> *)explodeToDictionaryInnerGlue:(NSString *)innerGlue outterGlue:(NSString *)outterGlue orderKey:(NSArray<NSString *> *_Nullable *_Nullable)orderKey decodeInf:(BOOL)decodeInf;
 - (nullable NSString *)fixedFileExtension;
 - (NSString *)stringByDeletingFixedPathExtension:(NSString *_Nullable *_Nullable)ext;
 - (nullable NSString *)stringByAppendingPathExtensionMust:(NSString *)str;

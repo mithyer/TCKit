@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TCHTTPRequestHelper : NSObject
 
-+ (NSString *)MD5_32:(NSString *)str;
-+ (NSString *)MD5_16:(NSString *)str;
++ (nullable NSString *)MD5_32:(NSString *)str;
++ (nullable NSString *)MD5_16:(NSString *)str;
 
 @end
 
@@ -20,7 +22,7 @@
 
 @interface NSURL (TCHTTPRequestHelper)
 
-- (instancetype)appendParamIfNeed:(NSDictionary<NSString *, id> *)param;
+- (NSURL *)appendParamIfNeed:(NSDictionary<NSString *, id> *)param orderKey:(NSArray<NSString *> *)orderKey;
 
 @end
 
@@ -34,3 +36,5 @@
 @end
 
 #endif // __TCKit__
+
+NS_ASSUME_NONNULL_END
