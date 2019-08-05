@@ -64,6 +64,10 @@ static char const kAlignmentRectInsetsKey;
 
 - (nullable __kindof UITextField *)tc_textField
 {
+    if (@available(iOS 11, *)) {
+        return self.searchTextField;
+    }
+    
     UITextField *searchTf = nil;
     for (__kindof UIView *subView in self.subviews) {
         if ([subView isKindOfClass:UITextField.class]) {
