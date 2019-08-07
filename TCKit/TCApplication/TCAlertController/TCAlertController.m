@@ -61,7 +61,7 @@
             }
             
             _alertView = (id<UIAlertViewAction>)alertCtrler;
-            _parentCtrler = viewCtrler ?: UIWindow.keyWindowTopController;
+            _parentCtrler = viewCtrler;
         }
     }
     
@@ -100,7 +100,7 @@
     self = [super init];
     if (self) {
         _preferredStyle = kTCAlertControllerStyleActionSheet;
-        _parentCtrler = viewCtrler ?: UIWindow.keyWindowTopController;
+        _parentCtrler = viewCtrler;
         
         if (Nil == UIAlertController.class) {
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
@@ -168,6 +168,10 @@
 
 - (void)show
 {
+    if (nil == _parentCtrler) {
+        _parentCtrler = UIWindow.keyWindowTopController;
+    }
+    
     if ([_alertView isKindOfClass:UIViewController.class]) {
         [_parentCtrler presentViewController:(UIViewController *)_alertView animated:YES completion:nil];
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
