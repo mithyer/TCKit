@@ -60,10 +60,13 @@
     static UIColor *color = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UITextField *textField = [[UITextField alloc] init];
-        textField.placeholder = @" ";
-        color = [textField.attributedPlaceholder attributesAtIndex:0 effectiveRange:NULL][NSForegroundColorAttributeName];
-//        color = [textField valueForKeyPath:@"_placeholderLabel.textColor"];
+        if (@available(iOS 13, *)) {
+            color = UIColor.placeholderTextColor;
+        } else {
+            UITextField *textField = [[UITextField alloc] init];
+            textField.placeholder = @" ";
+            color = [textField.attributedPlaceholder attributesAtIndex:0 effectiveRange:NULL][NSForegroundColorAttributeName];
+        }
     });
     return color;
 }
@@ -100,10 +103,10 @@
             label.userInteractionEnabled = NO;
             objc_setAssociatedObject(self, @selector(placeholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(updatePlaceholderLabel)
-                                                         name:UITextViewTextDidChangeNotification
-                                                       object:self];
+            [NSNotificationCenter.defaultCenter addObserver:self
+                                                   selector:@selector(updatePlaceholderLabel)
+                                                       name:UITextViewTextDidChangeNotification
+                                                     object:self];
             
             for (NSString *key in self.class.observingKeys) {
                 [self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:NULL];
@@ -132,7 +135,7 @@
 }
 
 - (void)setPlaceholder:(NSString *)placeholder {
-    if ([NSThread isMainThread]) {
+    if (NSThread.isMainThread) {
         self.placeholderLabel.text = placeholder;
         [self updatePlaceholderLabel];
     }
