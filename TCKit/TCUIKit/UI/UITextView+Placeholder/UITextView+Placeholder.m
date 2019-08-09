@@ -98,6 +98,7 @@
             
             label = [[UILabel alloc] init];
             label.textColor = self.class.defaultPlaceholderColor;
+            label.lineBreakMode = self.textContainer.lineBreakMode;
             label.numberOfLines = 0;
             label.font = self.font;
             label.userInteractionEnabled = NO;
@@ -138,8 +139,7 @@
     if (NSThread.isMainThread) {
         self.placeholderLabel.text = placeholder;
         [self updatePlaceholderLabel];
-    }
-    else {
+    } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.placeholderLabel.text = placeholder;
             [self updatePlaceholderLabel];
