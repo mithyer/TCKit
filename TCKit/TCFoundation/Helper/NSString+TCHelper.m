@@ -472,12 +472,12 @@ bool tc_is_ip_addr(char const *host, bool *ipv6)
         static CFStringEncoding const kEds[] = {
             kCFStringEncodingBig5_HKSCS_1999,
             kCFStringEncodingBig5,
+        
+            kCFStringEncodingDOSJapanese,
+            kCFStringEncodingShiftJIS,
             
             kCFStringEncodingHZ_GB_2312,
             kCFStringEncodingGB_18030_2000,
-            
-            kCFStringEncodingShiftJIS,
-            kCFStringEncodingDOSJapanese,
         };
         
         for (NSUInteger i = 0; i < sizeof(kEds)/sizeof(kEds[0]); ++i) {
