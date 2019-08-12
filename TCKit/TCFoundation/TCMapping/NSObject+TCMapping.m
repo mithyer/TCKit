@@ -587,13 +587,12 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 + (NSMutableArray *)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error
 {
     NSParameterAssert(path);
-    
-    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSError *err = nil;
+    NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached|NSDataReadingMappedAlways error:&err];
     if (nil == data) {
         return nil;
     }
     
-    NSError *err = nil;
     NSArray *arry = [NSJSONSerialization JSONObjectWithData:data
                                                     options:kNilOptions
                                                       error:&err];
