@@ -644,7 +644,7 @@ static uint8_t nibbleFromChar(unichar c) {
 
 - (NSString *)hexStringRepresentationUppercase:(BOOL)uppercase seperator:(NSString *__nullable)seperator width:(NSUInteger)width
 {
-    const char *hexTable = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+    const char *const hexTable = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
     const NSUInteger charLength = self.length * 2;
 
     
@@ -665,16 +665,15 @@ static uint8_t nibbleFromChar(unichar c) {
     BOOL sep = sepLen > 0 && width > 0;
     if (sep) {
         NSUInteger unitCount = (charLength + width - 1) / width;
-        
         for (NSUInteger i = 0; i < unitCount; ++i) {
             NSUInteger index = (i + 1) * width + i * sepLen;
             [str insertString:seperator atIndex:index];
         }
- 
     }
     
     return str;
 }
+
 
 #pragma mark - quoted-printable
 
