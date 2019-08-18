@@ -63,6 +63,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 @dynamic secondarySystemGroupedBackgroundColor;
 
 @dynamic separatorColor;
+@dynamic placeholderTextColor;
 #endif
 
 + (instancetype)colorWithLight:(UIColor *)light dark:(UIColor *)dark

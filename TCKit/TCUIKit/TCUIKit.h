@@ -9,6 +9,13 @@
 #ifndef TCUIKit_h
 #define TCUIKit_h
 
+#ifndef __IPHONE_13_0
+enum {
+    UIActivityIndicatorViewStyleMedium = 100,
+    UIActivityIndicatorViewStyleLarge = 101,
+};
+#endif
+
 #import "UIView+TCHelper.h"
 #import "UILabel+TCHelper.h"
 #import "UIButton+TCHelper.h"
