@@ -163,8 +163,15 @@
 {
     if (self.copyEnable && [self becomeFirstResponder]) {
         UIMenuController *menu = UIMenuController.sharedMenuController;
-        [menu setTargetRect:rect inView:self];
-        [menu setMenuVisible:YES animated:YES];
+#ifdef __IPHONE_13_0
+        if (@available(iOS 13, *)) {
+            [menu showMenuFromView:self rect:rect];
+        } else
+#endif
+        {
+            [menu setTargetRect:rect inView:self];
+            [menu setMenuVisible:YES animated:YES];
+        }
     }
 }
 
