@@ -61,6 +61,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 @dynamic secondarySystemBackgroundColor;
 @dynamic tertiarySystemBackgroundColor;
 @dynamic secondarySystemGroupedBackgroundColor;
+@dynamic systemGroupedBackgroundColor;
 
 @dynamic separatorColor;
 @dynamic placeholderTextColor;

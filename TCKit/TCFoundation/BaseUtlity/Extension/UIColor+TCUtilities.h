@@ -61,6 +61,7 @@ extern UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat percent);
 @property (class, nonatomic, readonly) UIColor *secondarySystemBackgroundColor;
 @property (class, nonatomic, readonly) UIColor *tertiarySystemBackgroundColor;
 @property (class, nonatomic, readonly) UIColor *secondarySystemGroupedBackgroundColor;
+@property (class, nonatomic, readonly) UIColor *systemGroupedBackgroundColor;
 
 @property (class, nonatomic, readonly) UIColor *separatorColor;
 @property (class, nonatomic, readonly) UIColor *placeholderTextColor;
