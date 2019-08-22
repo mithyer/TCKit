@@ -1101,3 +1101,23 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
 }
 
 @end
+
+
+// !!!: -[NSBigMutableString substringFromIndex:]: Index 9223372036854775807 out of bounds; 9223372036854775807 为 NSNotFound
+@implementation NSMutableString (TextViewEditNSNotFoundCrashFix)
+
++ (void)load
+{
+    [self tc_swizzle:@selector(substringFromIndex:)];
+}
+
+- (NSString *)tc_substringFromIndex:(NSUInteger)from
+{
+    if (NSNotFound == from) {
+        return nil;
+    }
+    
+    return [self tc_substringFromIndex:from];
+}
+
+@end

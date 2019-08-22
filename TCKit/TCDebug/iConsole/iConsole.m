@@ -700,7 +700,16 @@ static void exceptionHandler(NSException *exception)
 
 - (void)sendEvent:(UIEvent *)event
 {
+#ifndef TC_IOS_PUBLISH
+    @try {
+        [super sendEvent:event]; // Apple says you must always call this!
+    } @catch (NSException *exception) {
+        NSLog(@"%@\n%@", exception, exception.callStackSymbols);
+    }
+#else
     [super sendEvent:event]; // Apple says you must always call this!
+#endif
+    
     
     if ([iConsole sharedConsole].enabled && event.type == UIEventTypeTouches) {
         NSSet *touches = [event allTouches];
