@@ -9,6 +9,7 @@
 #ifndef TCDefines_h
 #define TCDefines_h
 
+#import <Availability.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
