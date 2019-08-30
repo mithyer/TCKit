@@ -14,13 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIWindow (TCHelper)
 
-+ (nullable UIViewController *)keyWindowTopController;
++ (nullable __kindof UIViewController *)keyWindowTopController;
 
-- (nullable UIViewController *)topMostViewController;
+- (nullable __kindof UIViewController *)topMostViewController;
 
 #ifdef __IPHONE_7_0
-- (nullable UIViewController *)viewControllerForStatusBarStyle;
-- (nullable UIViewController *)viewControllerForStatusBarHidden;
+- (nullable __kindof UIViewController *)viewControllerForStatusBarStyle;
+- (nullable __kindof UIViewController *)viewControllerForStatusBarHidden;
 #endif
 
 @end
