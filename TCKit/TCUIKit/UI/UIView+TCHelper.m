@@ -95,4 +95,21 @@ static char const kAlignmentRectInsetsKey;
 
 @end
 
+@implementation UITableView (TCFixLayoutMargin)
+
++ (void)load
+{
+    [self tc_swizzle:@selector(initWithFrame:style:)];
+}
+
+- (instancetype)tc_initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+{
+    UITableView *tableView = [self tc_initWithFrame:frame style:style];
+    tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    return tableView;
+}
+
+@end
+
+
 #endif
