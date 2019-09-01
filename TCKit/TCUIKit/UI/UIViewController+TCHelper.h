@@ -24,7 +24,7 @@ typedef void (^TCViewControllerCallbackType)(UIViewController *ctrler);
 
 @interface UIViewController (TCHelper) <TC_UIViewControllerCallback>
 
-@property (nonatomic, assign) BOOL prefersStatusBarHidden;
+@property (nonatomic, assign, readwrite) BOOL prefersStatusBarHidden;
 @property (nonatomic, assign) UIStatusBarStyle preferredStatusBarStyle;
 @property (nonatomic, assign) UIStatusBarAnimation preferredStatusBarUpdateAnimation;
 @property (nonatomic, assign) UIInterfaceOrientationMask supportedInterfaceOrientations;
