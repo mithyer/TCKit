@@ -20,11 +20,14 @@
 
 + (NSString *)tc_systemUserAgent
 {
+#ifdef __IPHONE_13_0
+    return WKWebView.tc_systemUserAgent;
+#else
     if (Nil != WKWebView.class) {
         return WKWebView.tc_systemUserAgent;
     }
-    
     return UIWebView.tc_systemUserAgent;
+#endif
 }
 
 - (NSURLRequest *)originalRequest

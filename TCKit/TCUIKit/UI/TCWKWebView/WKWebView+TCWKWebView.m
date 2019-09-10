@@ -178,13 +178,15 @@
 
 + (NSString *)tc_systemUserAgent
 {
-    static NSString *s_userAgent = nil;
+    static NSString *s_userAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dispatch_block_t block = ^{
             __block WKWebView *view = [[self alloc] init];
             [view evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString * _Nullable result, NSError * _Nullable error) {
-                s_userAgent = result;
+                if (nil != result) {
+                    s_userAgent = result;
+                }
                 view = nil;
             }];
         };
