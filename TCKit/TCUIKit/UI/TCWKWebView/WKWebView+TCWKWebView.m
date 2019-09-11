@@ -160,10 +160,13 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(loadRequest:)];
-    
-    // fix non-public api
-    //    [self tc_swizzle:@selector(layoutSubviews)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(loadRequest:)];
+        
+        // fix non-public api
+        //    [self tc_swizzle:@selector(layoutSubviews)];
+    });
 }
 
 - (nullable id)tc_loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL

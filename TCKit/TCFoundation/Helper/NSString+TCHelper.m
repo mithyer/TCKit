@@ -1108,7 +1108,10 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
 
 + (void)load
 {
-    [self tc_swizzle:@selector(substringFromIndex:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(substringFromIndex:)];
+    });
 }
 
 - (NSString *)tc_substringFromIndex:(NSUInteger)from

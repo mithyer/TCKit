@@ -32,8 +32,12 @@
 
 #pragma mark - Swizzle Dealloc
 
-+ (void)load {
-    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:NSSelectorFromString(@"dealloc")];
+    });
 }
 
 - (void)tc_dealloc {

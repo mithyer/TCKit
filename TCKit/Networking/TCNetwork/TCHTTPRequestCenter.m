@@ -35,6 +35,8 @@
 
 }
 
+@synthesize requestManager = _requestManager;
+
 + (instancetype)defaultCenter
 {
     static NSMapTable<Class, __kindof TCHTTPRequestCenter *> *centers = nil;
@@ -212,6 +214,10 @@
                 self.acceptableContentTypes = nil;
             }
             
+            if ([reqMngr.responseSerializer isKindOfClass:AFJSONResponseSerializer.class]
+                && ((AFJSONResponseSerializer *)reqMngr.responseSerializer).readingOptions == 0) {
+                ((AFJSONResponseSerializer *)reqMngr.responseSerializer).readingOptions = NSJSONReadingFragmentsAllowed;
+            }
             [reqMngr.reachabilityManager startMonitoring];
             [s_mngrPool setObject:reqMngr forKey:identifier];
         }
@@ -229,6 +235,16 @@
     }
     
     return _requestManager;
+}
+
+- (void)setRequestManager:(AFHTTPSessionManager *)requestManager
+{
+    if ([requestManager.responseSerializer isKindOfClass:AFJSONResponseSerializer.class]
+        && ((AFJSONResponseSerializer *)requestManager.responseSerializer).readingOptions == 0) {
+        ((AFJSONResponseSerializer *)requestManager.responseSerializer).readingOptions = NSJSONReadingFragmentsAllowed;
+    }
+    
+    _requestManager = requestManager;
 }
 
 - (instancetype)initWithSession:(nullable AFHTTPSessionManager *)mng

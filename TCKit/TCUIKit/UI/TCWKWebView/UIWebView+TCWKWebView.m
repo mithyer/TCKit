@@ -17,7 +17,10 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(loadRequest:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(loadRequest:)];
+    });
 }
 
 + (NSString *)tc_systemUserAgent

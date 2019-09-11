@@ -19,8 +19,11 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(textRectForBounds:limitedToNumberOfLines:)];
-    [self tc_swizzle:@selector(drawTextInRect:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(textRectForBounds:limitedToNumberOfLines:)];
+        [self tc_swizzle:@selector(drawTextInRect:)];
+    });
 }
 
 - (UIEdgeInsets)contentEdgeInsets

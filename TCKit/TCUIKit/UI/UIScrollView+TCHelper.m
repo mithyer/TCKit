@@ -20,7 +20,10 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(touchesShouldCancelInContentView:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(touchesShouldCancelInContentView:)];
+    });
 }
 
 

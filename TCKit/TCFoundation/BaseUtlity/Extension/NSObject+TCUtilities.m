@@ -25,6 +25,11 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
         return NO;
     }
     
+    __unsafe_unretained Class klass = input.isClassMethod ? object_getClass(input.klass) : input.klass;
+    if (Nil == klass) {
+        return NO;
+    }
+    
     Method (*getMethod)(Class cls, SEL name) = input.isClassMethod ? class_getClassMethod : class_getInstanceMethod;
     
     Method m1 = getMethod(input.klass, input.srcSel);
@@ -46,16 +51,15 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
     
     
     Method m2 = getMethod(input.klass, input.dstSel);
-    
     if (nil != block) {
-        class_replaceMethod(input.klass, input.dstSel, imp_implementationWithBlock(block), method_getTypeEncoding(m1));
+        class_replaceMethod(klass, input.dstSel, imp_implementationWithBlock(block), method_getTypeEncoding(m1));
         if (NULL == m2) {
-            m2 = getMethod(input.klass, input.dstSel);
+            m2 = getMethod(klass, input.dstSel);
         }
     }
     
-    if (class_addMethod(input.klass, input.srcSel, method_getImplementation(m2), method_getTypeEncoding(m2))) {
-        class_replaceMethod(input.klass, input.dstSel, method_getImplementation(m1), method_getTypeEncoding(m1));
+    if (class_addMethod(klass, input.srcSel, method_getImplementation(m2), method_getTypeEncoding(m2))) {
+        class_replaceMethod(klass, input.dstSel, method_getImplementation(m1), method_getTypeEncoding(m1));
         
     } else {
         method_exchangeImplementations(m1, m2);

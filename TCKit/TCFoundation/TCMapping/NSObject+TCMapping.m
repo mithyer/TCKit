@@ -567,7 +567,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     
     NSError *err = nil;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
-                                                        options:kNilOptions
+                                                        options:NSJSONReadingFragmentsAllowed
                                                           error:&err];
     if (NULL != error) {
         *error = err;
@@ -594,7 +594,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
     }
     
     NSArray *arry = [NSJSONSerialization JSONObjectWithData:data
-                                                    options:kNilOptions
+                                                    options:NSJSONReadingFragmentsAllowed
                                                       error:&err];
     if (NULL != error) {
         *error = err;

@@ -23,4 +23,8 @@ extern size_t _TCEndian_readf(FILE *stream, const char *format, ...);
 
 @end
 
+@interface NSJSONSerialization (TCHelper)
+
+@end
+
 NS_ASSUME_NONNULL_END

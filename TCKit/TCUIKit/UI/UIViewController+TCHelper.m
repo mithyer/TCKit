@@ -16,14 +16,17 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(viewWillAppear:)];
-    [self tc_swizzle:@selector(viewWillDisappear:)];
-    [self tc_swizzle:@selector(viewDidAppear:)];
-    [self tc_swizzle:@selector(viewDidDisappear:)];
-    [self tc_swizzle:@selector(prefersStatusBarHidden)];
-    [self tc_swizzle:@selector(preferredStatusBarStyle)];
-    [self tc_swizzle:@selector(preferredStatusBarUpdateAnimation)];
-    [self tc_swizzle:@selector(supportedInterfaceOrientations)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(viewWillAppear:)];
+        [self tc_swizzle:@selector(viewWillDisappear:)];
+        [self tc_swizzle:@selector(viewDidAppear:)];
+        [self tc_swizzle:@selector(viewDidDisappear:)];
+        [self tc_swizzle:@selector(prefersStatusBarHidden)];
+        [self tc_swizzle:@selector(preferredStatusBarStyle)];
+        [self tc_swizzle:@selector(preferredStatusBarUpdateAnimation)];
+        [self tc_swizzle:@selector(supportedInterfaceOrientations)];
+    });
 }
 
 

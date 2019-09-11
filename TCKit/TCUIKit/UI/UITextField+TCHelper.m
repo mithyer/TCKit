@@ -98,7 +98,10 @@
 
 + (void)load
 {
-    [self tc_swizzle:@selector(paste:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(paste:)];
+    });
 }
 
 - (void)tc_paste:(UIMenuController *)sender

@@ -90,8 +90,11 @@ static char const kHeaderClassKey;
 
 + (void)load
 {
-    [self tc_swizzle:@selector(delegate) to:@selector(pullrefresh_delegate)];
-    [self tc_swizzle:@selector(setDelegate:) to:@selector(setPullrefresh_delegate:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(delegate) to:@selector(pullrefresh_delegate)];
+        [self tc_swizzle:@selector(setDelegate:) to:@selector(setPullrefresh_delegate:)];
+    });
 }
 
 

@@ -141,10 +141,13 @@ static char const kBtnExtraKey;
 + (void)load
 {
     // ARC forbids us to use a selector on dealloc, so we must trick it with NSSelectorFromString()
-    [self tc_swizzle:NSSelectorFromString(@"dealloc")];
-    [self tc_swizzle:@selector(setImage:forState:)];
-    [self tc_swizzle:@selector(setTitle:forState:)];
-    [self tc_swizzle:@selector(setAttributedTitle:forState:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:NSSelectorFromString(@"dealloc")];
+        [self tc_swizzle:@selector(setImage:forState:)];
+        [self tc_swizzle:@selector(setTitle:forState:)];
+        [self tc_swizzle:@selector(setAttributedTitle:forState:)];
+    });
 }
 
 - (_TCButtonExtra *)btnExtra

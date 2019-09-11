@@ -19,7 +19,10 @@ static char const kAlignmentRectInsetsKey;
 
 + (void)load
 {
-    [self tc_swizzle:@selector(alignmentRectInsets)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(alignmentRectInsets)];
+    });
 }
 
 + (CGFloat)pointWithPixel:(NSUInteger)pixel
@@ -99,7 +102,10 @@ static char const kAlignmentRectInsetsKey;
 
 + (void)load
 {
-    [self tc_swizzle:@selector(initWithFrame:style:)];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self tc_swizzle:@selector(initWithFrame:style:)];
+    });
 }
 
 - (instancetype)tc_initWithFrame:(CGRect)frame style:(UITableViewStyle)style
