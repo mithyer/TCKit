@@ -217,47 +217,44 @@ size_t _TCEndian_readf(FILE *stream, const char *format, ...)
 }
 
 
-
-@implementation NSJSONSerialization (TCHelper)
-
-+ (void)load
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self tc_swizzle:@selector(JSONObjectWithData:options:error:)];
-    });
-}
-
-+ (nullable id)tc_JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error
-{
-    NSUInteger len = data.length;
-    NSError *serializationError = nil;
-    id responseObject = [self tc_JSONObjectWithData:data options:opt error:&serializationError];
-    if (nil == responseObject && [serializationError.domain isEqualToString:NSCocoaErrorDomain] && serializationError.code == NSPropertyListReadCorruptError) {
-        NSMutableData *tmpData = NSMutableData.data;
-        const char *bytes = (typeof(bytes))data.bytes;
-        for (NSUInteger i = 0; i < len; ++i) {
-            if (0 == iscntrl(bytes[i])) {
-                [tmpData appendBytes:bytes + i length:1];
-            }
-        }
-        if (tmpData.length > 0 && tmpData.length < len) {
-            NSError *err = serializationError;
-            serializationError = nil;
-            responseObject = [NSJSONSerialization JSONObjectWithData:tmpData options:opt error:&serializationError];
-            if (nil == responseObject) {
-                serializationError = err;
-            }
-        }
-    }
-    
-    if (NULL != error && nil != serializationError) {
-        *error = serializationError;
-    }
-    
-    return responseObject;
-}
-
-
-
-@end
+//@implementation NSJSONSerialization (TCHelper)
+//
+//+ (void)load
+//{
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        [self tc_swizzle:@selector(JSONObjectWithData:options:error:)];
+//    });
+//}
+//
+//+ (nullable id)tc_JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error
+//{
+//    NSUInteger len = data.length;
+//    NSError *serializationError = nil;
+//    id responseObject = [self tc_JSONObjectWithData:data options:opt error:&serializationError];
+//    if (nil == responseObject && [serializationError.domain isEqualToString:NSCocoaErrorDomain] && serializationError.code == NSPropertyListReadCorruptError) {
+//        NSMutableData *tmpData = NSMutableData.data;
+//        const char *bytes = (typeof(bytes))data.bytes;
+//        for (NSUInteger i = 0; i < len; ++i) {
+//            if (0 == iscntrl(bytes[i])) {
+//                [tmpData appendBytes:bytes + i length:1];
+//            }
+//        }
+//        if (tmpData.length > 0 && tmpData.length < len) {
+//            NSError *err = serializationError;
+//            serializationError = nil;
+//            responseObject = [NSJSONSerialization JSONObjectWithData:tmpData options:opt error:&serializationError];
+//            if (nil == responseObject) {
+//                serializationError = err;
+//            }
+//        }
+//    }
+//
+//    if (NULL != error && nil != serializationError) {
+//        *error = serializationError;
+//    }
+//
+//    return responseObject;
+//}
+//
+//@end
