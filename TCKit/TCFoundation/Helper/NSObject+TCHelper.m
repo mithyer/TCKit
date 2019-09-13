@@ -26,7 +26,7 @@ static NSString const *kDefaultDomain = @"TCKit";
                                            withIntermediateDirectories:YES
                                                             attributes:nil
                                                                  error:NULL]) {
-        NSAssert(false, @"create directory failed.");
+        NSCAssert(false, @"create directory failed.");
         dir = nil;
     }
     
@@ -35,13 +35,13 @@ static NSString const *kDefaultDomain = @"TCKit";
 
 + (NSURL *)defaultCacheDirectoryInDomain:(NSString *)domain create:(BOOL)create
 {
-    NSString *dir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:domain?:kDefaultDomain];
+    NSString *dir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:domain ?: kDefaultDomain];
     
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
                                            withIntermediateDirectories:YES
                                                             attributes:nil
                                                                  error:NULL]) {
-        NSAssert(false, @"create directory failed.");
+        NSCAssert(false, @"create directory failed.");
         dir = nil;
     }
     return nil == dir ? nil : [NSURL fileURLWithPath:dir];
@@ -49,12 +49,12 @@ static NSString const *kDefaultDomain = @"TCKit";
 
 + (NSURL *)defaultTmpDirectoryInDomain:(NSString *)domain create:(BOOL)create;
 {
-    NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:domain?:kDefaultDomain];
+    NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:domain ?: kDefaultDomain];
     if (create && ![NSFileManager.defaultManager createDirectoryAtPath:dir
                                            withIntermediateDirectories:YES
                                                             attributes:nil
                                                                  error:NULL]) {
-        NSAssert(false, @"create directory failed.");
+        NSCAssert(false, @"create directory failed.");
         dir = nil;
     }
     

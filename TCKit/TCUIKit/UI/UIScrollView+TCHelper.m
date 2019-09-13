@@ -62,7 +62,7 @@
     self.delaysContentTouches = NO;
     for (UIView *view in self.subviews) {
         // looking for a UITableViewWrapperView
-        if ([NSStringFromClass(view.class) isEqualToString:@"UITableViewWrapperView"]) {
+        if ([NSStringFromClass(view.class) isEqualToString:[NSStringFromClass(UITableView.class) stringByAppendingString:@"WrapperView"]]) {
             // this test is necessary for safety and because a "UITableViewWrapperView" is NOT a UIScrollView in iOS7
             if ([view isKindOfClass:UIScrollView.class]) {
                 // turn OFF delaysContentTouches in the hidden subview
