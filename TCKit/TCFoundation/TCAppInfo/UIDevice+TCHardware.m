@@ -117,7 +117,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 @implementation UIDevice (TCHardware)
 
 
-- (unsigned long long)appUsedMemory
++ (unsigned long long)appUsedMemory
 {
     struct task_basic_info info;
     mach_msg_type_number_t size = sizeof(info);
@@ -125,7 +125,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return (kerr == KERN_SUCCESS) ? (unsigned long long)info.resident_size : 0; // size in bytes
 }
 
-- (unsigned long long)appFreeMemory
++ (unsigned long long)appFreeMemory
 {
     mach_port_t host_port = mach_host_self();
     mach_msg_type_number_t host_size = sizeof(vm_statistics_data_t) / sizeof(integer_t);
@@ -140,7 +140,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 #pragma mark - sysctlbyname utils
 
-- (NSString *)getSysInfoByName:(char *)typeSpecifier
++ (NSString *)getSysInfoByName:(char *)typeSpecifier
 {
     size_t size = 0;
     if (0 != sysctlbyname(typeSpecifier, NULL, &size, NULL, 0) || size < 1) {
@@ -155,19 +155,19 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return @(answer);
 }
 
-- (NSString *)versionModel
++ (NSString *)versionModel
 {
     return [self getSysInfoByName:"kern.osversion"];
 }
 
-- (NSString *)platform
++ (NSString *)platform
 {
     return [self getSysInfoByName:"hw.machine"];
 }
 
 
 // Thanks, Tom Harrington (Atomicbird)
-- (NSString *)hwmodel
++ (NSString *)hwmodel
 {
     return [self getSysInfoByName:"hw.model"];
 }
@@ -175,7 +175,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 #pragma mark - sysctl utils
 
-- (NSUInteger)getSysInfo:(int)typeSpecifier
++ (NSUInteger)getSysInfo:(int)typeSpecifier
 {
     NSUInteger results = 0;
     size_t size = sizeof(results);
@@ -184,32 +184,32 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return results;
 }
 
-- (NSUInteger)cpuFrequency
++ (NSUInteger)cpuFrequency
 {
     return [self getSysInfo:HW_CPU_FREQ];
 }
 
-- (NSUInteger)busFrequency
++ (NSUInteger)busFrequency
 {
     return [self getSysInfo:HW_BUS_FREQ];
 }
 
-- (NSUInteger)cpuCount
++ (NSUInteger)cpuCount
 {
     return [self getSysInfo:HW_NCPU];
 }
 
-- (NSUInteger)totalMemory
++ (NSUInteger)totalMemory
 {
     return [self getSysInfo:HW_PHYSMEM];
 }
 
-- (NSUInteger)userMemory
++ (NSUInteger)userMemory
 {
     return [self getSysInfo:HW_USERMEM];
 }
 
-- (NSUInteger)maxSocketBufferSize
++ (NSUInteger)maxSocketBufferSize
 {
     return [self getSysInfo:KIPC_MAXSOCKBUF];
 }
@@ -217,7 +217,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 #pragma mark - platform type and name utils
 
-- (TCDevicePlatform)platformType
++ (TCDevicePlatform)platformType
 {
     NSString *const platform = self.platform;
 
@@ -413,7 +413,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return kTCDeviceUnknown;
 }
 
-- (NSString *)platformString
++ (NSString *)platformString
 {
     TCDevicePlatform type = self.platformType;
     if (type < kTCDeviceUnknown || type >= kTCDeviceCount) {
@@ -431,8 +431,9 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return s_device_names[type];
 }
 
-- (TCDeviceScreen)screen
++ (TCDeviceScreen)screenMode
 {
+    NSCParameterAssert(NSThread.isMainThread);
     CGSize const size = UIScreen.mainScreen.bounds.size;
     CGFloat const screenHeight = MAX(size.height, size.width);
     
@@ -474,12 +475,46 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return kTCDeviceScreenUnknown;
 }
 
-- (BOOL)hasRetinaDisplay
++ (nullable NSString *)screenInchString
 {
+    switch (self.screenMode) {
+        case kTCDeviceScreen3_5inch:
+            return @"3.5〃";
+        case kTCDeviceScreen4inch:
+            return @"4〃";
+        case kTCDeviceScreen4_7inch:
+            return @"4.7〃";
+        case kTCDeviceScreen5_5inch:
+            return @"5.5〃";
+        case kTCDeviceScreen5_8inch:
+            return @"5.8〃";
+        case kTCDeviceScreen6_1inch:
+            return @"6.1〃";
+        case kTCDeviceScreen6_5inch:
+            return @"6.5〃";
+        case kTCDeviceScreen7_9inch:
+            return @"7.9〃";
+        case kTCDeviceScreen9_7inch:
+            return @"9.7〃";
+        case kTCDeviceScreen10_5inch:
+            return @"10.5〃";
+        case kTCDeviceScreen11inch:
+            return @"11〃";
+        case kTCDeviceScreen12_9inch:
+            return @"12.9〃";
+            
+        default:
+            return nil;
+    }
+}
+
++ (BOOL)hasRetinaDisplay
+{
+    NSCParameterAssert(NSThread.isMainThread);
     return UIScreen.mainScreen.scale >= 2.0f;
 }
 
-- (TCDeviceFamily)deviceFamily
++ (TCDeviceFamily)deviceFamily
 {
     NSString *platform = self.platform;
     if ([platform hasPrefix:@"iPhone"]) return kTCDeviceFamilyiPhone;
@@ -490,14 +525,14 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return kTCDeviceFamilyUnknown;
 }
 
-- (BOOL)cellularAccessable
++ (BOOL)cellularAccessable
 {
     CTTelephonyNetworkInfo *ctInfo = [[CTTelephonyNetworkInfo alloc] init];
     return nil != ctInfo.subscriberCellularProvider && nil != ctInfo.subscriberCellularProvider.carrierName && nil != ctInfo.currentRadioAccessTechnology;
 }
 
 // https://stackoverflow.com/questions/7101206/know-if-ios-device-has-cellular-data-capabilities
-- (BOOL)hasCellular
++ (BOOL)hasCellular
 {
     static BOOL s_detected = NO;
     static BOOL s_found = NO;
@@ -536,7 +571,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 // Return the local MAC addy
 // Courtesy of FreeBSD hackers email list
 // Accidentally munged during previous update. Fixed thanks to mlamb.
-- (NSString *)macaddress
++ (NSString *)macaddress
 {
     int mib[] = {
         CTL_NET,
@@ -697,7 +732,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     
     if ((kTCNetworkInterfaceTypeUSB == type || kTCNetworkInterfaceTypeBluetooth == type)
         // iPod, iPad, >= iOS11
-        && !UIDevice.currentDevice.hasCellular
+        && !UIDevice.hasCellular
         && [UIDevice.currentDevice.systemVersion compare:@"11" options:NSNumericSearch] != NSOrderedAscending) {
         if (kTCNetworkInterfaceTypeUSB == type) {
             type = kTCNetworkInterfaceTypeBluetooth;
@@ -730,7 +765,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 
 #pragma mark -
 
-- (void)sysDNSServersIpv4:(NSArray<NSString *> **)ipv4 ipv6: (NSArray<NSString *> **)ipv6
++ (void)sysDNSServersIpv4:(NSArray<NSString *> **)ipv4 ipv6: (NSArray<NSString *> **)ipv6
 {
     if (ipv4 == NULL && ipv6 == NULL) {
         return;
@@ -800,7 +835,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 }
 
 
-- (NSArray<NSString *> *)dnsAddresses
++ (NSArray<NSString *> *)dnsAddresses
 {
     NSArray *ipv4Dns = nil;
     NSArray *ipv6Dns = nil;
@@ -812,7 +847,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return dnsServers.count > 0 ? dnsServers : nil;
 }
 
-- (BOOL)isVPNON
++ (BOOL)isVPNOn
 {
     CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
     if (NULL == dicRef) {
@@ -834,7 +869,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return NO;
 }
 
-- (void)HTTPProxy:(NSString **)host port:(NSNumber **)port
++ (void)HTTPProxy:(NSString **)host port:(NSNumber **)port
 {
     CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
     if (NULL == dicRef) {
@@ -926,7 +961,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 //}
 
 // https://www.cnblogs.com/mobilefeng/p/4977783.html
-- (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block
++ (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block
 {
     // Get Page Size
     int mib[2];
@@ -992,7 +1027,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
 //    }
 //}
 
-- (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
++ (void)diskTotalSpace:(uint64_t *)pTotal freeSpace:(uint64_t *)pFree
 {
     if (NULL == pTotal && NULL == pFree) {
         return;
@@ -1018,7 +1053,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     }
 }
 
-- (float)cpuUsage
++ (float)cpuUsage
 {
     mach_msg_type_number_t count = HOST_CPU_LOAD_INFO_COUNT;
     static host_cpu_load_info_data_t previous_info = {0, 0, 0, 0};
@@ -1042,7 +1077,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     return (user + nice + system) * 100.0f / total;
 }
 
-- (NSDate *)systemUpTime
++ (NSDate *)systemUpTime
 {
     struct timeval boottime;
     size_t len = sizeof(boottime);

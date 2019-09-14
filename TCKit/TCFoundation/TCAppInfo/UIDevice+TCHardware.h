@@ -127,40 +127,41 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIDevice (TCHardware)
 
-- (nullable NSString *)versionModel;
-- (nullable NSString *)platform;
-- (nullable NSString *)hwmodel;
-- (TCDevicePlatform)platformType;
-- (nullable NSString *)platformString;
-- (TCDeviceScreen)screen;
++ (nullable NSString *)versionModel;
++ (nullable NSString *)platform;
++ (nullable NSString *)hwmodel;
++ (TCDevicePlatform)platformType;
++ (nullable NSString *)platformString;
++ (TCDeviceScreen)screenMode;
++ (nullable NSString *)screenInchString;
 
-- (NSUInteger)cpuFrequency;
-- (NSUInteger)busFrequency;
-- (NSUInteger)cpuCount;
-- (NSUInteger)totalMemory;
-- (NSUInteger)userMemory;
++ (NSUInteger)cpuFrequency;
++ (NSUInteger)busFrequency;
++ (NSUInteger)cpuCount;
++ (NSUInteger)totalMemory;
++ (NSUInteger)userMemory;
 
-- (unsigned long long)appUsedMemory;
-- (unsigned long long)appFreeMemory;
++ (unsigned long long)appUsedMemory;
++ (unsigned long long)appFreeMemory;
 
-- (nullable NSString *)macaddress;
++ (nullable NSString *)macaddress;
 
-- (nullable NSArray<NSString *> *)dnsAddresses;
-- (void)sysDNSServersIpv4:(NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv4 ipv6: (NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv6;
++ (nullable NSArray<NSString *> *)dnsAddresses;
++ (void)sysDNSServersIpv4:(NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv4 ipv6: (NSArray<NSString *> * _Nullable __autoreleasing *_Nullable)ipv6;
 
 //- (NSString *)gatewayIPAddress;
-- (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSNumber *_Nullable __autoreleasing * _Nullable)port;
++ (void)HTTPProxy:(NSString *_Nullable __autoreleasing * _Nullable)host port:(NSNumber *_Nullable __autoreleasing * _Nullable)port;
 
-- (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block;
-- (nullable NSDate *)systemUpTime;
-- (float)cpuUsage;
-- (void)diskTotalSpace:(uint64_t *_Nullable)pTotal freeSpace:(uint64_t *_Nullable)pFree;
-- (BOOL)isVPNON;
++ (void)fetchMemoryStatistics:(void (^)(size_t total, size_t wired, size_t active, size_t inactive, size_t free))block;
++ (nullable NSDate *)systemUpTime;
++ (float)cpuUsage;
++ (void)diskTotalSpace:(uint64_t *_Nullable)pTotal freeSpace:(uint64_t *_Nullable)pFree;
++ (BOOL)isVPNOn;
 
-- (BOOL)hasRetinaDisplay;
-- (TCDeviceFamily)deviceFamily;
-- (BOOL)hasCellular;
-- (BOOL)cellularAccessable;
++ (BOOL)hasRetinaDisplay;
++ (TCDeviceFamily)deviceFamily;
++ (BOOL)hasCellular;
++ (BOOL)cellularAccessable;
 
 
 #pragma mark -
