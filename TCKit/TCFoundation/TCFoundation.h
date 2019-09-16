@@ -33,6 +33,10 @@
 #import "NSURL+TCHelper.h"
 #import "NSURL+IDN.h"
 
+#ifndef __IPHONE_13_0
+#define NSJSONReadingFragmentsAllowed NSJSONReadingAllowFragments
+#endif
+
 
 #define TC_AUTO_COPY_CODING_EQUAL_HASH \
 - (NSUInteger)hash {return self.tc_hash;} \

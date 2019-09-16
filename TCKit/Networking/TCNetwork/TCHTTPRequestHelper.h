@@ -17,8 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+NS_ASSUME_NONNULL_END
+
 
 #ifndef __TCKit__
+
+#ifndef __IPHONE_13_0
+#define NSJSONReadingFragmentsAllowed NSJSONReadingAllowFragments
+#endif
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (TCHTTPRequestHelper)
 
@@ -35,6 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+NS_ASSUME_NONNULL_END
+
+#else
+
+#import "TCFoundation.h"
+
 #endif // __TCKit__
 
-NS_ASSUME_NONNULL_END
+
