@@ -1,5 +1,6 @@
 /** Thanks to
- https://github.com/Ekhoo/Device/
+https://github.com/xtcmoons/XTCCategories/blob/6df5718bc3231c268bf8c73e6b41c865fd4670a1/Categories/UIKit/UIDevice%2BXTCAdd.m
+ https://github.com/p709723778/UIDevice-SPPlatform/blob/624d71bb426fc77382c1d527cdd347eed213c7ed/Objective-C/SPPlatform/SPPlatform/UIDevice%2BCategory/UIDevice%2BSPPlatform.m
  https://github.com/lmirosevic/GBDeviceInfo
  */
 
@@ -31,7 +32,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDeviceUnknown] = @"Unknown iOS device",
     
     // iPhone
-    [kTCDevice1GiPhone] = @"iPhone 1G",
+    [kTCDevice1GiPhone] = @"iPhone 1",
     [kTCDevice3GiPhone] = @"iPhone 3G",
     [kTCDevice3GSiPhone] = @"iPhone 3GS",
     [kTCDevice4iPhone] = @"iPhone 4",
@@ -56,55 +57,59 @@ static NSString *s_device_names[kTCDeviceCount] = {
     [kTCDeviceXS] = @"iPhone XS",
     [kTCDeviceXSMax] = @"iPhone XS Max",
     
+    [kTCDevice11] = @"iPhone 11",
+    [kTCDevice11Pro] = @"iPhone 11 Pro",
+    [kTCDevice11ProMax] = @"iPhone 11 Pro MAX",
+    
     [kTCDeviceUnknowniPhone] = @"Unknown iPhone",
     
     // iPod
-    [kTCDevice1GiPod] = @"iPod touch 1G",
-    [kTCDevice2GiPod] = @"iPod touch 2G",
-    [kTCDevice3GiPod] = @"iPod touch 3G",
-    [kTCDevice4GiPod] = @"iPod touch 4G",
-    [kTCDevice5GiPod] = @"iPod touch 5G",
-    [kTCDevice6GiPod] = @"iPod touch 6G",
-    [kTCDevice7GiPod] = @"iPod touch 7G",
+    [kTCDevice1GiPod] = @"iPod touch 1",
+    [kTCDevice2GiPod] = @"iPod touch 2",
+    [kTCDevice3GiPod] = @"iPod touch 3",
+    [kTCDevice4GiPod] = @"iPod touch 4",
+    [kTCDevice5GiPod] = @"iPod touch 5",
+    [kTCDevice6GiPod] = @"iPod touch 6",
+    [kTCDevice7GiPod] = @"iPod touch 7",
     [kTCDeviceUnknowniPod] = @"Unknown iPod",
     
     // iPad
-    [kTCDevice1GiPad] = @"iPad 1G",
-    [kTCDevice2GiPad] = @"iPad 2G",
-    [kTCDevice3GiPad] = @"iPad 3G",
-    [kTCDevice4GiPad] = @"iPad 4G",
+    [kTCDevice1GiPad] = @"iPad 1",
+    [kTCDevice2GiPad] = @"iPad 2",
+    [kTCDevice3GiPad] = @"iPad 3",
+    [kTCDevice4GiPad] = @"iPad 4",
     [kTCDevice5GiPad] = @"iPad 2017",
     [kTCDevice6GiPad] = @"iPad 2018",
     
     // iPad mini
-    [kTCDevice1GiPadMini] = @"iPad Mini 1G",
-    [kTCDevice2GiPadMini] = @"iPad Mini 2G",
-    [kTCDevice3GiPadMini] = @"iPad Mini 3G",
-    [kTCDevice4GiPadMini] = @"iPad Mini 4G",
-    [kTCDevice5GiPadMini] = @"iPad Mini 5G",
+    [kTCDevice1GiPadMini] = @"iPad Mini 1",
+    [kTCDevice2GiPadMini] = @"iPad Mini 2",
+    [kTCDevice3GiPadMini] = @"iPad Mini 3",
+    [kTCDevice4GiPadMini] = @"iPad Mini 4",
+    [kTCDevice5GiPadMini] = @"iPad Mini 5",
     
     // ipad Air
-    [kTCDevice1GiPadAir] = @"iPad Air 1G",
-    [kTCDevice2GiPadAir] = @"iPad Air 2G",
-    [kTCDevice3GiPadAir] = @"iPad Air 3G",
+    [kTCDevice1GiPadAir] = @"iPad Air 1",
+    [kTCDevice2GiPadAir] = @"iPad Air 2",
+    [kTCDevice3GiPadAir] = @"iPad Air 3",
     [kTCDeviceUnknowniPad] = @"Unknown iPad",
     
     // ipad pro
-    [kTCDevice1GiPadPro9_7] = @"iPad Pro 1G 9.7-inch",
-    [kTCDevice1GiPadPro12_9] = @"iPad Pro 1G 12.9-inch",
+    [kTCDevice1GiPadPro9_7] = @"iPad Pro 1 (9.7 inch)",
+    [kTCDevice1GiPadPro12_9] = @"iPad Pro 1 (12.9 inch)",
     
-    [kTCDevice1GiPadPro10_5] = @"iPad Pro 1G 10.5-inch",
-    [kTCDevice2GiPadPro12_9] = @"iPad Pro 2G 12.9-inch",
+    [kTCDevice1GiPadPro10_5] = @"iPad Pro 1 (10.5 inch)",
+    [kTCDevice2GiPadPro12_9] = @"iPad Pro 2 (12.9 inch)",
 
-    [kTCDevice1GiPadPro11] = @"iPad Pro 3rd Gen (11 inch)",
-    [kTCDevice1GiPadPro11_1TB] = @"iPad Pro 3rd Gen (11 inch, 1TB)",
-    [kTCDevice3GiPadPro12_9] = @"iPad Pro 3rd Gen (12.9 inch)",
-    [kTCDevice3GiPadPro12_9_1TB] = @"iPad Pro 3rd Gen (12.9 inch, 1TB)",
+    [kTCDevice1GiPadPro11] = @"iPad Pro 3 (11 inch)",
+    [kTCDevice1GiPadPro11_1TB] = @"iPad Pro 3 (11 inch, 1TB)",
+    [kTCDevice3GiPadPro12_9] = @"iPad Pro 3 (12.9 inch)",
+    [kTCDevice3GiPadPro12_9_1TB] = @"iPad Pro 3 (12.9 inch, 1TB)",
     
     // apple TV
-    [kTCDeviceAppleTV2] = @"Apple TV 2G",
-    [kTCDeviceAppleTV3] = @"Apple TV 3G",
-    [kTCDeviceAppleTV4] = @"Apple TV 4G",
+    [kTCDeviceAppleTV2] = @"Apple TV 2",
+    [kTCDeviceAppleTV3] = @"Apple TV 3",
+    [kTCDeviceAppleTV4] = @"Apple TV 4",
     [kTCDeviceUnknownAppleTV] = @"Unknown Apple TV",
     
     // simulator
@@ -286,6 +291,22 @@ static NSString *s_device_names[kTCDeviceCount] = {
                 break;
         }
     }
+    else if ([platform hasPrefix:@"iPhone12,"]) {
+        NSInteger subVersion = [[[platform componentsSeparatedByString:@","] lastObject] integerValue];
+        switch (subVersion) {
+            case 1:
+                return kTCDevice11;
+                
+            case 3:
+                return kTCDevice11Pro;
+                
+            case 5:
+                return kTCDevice11ProMax;
+                
+            default:
+                break;
+        }
+    }
     
     // iPod
     else if ([platform hasPrefix:@"iPod1,"])              return kTCDevice1GiPod;
@@ -394,6 +415,7 @@ static NSString *s_device_names[kTCDeviceCount] = {
     // Apple TV
     else if ([platform hasPrefix:@"AppleTV2"])           return kTCDeviceAppleTV2;
     else if ([platform hasPrefix:@"AppleTV3"])           return kTCDeviceAppleTV3;
+    else if ([platform hasPrefix:@"AppleTV5"])           return kTCDeviceAppleTV4;
     
     // Simulator thanks Jordan Breeding
     else if ([platform hasSuffix:@"86"] || [platform isEqualToString:@"x86_64"]) {

@@ -69,15 +69,18 @@ NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesToggle";
 {
     NSString *value = nil;
     
-    if(!value && keychain ){
+    if(keychain ){
         value = [UICKeyChainStore stringForKey:key service:service accessGroup:accessGroup];
+        if (nil != value && ![value isKindOfClass:NSString.class]) {
+            value = nil;
+        }
     }
     
     if(!value && userDefaults ){
         value = [[NSUserDefaults standardUserDefaults] stringForKey:key];
     }
     
-    return value;
+    return ![value isKindOfClass:NSString.class] ? nil : value;
 }
 
 
@@ -108,8 +111,7 @@ NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesToggle";
     }
     
     NSString *uuidValue = (__bridge_transfer NSString *)uuidStringRef;
-    uuidValue = [uuidValue lowercaseString];
-    uuidValue = [uuidValue stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    uuidValue = [uuidValue.lowercaseString stringByReplacingOccurrencesOfString:@"-" withString:@""];
     return uuidValue;
 }
 

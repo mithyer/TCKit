@@ -41,6 +41,11 @@ typedef NS_ENUM(NSInteger, TCDevicePlatform) {
     kTCDeviceXS,
     kTCDeviceXSMax,
     
+    // 2019
+    kTCDevice11,
+    kTCDevice11Pro,
+    kTCDevice11ProMax,
+    
     
     kTCDevice1GiPod,
     kTCDevice2GiPod,
