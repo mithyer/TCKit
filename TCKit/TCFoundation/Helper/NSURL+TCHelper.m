@@ -234,6 +234,8 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
     struct stat statbuf;
     if (stat(url.fileSystemRepresentation, &statbuf) == 0) {
         fileSize = (unsigned long long)statbuf.st_size;
+    } else {
+        fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:url.path error:NULL].fileSize;
     }
     
     return fileSize;
