@@ -28,15 +28,18 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (void)initialize
 {
-    void (^block)(NSNotification *note) = ^(NSNotification * _Nonnull note) {
-        NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
-        NSNumber *size = [fattributes objectForKey:NSFileSystemFreeSize];
-        if (nil != size && size.unsignedLongLongValue < 500e6) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTCApplicationDidReceiveDiskSpaceWarning object:size];
-        }
-    };
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:nil usingBlock:block];
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:block];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void (^block)(NSNotification *note) = ^(NSNotification * _Nonnull note) {
+            NSDictionary *fattributes = [NSFileManager.defaultManager attributesOfFileSystemForPath:NSHomeDirectory() error:NULL];
+            NSNumber *size = [fattributes objectForKey:NSFileSystemFreeSize];
+            if (nil != size && size.unsignedLongLongValue < 500e6) {
+                [NSNotificationCenter.defaultCenter postNotificationName:kTCApplicationDidReceiveDiskSpaceWarning object:size];
+            }
+        };
+        [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:nil usingBlock:block];
+        [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:block];
+    });
 }
 
 + (NSString *)appVersion:(TCMigrationVersionType)type
