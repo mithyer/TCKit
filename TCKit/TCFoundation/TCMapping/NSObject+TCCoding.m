@@ -296,7 +296,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 - (id)tc_JSONObject
 {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
-    return nil != data ? [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingFragmentsAllowed error:NULL] : nil;
+    return nil != data ? [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:NULL] : nil;
 }
 
 @end
@@ -306,7 +306,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (id)tc_JSONObject
 {
-    return [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingFragmentsAllowed error:NULL];
+    return [NSJSONSerialization JSONObjectWithData:self options:kNilOptions error:NULL];
 }
 
 @end
