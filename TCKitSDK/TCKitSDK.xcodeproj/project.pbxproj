@@ -1865,8 +1865,8 @@
 				B76D778E1F134DA100CF77FA /* UIApplication+TCHelper.m */,
 			);
 			name = TCApplication;
-			path = ../../TCKit/TCApplication;
-			sourceTree = "<group>";
+			path = ../TCKit/TCApplication;
+			sourceTree = SOURCE_ROOT;
 		};
 		B76D77811F134DA100CF77FA /* TCAlertController */ = {
 			isa = PBXGroup;

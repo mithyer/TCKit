@@ -27,10 +27,14 @@
         if (responder == self) {
             // this is a UITransitionView
             if (subView.subviews.count > 0) {
-                UIView *subSubView = subView.subviews.firstObject; // this should be the UILayoutContainerView
-                if ([NSStringFromClass(subSubView.class) rangeOfString:[NSStringFromClass(UILayoutGuide.class) substringToIndex:8]].location == NSNotFound) {
+                // find the UILayoutContainerView
+                NSString *key = [NSStringFromClass(UILayoutGuide.class) substringToIndex:8];
+                UIView *subSubView = subView;
+                do {
+                    // this should be the UILayoutContainerView
                     subSubView = subSubView.subviews.firstObject;
-                }
+                } while ([NSStringFromClass(subSubView.class) rangeOfString:key].location == NSNotFound && subSubView.subviews.count > 0 && ![subSubView.nextResponder isKindOfClass:UIViewController.class]);
+                
                 responder = subSubView.nextResponder;
             }
         }
@@ -40,6 +44,7 @@
         }
     }
     
+    NSCAssert(false, @"topMostViewController nil");
     return nil;
 }
 
