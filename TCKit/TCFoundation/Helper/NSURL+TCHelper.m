@@ -103,6 +103,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
 
 @end
 
+
 @implementation NSURL (TCHelper)
 
 - (NSURL *)safeURLByResolvingSymlinksInPath
@@ -321,6 +322,31 @@ done:
     }
     NSURL *url = self.safeURLByResolvingSymlinksInPath;
     return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFURLRef)url, FileHashDefaultChunkSizeForReadingData);
+}
+
+@end
+
+
+@implementation NSFileManager (TCHelper)
+
+- (BOOL)linkCopyItemAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError **)error
+{
+    BOOL suc = [NSFileManager.defaultManager linkItemAtURL:srcURL toURL:dstURL error:error];
+    if (!suc) {
+        // !!!: may create an empty directory
+        [NSFileManager.defaultManager removeItemAtURL:dstURL error:NULL];
+        suc = [NSFileManager.defaultManager copyItemAtURL:srcURL toURL:dstURL error:error];
+        if (suc) {
+            if (NULL != error) {
+                *error = nil;
+            }
+            NSDictionary<NSFileAttributeKey, id> *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:srcURL.path error:NULL];
+            if (attributes.count > 0) {
+                [NSFileManager.defaultManager setAttributes:attributes ofItemAtPath:dstURL.path error:NULL];
+            }
+        }
+    }
+    return suc;
 }
 
 @end

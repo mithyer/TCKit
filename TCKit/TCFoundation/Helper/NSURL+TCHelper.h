@@ -42,4 +42,10 @@ extern NSString * TCPercentEscapedStringFromFileName(NSString *string);
 
 @end
 
+@interface NSFileManager (TCHelper)
+
+- (BOOL)linkCopyItemAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError **)error;
+
+@end
+
 NS_ASSUME_NONNULL_END
