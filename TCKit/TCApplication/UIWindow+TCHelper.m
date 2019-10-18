@@ -20,6 +20,11 @@
 // code from: http://stackoverflow.com/questions/11637709/get-the-current-displaying-uiviewcontroller-on-the-screen-in-appdelegate-m
 - (UIViewController *)topMostViewController
 {
+    if (nil != self.rootViewController) {
+        return [self topViewController:self.rootViewController];
+    }
+    
+    // for window only add a subview from controller
     for (UIView *subView in self.subviews) {
         UIResponder *responder = subView.nextResponder;
         
@@ -52,7 +57,6 @@
 {
     BOOL isPresenting = NO;
     do {
-        // this path is called only on iOS 6+, so -presentedViewController is fine here.
         UIViewController *presented = controller.presentedViewController;
         isPresenting = presented != nil;
         if (isPresenting) {
@@ -68,6 +72,11 @@
     } else if ([controller isKindOfClass:UINavigationController.class]) {
         UINavigationController *navi = (typeof(navi))controller;
         UIViewController *ctrler = navi.visibleViewController;
+        controller = [self topViewController:ctrler];
+        
+    } else if ([controller isKindOfClass:UIPageViewController.class]) {
+        UIPageViewController *page = (typeof(page))controller;
+        UIViewController *ctrler = page.viewControllers.firstObject;
         controller = [self topViewController:ctrler];
     }
     
