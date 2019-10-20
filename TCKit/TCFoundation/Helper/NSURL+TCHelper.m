@@ -42,16 +42,16 @@ NSString * TCPercentEscapedStringFromString(NSString *string) {
 NSString * TCPercentEscapedStringFromFileName(NSString *string)
 {
     if (string.length < 1) {
-        return string;
+        return nil;
     }
     
     NSString *name = [[string componentsSeparatedByCharactersInSet:NSCharacterSet.illegalFileNameCharacters] componentsJoinedByString:@"_"];
     if (name.length > NAME_MAX) {
         name = [name substringFromIndex:name.length - NAME_MAX];
     } else if ([name isEqualToString:@"_"]) {
-        name = @"";
+        return nil;
     }
-    return name;
+    return name.length < 1 ? nil : name;
 }
 
 @implementation NSCharacterSet (TCHelper)
