@@ -46,7 +46,7 @@ __strong void(^block)(void) __attribute__((cleanup(_tc_blockCleanUp), unused)) =
 
 NS_INLINE BOOL IS_IPAD(void)
 {
-    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+    return UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
 }
 
 NS_INLINE NSComparisonResult COMPARE_SYSTEM_VERSION(NSString *v)
