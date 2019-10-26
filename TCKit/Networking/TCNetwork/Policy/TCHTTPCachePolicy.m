@@ -53,7 +53,7 @@ NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
     } else {
         requestUrl = _request.apiUrl;
     }
-    NSParameterAssert(requestUrl);
+    NSCParameterAssert(requestUrl);
     
     static NSString *const s_fmt = @"Method:%@ RequestUrl:%@ Parames:%@ Sensitive:%@";
     NSString *cacheKey = [NSString stringWithFormat:s_fmt, @(_request.method), requestUrl, _parametersForCachePathFilter, _sensitiveDataForCachePathFilter];
@@ -75,7 +75,7 @@ NSInteger const kTCHTTPRequestCacheNeverExpired = -1;
         path = [_request.requestAgent cachePathForResponse];
     }
     
-    NSParameterAssert(path);
+    NSCParameterAssert(path);
     
     if (nil == path) {
         path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"TCHTTPCache.TCNetwork.TCKit"];

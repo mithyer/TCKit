@@ -36,6 +36,7 @@
     }
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
 - (NSURL *)moveToTmp:(NSURL *)url
 {
     _orgUrl = url;
@@ -61,6 +62,7 @@
 
     return dstUrl;
 }
+#endif
 
 @end
 
@@ -268,10 +270,11 @@
 {
     // load local request on iOS8, must move files to tmp
     typeof(request) req = request;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
     if (SYSTEM_VERSION_LESS_THAN(@"9.0") &&
         nil != req.URL && req.URL.isFileURL &&
         ![req.URL.path hasPrefix:NSTemporaryDirectory()]) {
-    
+        
         _LocalURLFixer *fixer = objc_getAssociatedObject(self, _cmd);
         if (nil != fixer && ![fixer.orgUrl isEqual:req.URL]) {
             objc_setAssociatedObject(self, _cmd, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -286,6 +289,7 @@
         mReq.URL = [fixer moveToTmp:req.URL];
         req = mReq.copy;
     }
+#endif
     
     self.originalRequest = req;
     return [self tc_loadRequest:req];

@@ -18,20 +18,18 @@
     if (nil == _downloadIdentifier) {
         _downloadIdentifier = [TCHTTPRequestHelper MD5_16:self.request.apiUrl];
     }
-    
     return _downloadIdentifier;
 }
 
 - (NSString *)downloadResumeCacheDirectory
 {
     if (nil == _downloadResumeCacheDirectory) {
-        
         NSString *dir = [NSTemporaryDirectory() stringByAppendingPathComponent:@"TCHTTPRequestResumeCache"];
         if (![NSFileManager.defaultManager createDirectoryAtPath:dir
                                      withIntermediateDirectories:YES
                                                       attributes:nil
                                                            error:NULL]) {
-            NSAssert(false, @"create directory failed.");
+            NSCAssert(false, @"create directory failed.");
             dir = nil;
         }
         
