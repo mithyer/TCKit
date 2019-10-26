@@ -48,7 +48,7 @@ static CGBitmapInfo const kTCSystemDefaultOrder = kCGBitmapByteOrderDefault | kC
 
 + (CGImageRef)initCGImageWithContentOfFile:(NSString *)path
 {
-    NSParameterAssert(path);
+    NSCParameterAssert(path);
     if (nil == path) {
         return NULL;
     }

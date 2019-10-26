@@ -86,7 +86,7 @@
             }
             [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [AFPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", value]];
         } else {
-            NSAssert(false, @"conflict query param");
+            NSCAssert(false, @"conflict query param");
         }
     }
     com.percentEncodedQuery = query;

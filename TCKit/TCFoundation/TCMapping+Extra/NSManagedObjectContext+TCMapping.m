@@ -49,7 +49,7 @@
     
     NSError *error = nil;
     NSArray *array = [self executeFetchRequest:fetchRequest error:&error];
-    NSAssert(nil == error, @"%@", error.localizedDescription);
+    NSCAssert(nil == error, @"%@", error.localizedDescription);
     
     return array.lastObject;
 }

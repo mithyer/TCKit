@@ -114,14 +114,14 @@
 
 - (BOOL)canStart:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(self.requestAgent);
+    NSCParameterAssert(self.requestAgent);
     return [self.requestAgent canAddRequest:self error:error];
 }
 
 
 - (BOOL)start:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(self.requestAgent);
+    NSCParameterAssert(self.requestAgent);
     if (self.isCancelled) {
         return NO;
     }

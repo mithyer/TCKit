@@ -16,8 +16,8 @@
 
 - (void)tc_encodeWithCoder:(NSCoder *)coder
 {
-    NSParameterAssert(coder);
-    NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use encodeWithCoder instead!");
+    NSCParameterAssert(coder);
+    NSCAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use encodeWithCoder instead!");
     if (nil == coder || [TCMappingMeta isNSTypeForClass:self.class]) {
         return;
     }
@@ -59,7 +59,7 @@
             continue;
         }
         
-        NSAssert((id)kCFNull == value || [value respondsToSelector:@selector(encodeWithCoder:)], @"+[%@ encodeWithCoder:] unrecognized selector sent to class %@", NSStringFromClass([value class]), [value class]);
+        NSCAssert((id)kCFNull == value || [value respondsToSelector:@selector(encodeWithCoder:)], @"+[%@ encodeWithCoder:] unrecognized selector sent to class %@", NSStringFromClass([value class]), [value class]);
         
         [coder encodeObject:value forKey:mapKey];
     }
@@ -67,8 +67,8 @@
 
 - (instancetype)tc_initWithCoder:(NSCoder *)coder
 {
-    NSParameterAssert(coder);
-    NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use encodeWithCoder instead!");
+    NSCParameterAssert(coder);
+    NSCAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use encodeWithCoder instead!");
     if (nil == coder || [TCMappingMeta isNSTypeForClass:self.class]) {
         return nil;
     }
@@ -107,7 +107,7 @@
 
 - (instancetype)tc_copy
 {
-    NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use copy instead of %@!", NSStringFromSelector(_cmd));
+    NSCAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use copy instead of %@!", NSStringFromSelector(_cmd));
     if ([TCMappingMeta isNSTypeForClass:self.class]) {
         return nil;
     }
@@ -138,7 +138,7 @@
 
 - (NSUInteger)tc_hash
 {
-    NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use hash instead of %@!", NSStringFromSelector(_cmd));
+    NSCAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use hash instead of %@!", NSStringFromSelector(_cmd));
     if ([TCMappingMeta isNSTypeForClass:self.class]) {
         return (NSUInteger)((__bridge void *)self);
     }
@@ -170,7 +170,7 @@
 
 - (BOOL)tc_isEqual:(id)object
 {
-    NSAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use isEqual: instead of %@!", NSStringFromSelector(_cmd));
+    NSCAssert(![TCMappingMeta isNSTypeForClass:self.class], @"use isEqual: instead of %@!", NSStringFromSelector(_cmd));
     
     if (self == object) {
         return YES;

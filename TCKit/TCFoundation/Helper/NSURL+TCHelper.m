@@ -201,7 +201,7 @@ NSString * TCPercentEscapedStringFromFileName(NSString *string)
                 }
                 [query appendFormat:(query.length > 0 ? @"&%@" : @"%@"), [TCPercentEscapedStringFromString(key) stringByAppendingFormat:@"=%@", value]];
             } else {
-                NSAssert(false, @"conflict query param");
+                NSCAssert(false, @"conflict query param");
             }
         }
         com.percentEncodedQuery = query;

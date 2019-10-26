@@ -65,20 +65,20 @@
 
 - (SecKeyRef)privateKey
 {
-    NSParameterAssert(_privateKey);
+    NSCParameterAssert(_privateKey);
     return _privateKey;
 }
 
 
 + (nullable NSData *)signData:(NSData *)plainData withPrivateKey:(NSData *)p12Data passwd:(NSString *_Nullable)passwd
 {
-    NSParameterAssert(plainData);
+    NSCParameterAssert(plainData);
     if (nil == plainData) {
         return nil;
     }
     
     SecKeyRef key = [self getPrivateKeyRefrenceFromData:p12Data password:passwd];
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (NULL == key) {
         return nil;
     }

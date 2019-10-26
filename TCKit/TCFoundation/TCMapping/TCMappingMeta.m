@@ -460,8 +460,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
 - (id)valueForKey:(NSString *)key meta:(TCMappingMeta *)meta ignoreNSNull:(BOOL)ignoreNSNull
 {
     // valueForKey unsupport: c pointer (include char *, char const *), bit struct, union, SEL
-    NSParameterAssert(meta);
-    NSParameterAssert(key);
+    NSCParameterAssert(meta);
+    NSCParameterAssert(key);
     
     TCEncodingType type = tc_typeForInfo(meta->_info);
     
@@ -480,7 +480,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
             }
             return value;
         } else {
-            NSAssert(false, @"not response to -[%@], or you can ignore property %@", NSStringFromSelector(@selector(tc_serializedStringForKey:meta:)), key);
+            NSCAssert(false, @"not response to -[%@], or you can ignore property %@", NSStringFromSelector(@selector(tc_serializedStringForKey:meta:)), key);
         }
         return nil;
     }
@@ -517,8 +517,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
 
 - (void)setValue:(nullable id)value forKey:(NSString *)key meta:(TCMappingMeta *)meta forPersistent:(BOOL)persistent
 {
-    NSParameterAssert(meta);
-    NSParameterAssert(key);
+    NSCParameterAssert(meta);
+    NSCParameterAssert(key);
     
     TCEncodingType type = tc_typeForInfo(meta->_info);
     
@@ -530,7 +530,7 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
             if ([self.class instancesRespondToSelector:@selector(tc_setSerializedString:forKey:meta:)]) {
                 [self tc_setSerializedString:str forKey:key meta:meta];
             } else {
-                NSAssert(false, @"not response to -[%@], or you can ignore property %@", NSStringFromSelector(@selector(tc_setSerializedString:forKey:meta:)), key);
+                NSCAssert(false, @"not response to -[%@], or you can ignore property %@", NSStringFromSelector(@selector(tc_setSerializedString:forKey:meta:)), key);
             }
             return;
         } else if ([value isKindOfClass:NSValue.class]) {
@@ -570,8 +570,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
 
 - (void)copy:(id)copy forKey:(NSString *)key meta:(TCMappingMeta *)meta
 {
-    NSParameterAssert(meta);
-    NSParameterAssert(key);
+    NSCParameterAssert(meta);
+    NSCParameterAssert(key);
     
     TCEncodingType type = tc_typeForInfo(meta->_info);
     
@@ -627,8 +627,8 @@ NSDictionary<NSString *, TCMappingMeta *> *tc_propertiesUntilRootClass(Class kla
 
 + (instancetype)valueWitUnsafeData:(NSData *)data customStructType:(const char *)type
 {
-    NSParameterAssert(data);
-    NSParameterAssert(type);
+    NSCParameterAssert(data);
+    NSCParameterAssert(type);
     
     if (nil == data || NULL == type) {
         return nil;

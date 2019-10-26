@@ -361,12 +361,12 @@ forHTTPHeaderField:(NSString *)field
                                 parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(method);
-    NSParameterAssert(URLString);
+    NSCParameterAssert(method);
+    NSCParameterAssert(URLString);
 
     NSURL *url = [NSURL URLWithString:URLString];
 
-    NSParameterAssert(url);
+    NSCParameterAssert(url);
 
     NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     mutableRequest.HTTPMethod = method;
@@ -388,8 +388,8 @@ forHTTPHeaderField:(NSString *)field
                               constructingBodyWithBlock:(void (^)(id <AFMultipartFormData> formData))block
                                                   error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(method);
-    NSParameterAssert(![method isEqualToString:@"GET"] && ![method isEqualToString:@"HEAD"]);
+    NSCParameterAssert(method);
+    NSCParameterAssert(![method isEqualToString:@"GET"] && ![method isEqualToString:@"HEAD"]);
 
     NSMutableURLRequest *mutableRequest = [self requestWithMethod:method URLString:URLString parameters:nil error:error];
 
@@ -423,8 +423,8 @@ forHTTPHeaderField:(NSString *)field
                              writingStreamContentsToFile:(NSURL *)fileURL
                                        completionHandler:(void (^)(NSError *error))handler
 {
-    NSParameterAssert(request.HTTPBodyStream);
-    NSParameterAssert([fileURL isFileURL]);
+    NSCParameterAssert(request.HTTPBodyStream);
+    NSCParameterAssert([fileURL isFileURL]);
 
     NSInputStream *inputStream = request.HTTPBodyStream;
     NSOutputStream *outputStream = [[NSOutputStream alloc] initWithURL:fileURL append:NO];
@@ -479,7 +479,7 @@ forHTTPHeaderField:(NSString *)field
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
+    NSCParameterAssert(request);
 
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
 
@@ -692,8 +692,8 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                          name:(NSString *)name
                         error:(NSError * __autoreleasing *)error
 {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(name);
+    NSCParameterAssert(fileURL);
+    NSCParameterAssert(name);
 
     NSString *fileName = [fileURL lastPathComponent];
     NSString *mimeType = AFContentTypeForPathExtension([fileURL pathExtension]);
@@ -707,10 +707,10 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                      mimeType:(NSString *)mimeType
                         error:(NSError * __autoreleasing *)error
 {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
+    NSCParameterAssert(fileURL);
+    NSCParameterAssert(name);
+    NSCParameterAssert(fileName);
+    NSCParameterAssert(mimeType);
 
     if (![fileURL isFileURL]) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: NSLocalizedStringFromTable(@"Expected URL to be a file URL", @"AFNetworking", nil)};
@@ -755,9 +755,9 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                            length:(int64_t)length
                          mimeType:(NSString *)mimeType
 {
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
+    NSCParameterAssert(name);
+    NSCParameterAssert(fileName);
+    NSCParameterAssert(mimeType);
 
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
@@ -779,9 +779,9 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                       fileName:(NSString *)fileName
                       mimeType:(NSString *)mimeType
 {
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
+    NSCParameterAssert(name);
+    NSCParameterAssert(fileName);
+    NSCParameterAssert(mimeType);
 
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
@@ -793,7 +793,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (void)appendPartWithFormData:(NSData *)data
                           name:(NSString *)name
 {
-    NSParameterAssert(name);
+    NSCParameterAssert(name);
 
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"", name] forKey:@"Content-Disposition"];
@@ -804,7 +804,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (void)appendPartWithHeaders:(NSDictionary *)headers
                          body:(NSData *)body
 {
-    NSParameterAssert(body);
+    NSCParameterAssert(body);
 
     AFHTTPBodyPart *bodyPart = [[AFHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
@@ -1245,7 +1245,7 @@ typedef enum {
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
+    NSCParameterAssert(request);
 
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         return [super requestBySerializingRequest:request withParameters:parameters error:error];
@@ -1338,7 +1338,7 @@ typedef enum {
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
+    NSCParameterAssert(request);
 
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         return [super requestBySerializingRequest:request withParameters:parameters error:error];

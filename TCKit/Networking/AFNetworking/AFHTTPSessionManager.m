@@ -87,13 +87,13 @@
 #pragma mark -
 
 - (void)setRequestSerializer:(AFHTTPRequestSerializer <AFURLRequestSerialization> *)requestSerializer {
-    NSParameterAssert(requestSerializer);
+    NSCParameterAssert(requestSerializer);
 
     _requestSerializer = requestSerializer;
 }
 
 - (void)setResponseSerializer:(AFHTTPResponseSerializer <AFURLResponseSerialization> *)responseSerializer {
-    NSParameterAssert(responseSerializer);
+    NSCParameterAssert(responseSerializer);
 
     [super setResponseSerializer:responseSerializer];
 }

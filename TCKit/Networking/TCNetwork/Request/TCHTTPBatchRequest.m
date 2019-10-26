@@ -55,13 +55,13 @@
 
 - (BOOL)start:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(self.requestAgent);
+    NSCParameterAssert(self.requestAgent);
     
     if (nil == self.requestAgent) {
         return NO;
     }
     
-    NSAssert(nil == self.timerPolicy || kTCHTTPTimerTypeDelay == self.timerPolicy.timerType, @"batch request support delay timer only");
+    NSCAssert(nil == self.timerPolicy || kTCHTTPTimerTypeDelay == self.timerPolicy.timerType, @"batch request support delay timer only");
     if (nil != self.timerPolicy && kTCHTTPTimerTypeDelay != self.timerPolicy.timerType) {
         return NO;
     }

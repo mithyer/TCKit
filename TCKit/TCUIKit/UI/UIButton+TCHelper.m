@@ -346,7 +346,7 @@ static char const kBtnExtraKey;
 
 - (void)noFrameKVOPerform:(dispatch_block_t)block
 {
-    NSParameterAssert(block);
+    NSCParameterAssert(block);
     
     if (nil == block) {
         return;

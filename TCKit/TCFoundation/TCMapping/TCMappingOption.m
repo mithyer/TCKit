@@ -29,7 +29,7 @@
 
 + (instancetype)optionWithNameMapping:(NSDictionary<NSString *, NSString *> *)nameMapping
 {
-    NSParameterAssert(nameMapping);
+    NSCParameterAssert(nameMapping);
     
     TCMappingOption *opt = [[self alloc] init];
     opt.nameMapping = nameMapping;
@@ -39,7 +39,7 @@
 
 + (instancetype)optionWithTypeMapping:(NSDictionary<NSString *, Class> *)typeMapping
 {
-    NSParameterAssert(typeMapping);
+    NSCParameterAssert(typeMapping);
     
     TCMappingOption *opt = [[self alloc] init];
     opt.typeMapping = typeMapping;
@@ -49,7 +49,7 @@
 
 + (instancetype)optionWithMappingValidate:(BOOL (^)(id obj))validate
 {
-    NSParameterAssert(validate);
+    NSCParameterAssert(validate);
     
     TCMappingOption *opt = [[self alloc] init];
     opt.mappingValidate = validate;

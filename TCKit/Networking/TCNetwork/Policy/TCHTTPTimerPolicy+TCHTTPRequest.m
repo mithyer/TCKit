@@ -48,7 +48,7 @@
         return NO;
     }
     
-    NSParameterAssert(self.intervalFunc);
+    NSCParameterAssert(self.intervalFunc);
     
     NSTimeInterval interval = self.intervalFunc(self, self.polledCount++);
     if (interval > 0) {

@@ -183,7 +183,7 @@
 
 - (AFHTTPSessionManager *)dequeueRequestManagerWithIdentifier:(NSString *)identifier
 {
-    NSParameterAssert(identifier);
+    NSCParameterAssert(identifier);
     if (nil == identifier) {
         return nil;
     }
@@ -268,7 +268,7 @@
 
 - (BOOL)canAddRequest:(id<TCHTTPRequest>)request error:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(request.observer);
+    NSCParameterAssert(request.observer);
     
     if (nil == request.observer) {
         if (NULL != error) {
@@ -355,10 +355,10 @@
 
 - (void)fireDownloadTaskFor:(id<TCHTTPRequest, TCHTTPReqAgentDelegate>)request downloadUrl:(NSURL *)downloadUrl successBlock:(void (^)(NSURLSessionTask *task, id responseObject))successBlock failureBlock:(void (^)(NSURLSessionTask *task, NSError *error))failureBlock
 {
-    NSParameterAssert(request);
-    NSParameterAssert(downloadUrl);
-    NSParameterAssert(successBlock);
-    NSParameterAssert(failureBlock);
+    NSCParameterAssert(request);
+    NSCParameterAssert(downloadUrl);
+    NSCParameterAssert(successBlock);
+    NSCParameterAssert(failureBlock);
     
     __block NSURLSessionTask *task = nil;
     
@@ -464,7 +464,7 @@
     }
     
     NSURL *url = [self buildRequestUrlForRequest:request];
-    NSParameterAssert(url);
+    NSCParameterAssert(url);
     
     id param = request.parameters;
     if (!request.ignoreParamFilter && [self.urlFilter respondsToSelector:@selector(filteredParamForParam:)]) {
@@ -499,9 +499,9 @@
         }
             
         case kTCHTTPMethodDownload: {
-            NSParameterAssert(request.streamPolicy.downloadDestinationPath);
+            NSCParameterAssert(request.streamPolicy.downloadDestinationPath);
             NSURL *downloadURL = [url appendParamIfNeed:param orderKey:nil];
-            NSParameterAssert(downloadURL);
+            NSCParameterAssert(downloadURL);
             
             if (nil == downloadURL || request.streamPolicy.downloadDestinationPath.length < 1) {
                 break; // !!!: break here, no return
@@ -586,7 +586,7 @@
 
 - (void)addRequestToPool:(id<TCHTTPRequest>)request
 {
-    NSParameterAssert(request);
+    NSCParameterAssert(request);
     
     [_poolLock lock];
     NSMapTable<id<NSCoding>, id<TCHTTPRequest>> *map = [_requestPool objectForKey:request.observer];
@@ -793,7 +793,7 @@
 
 - (void)cachedResponseForRequest:(id<TCHTTPRequest>)request result:(void(^)(id response))result
 {
-    NSParameterAssert(result);
+    NSCParameterAssert(result);
     
     if (nil == result) {
         return;

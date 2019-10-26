@@ -31,7 +31,7 @@
         dispatch_block_t block = ^{
             s_userAgent = [[[self alloc] init] stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
         };
-        NSParameterAssert(NSThread.isMainThread);
+        NSCParameterAssert(NSThread.isMainThread);
         if (NSThread.isMainThread) {
             block();
         } else {
@@ -135,7 +135,7 @@
             [self bk_weaklyAssociateValue:headerView withKey:@selector(webHeaderView)];
         }
         
-        NSParameterAssert(headerView.superview == scrollView);
+        NSCParameterAssert(headerView.superview == scrollView);
     }
     
     if (needResetTopInsets) {

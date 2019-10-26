@@ -407,7 +407,7 @@
             extra.headerView = headerView;
         }
         
-        NSParameterAssert(headerView.superview == scrollView);
+        NSCParameterAssert(headerView.superview == scrollView);
     }
     
     if (needUpdate) {

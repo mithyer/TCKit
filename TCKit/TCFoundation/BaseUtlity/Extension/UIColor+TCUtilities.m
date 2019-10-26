@@ -225,7 +225,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 - (CGFloat)cyanChannel
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -cyanChannel");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -cyanChannel");
     CGFloat c = 0.0f;
     [self toC:&c toM:NULL toY:NULL toK:NULL];
     return c;
@@ -233,7 +233,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 - (CGFloat)magentaChannel
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -magentaChannel");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -magentaChannel");
     CGFloat m = 0.0f;
     [self toC:NULL toM:&m toY:NULL toK:NULL];
     return m;
@@ -241,7 +241,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 - (CGFloat)yellowChannel
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -yellowChannel");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -yellowChannel");
     CGFloat y = 0.0f;
     [self toC:NULL toM:NULL toY:&y toK:NULL];
     return y;
@@ -249,7 +249,7 @@ UIColor *tcInterpolateColors(UIColor *c1, UIColor *c2, CGFloat amt)
 
 - (CGFloat)blackChannel
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -blackChannel");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -blackChannel");
     CGFloat k = 0.0f;
     [self toC:NULL toM:NULL toY:NULL toK:&k];
     return k;
@@ -418,7 +418,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)red
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -red");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -red");
     CGFloat r = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -437,7 +437,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)green
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -green");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -green");
     CGFloat g = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -456,7 +456,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)blue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -blue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -blue");
     CGFloat b = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -475,7 +475,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)alpha
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -alpha");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -alpha");
     CGFloat a = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -494,7 +494,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)white
 {
-    NSAssert(self.usesMonochromeColorspace, @"Must be a Monochrome color to use -white");
+    NSCAssert(self.usesMonochromeColorspace, @"Must be a Monochrome color to use -white");
     
     CGFloat w = 0;
     [self getWhite:&w alpha:NULL];
@@ -504,7 +504,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)hue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hue");
     CGFloat h = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -523,7 +523,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)saturation
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -saturation");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -saturation");
     CGFloat s = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -542,7 +542,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)brightness
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -brightness");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -brightness");
     CGFloat v = 0.0f;
     
     switch (self.colorSpaceModel) {
@@ -561,7 +561,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (CGFloat)luminance
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -luminance");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -luminance");
     
     CGFloat r = 0, g = 0, b = 0;
     if (![self getRed:&r green:&g blue:&b alpha:NULL]) {
@@ -597,7 +597,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (NSArray *)arrayFromRGBAComponents
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -arrayFromRGBAComponents");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -arrayFromRGBAComponents");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -785,7 +785,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
                                    blue:(CGFloat)blue
                                   alpha:(CGFloat)alpha
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -803,7 +803,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
                             blue:(CGFloat)blue
                            alpha:(CGFloat)alpha
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -821,7 +821,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
                                   blue:(CGFloat)blue
                                  alpha:(CGFloat)alpha
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -839,7 +839,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
                                  blue:(CGFloat)blue
                                 alpha:(CGFloat)alpha
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -878,7 +878,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (instancetype)colorByMultiplyingByColor:(UIColor *)color
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -890,7 +890,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (instancetype)colorByAddingColor:(UIColor *)color
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -902,7 +902,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (instancetype)colorByLighteningToColor:(UIColor *)color
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -914,7 +914,7 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 
 - (instancetype)colorByDarkeningToColor:(UIColor *)color
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use arithmetic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -927,8 +927,8 @@ void tcYUV2RGB_f(CGFloat y, CGFloat u, CGFloat v, CGFloat *r, CGFloat *g, CGFloa
 // Andrew Wooster https://github.com/wooster
 - (instancetype)colorByInterpolatingToColor:(UIColor *)color byFraction:(CGFloat)fraction
 {
-    NSAssert(self.canProvideRGBComponents, @"Self must be a RGB color to use arithmatic operations");
-    NSAssert(color.canProvideRGBComponents, @"Color must be a RGB color to use arithmatic operations");
+    NSCAssert(self.canProvideRGBComponents, @"Self must be a RGB color to use arithmatic operations");
+    NSCAssert(color.canProvideRGBComponents, @"Color must be a RGB color to use arithmatic operations");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -1245,7 +1245,7 @@ void tcHSPtoRGB(
 
 - (uint32_t)rgbHex
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -rgbHex");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -rgbHex");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -1256,7 +1256,7 @@ void tcHSPtoRGB(
 
 - (uint32_t)rgbaHex
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -rgbaHex");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -rgbaHex");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -1267,7 +1267,7 @@ void tcHSPtoRGB(
 
 - (uint32_t)argbHex
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -argbHex");
+    NSCAssert(self.canProvideRGBComponents, @"Must be a RGB color to use -argbHex");
     
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
@@ -1278,7 +1278,7 @@ void tcHSPtoRGB(
 
 - (NSString *)stringValue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -stringValue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -stringValue");
     NSString *result = nil;
     switch (self.colorSpaceModel) {
         case kCGColorSpaceModelRGB:
@@ -1297,7 +1297,7 @@ void tcHSPtoRGB(
 
 - (NSString *)rgbaHexStringValue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
     NSString *result = nil;
     switch (self.colorSpaceModel) {
         case kCGColorSpaceModelRGB:
@@ -1314,7 +1314,7 @@ void tcHSPtoRGB(
 
 - (NSString *)rgbHexStringValue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
     NSString *result = nil;
     switch (self.colorSpaceModel) {
         case kCGColorSpaceModelRGB:
@@ -1331,7 +1331,7 @@ void tcHSPtoRGB(
 
 - (NSString *)argbHexStringValue
 {
-    NSAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
+    NSCAssert(self.canProvideRGBComponents, @"Must be an RGB color to use -hexStringValue");
     NSString *result = nil;
     switch (self.colorSpaceModel) {
         case kCGColorSpaceModelRGB:

@@ -112,7 +112,7 @@ static CGImageRef TC_CGImageCreateOrientationUp(UIImage *img, CGBitmapInfo destB
 #ifndef TC_IOS_PUBLISH
     bitmapInfo = CGImageGetBitmapInfo(resutImg.CGImage);
     if (![UIImage isDefaultBitMapOrder:bitmapInfo] || resutImg.imageOrientation != UIImageOrientationUp) {
-        NSAssert(false, @"input image is not BGRA");
+        NSCAssert(false, @"input image is not BGRA");
     }
 #endif
     return resutImg;

@@ -76,7 +76,7 @@
 
 - (void)cachedResponseByForce:(BOOL)force result:(void(^)(id response, TCCachedRespState state))result
 {
-    NSParameterAssert(result);
+    NSCParameterAssert(result);
     
     if (nil == result) {
         return;

@@ -247,7 +247,7 @@ static NSString *tc_md5_32(NSString *str)
             NSError *error = nil;
             [NSFileManager.defaultManager removeItemAtPath:tmpDownloadFile error:NULL];
             [NSFileManager.defaultManager copyItemAtPath:[subpath stringByAppendingPathComponent:tmpDownloadFile.lastPathComponent] toPath:tmpDownloadFile error:&error];
-            NSAssert(nil == error, @"%@", error);
+            NSCAssert(nil == error, @"%@", error);
         }
         
         if (![NSFileManager.defaultManager fileExistsAtPath:tmpDownloadFile]) {

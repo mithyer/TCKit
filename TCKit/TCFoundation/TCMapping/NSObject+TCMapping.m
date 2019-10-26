@@ -558,7 +558,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 
 + (instancetype)tc_mappingWithDictionaryOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(path);
+    NSCParameterAssert(path);
     
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached|NSDataReadingMappedAlways error:NULL];
     if (nil == data) {
@@ -586,7 +586,7 @@ static id databaseInstanceWithValue(NSDictionary *value, NSDictionary *primaryKe
 
 + (NSMutableArray *)tc_mappingWithArrayOfJSONFile:(NSString *)path error:(NSError * _Nullable __strong * _Nullable)error
 {
-    NSParameterAssert(path);
+    NSCParameterAssert(path);
     NSError *err = nil;
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingUncached|NSDataReadingMappedAlways error:&err];
     if (nil == data) {
@@ -673,9 +673,9 @@ NS_INLINE dispatch_queue_t tc_mappingQueue(void)
 
 - (void)tc_merge:(__kindof NSObject *)obj map:(id (^)(SEL prop, id left, id right))map
 {
-    NSParameterAssert(obj);
-    NSParameterAssert(map);
-    NSAssert([obj isKindOfClass:self.class], @"obj must be kindof self class");
+    NSCParameterAssert(obj);
+    NSCParameterAssert(map);
+    NSCAssert([obj isKindOfClass:self.class], @"obj must be kindof self class");
     
     __unsafe_unretained Class curClass = self.class;
     if (nil == obj || nil == map || ![obj isKindOfClass:curClass]) {
@@ -912,7 +912,7 @@ static id tc_mappingWithDictionary(NSDictionary *dataDic,
 
 - (id)valueForKeyExceptNull:(NSString *)key
 {
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     id obj = self[key];
     return (id)kCFNull == obj ? nil : obj;
 }

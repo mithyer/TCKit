@@ -261,7 +261,7 @@ static NSObject *codingObject(NSObject *obj, TCPersisentStyle const style, Class
 
 - (BOOL)tc_writeJSONToFile:(NSString *)path atomically:(BOOL)useAuxiliaryFile
 {
-    NSParameterAssert(path);
+    NSCParameterAssert(path);
     if (path.length < 1) {
         return NO;
     }

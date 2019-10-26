@@ -79,7 +79,7 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (void)migrateToVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(NSString *)domain block:(dispatch_block_t)block
 {
-    NSParameterAssert(version);
+    NSCParameterAssert(version);
     
     if (nil == version) {
         return;
@@ -110,7 +110,7 @@ NSString *const kTCApplicationDidReceiveDiskSpaceWarning = @"TCApplicationDidRec
 
 + (BOOL)migratedVersion:(NSString *)version type:(TCMigrationVersionType)type domain:(NSString *)domain
 {
-    NSParameterAssert(version);
+    NSCParameterAssert(version);
     if (nil == version) {
         return YES;
     }

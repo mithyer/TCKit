@@ -41,7 +41,7 @@
 
 + (instancetype)RSAWithPublicFile:(NSString *)derFile privateFile:(NSString *)p12File passwd:(NSString *)passwd
 {
-    NSParameterAssert(derFile);
+    NSCParameterAssert(derFile);
     if (nil == derFile) {
         return nil;
     }
@@ -80,7 +80,7 @@
         }
     }
     
-    NSParameterAssert(_publicKey);
+    NSCParameterAssert(_publicKey);
     return _publicKey;
 }
 
@@ -115,7 +115,7 @@
         }
     }
     
-    NSParameterAssert(_privateKey);
+    NSCParameterAssert(_privateKey);
     return _privateKey;
 }
 
@@ -126,13 +126,13 @@
 
 - (NSData *)encryptData:(NSData *)plainData
 {
-    NSParameterAssert(plainData);
+    NSCParameterAssert(plainData);
     if (nil == plainData) {
         return nil;
     }
     
     SecKeyRef key = self.publicKey;
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (NULL == key) {
         return nil;
     }
@@ -182,13 +182,13 @@
 
 - (NSData *)decryptData:(NSData *)cypherData
 {
-    NSParameterAssert(cypherData);
+    NSCParameterAssert(cypherData);
     if (nil == cypherData) {
         return nil;
     }
     
     SecKeyRef key = self.privateKey;
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (NULL == key) {
         return nil;
     }
@@ -235,7 +235,7 @@
 
 - (NSString *)encryptString:(NSString *)plainStr
 {
-    NSParameterAssert(plainStr);
+    NSCParameterAssert(plainStr);
     if (nil == plainStr) {
         return nil;
     }
@@ -246,7 +246,7 @@
 
 - (NSString *)decryptString:(NSString *)cypherStr
 {
-    NSParameterAssert(cypherStr);
+    NSCParameterAssert(cypherStr);
     if (nil == cypherStr) {
         return nil;
     }
@@ -263,13 +263,13 @@
 
 - (NSData *)signSHA256Data:(NSData *)plainData
 {
-    NSParameterAssert(plainData);
+    NSCParameterAssert(plainData);
     if (nil == plainData) {
         return nil;
     }
     
     SecKeyRef key = self.privateKey;
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (NULL == key) {
         return nil;
     }
@@ -306,14 +306,14 @@
 
 - (BOOL)verifySHA256Data:(NSData *)plainData signData:(NSData *)signData
 {
-    NSParameterAssert(plainData);
-    NSParameterAssert(signData);
+    NSCParameterAssert(plainData);
+    NSCParameterAssert(signData);
     if (nil == plainData || nil == signData) {
         return NO;
     }
     
     SecKeyRef key = self.publicKey;
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     if (NULL == key) {
         return NO;
     }
@@ -337,7 +337,7 @@
 
 - (NSString *)signSHA256String:(NSString *)plainStr
 {
-    NSParameterAssert(plainStr);
+    NSCParameterAssert(plainStr);
     if (nil == plainStr) {
         return nil;
     }
@@ -348,8 +348,8 @@
 
 - (BOOL)verifySHA256String:(NSString *)plainStr sign:(NSString *)signStr
 {
-    NSParameterAssert(plainStr);
-    NSParameterAssert(signStr);
+    NSCParameterAssert(plainStr);
+    NSCParameterAssert(signStr);
     if (nil == plainStr || nil == signStr) {
         return NO;
     }

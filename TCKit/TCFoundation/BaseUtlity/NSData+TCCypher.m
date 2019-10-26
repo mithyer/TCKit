@@ -797,7 +797,7 @@ static uint8_t nibbleFromChar(unichar c) {
 
 - (NSRange)rangeOfString:(NSString *)strToFind encoding:(NSStringEncoding)encoding options:(NSDataSearchOptions)mask range:(NSRange * _Nullable)searchRange
 {
-    NSParameterAssert(strToFind);
+    NSCParameterAssert(strToFind);
     if (nil == strToFind) {
         return NSMakeRange(NSNotFound, 0);
     }

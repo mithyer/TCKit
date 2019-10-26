@@ -29,7 +29,7 @@ NSTimeInterval kTCHTTPTimerIntervalEnd = -1;
 
 + (instancetype)pollingPolicyWithIntervals:(NSTimeInterval (^)(TCHTTPTimerPolicy *policy, NSUInteger index))intervalFunc
 {
-    NSParameterAssert(intervalFunc);
+    NSCParameterAssert(intervalFunc);
     if (nil == intervalFunc) {
         return nil;
     }
@@ -42,7 +42,7 @@ NSTimeInterval kTCHTTPTimerIntervalEnd = -1;
 
 + (instancetype)delayPolicyWithInterval:(NSTimeInterval)interval
 {
-    NSAssert(interval > 0, @"delay interval must > 0");
+    NSCAssert(interval > 0, @"delay interval must > 0");
     
     if (interval <= 0) {
         return nil;
@@ -58,7 +58,7 @@ NSTimeInterval kTCHTTPTimerIntervalEnd = -1;
 
 + (instancetype)retryPolicyWithIntervals:(NSTimeInterval (^)(TCHTTPTimerPolicy *policy, NSUInteger index))intervalFunc
 {
-    NSParameterAssert(intervalFunc);
+    NSCParameterAssert(intervalFunc);
     if (nil == intervalFunc) {
         return nil;
     }

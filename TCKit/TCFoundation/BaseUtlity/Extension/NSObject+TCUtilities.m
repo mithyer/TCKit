@@ -97,7 +97,7 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
 
 + (BOOL)currentClassRespondToSelector:(SEL)sel
 {
-    NSParameterAssert(sel);
+    NSCParameterAssert(sel);
     
     if (NULL == sel || ![self respondsToSelector:sel]) {
         return NO;
@@ -108,7 +108,7 @@ BOOL tcSwizzleMethod(TCSwizzleInput input, id block, IMP *origIMP, NSError **err
 
 + (BOOL)currentClassInstanceRespondToSelector:(SEL)sel
 {
-    NSParameterAssert(sel);
+    NSCParameterAssert(sel);
     
     if (NULL == sel || ![self instancesRespondToSelector:sel]) {
         return NO;
@@ -469,8 +469,8 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 - (BOOL)isProperty:(NSString *)propertyName confirm:(Protocol *)protocol
 {
-    NSParameterAssert(propertyName);
-    NSParameterAssert(protocol);
+    NSCParameterAssert(propertyName);
+    NSCParameterAssert(protocol);
     if (nil == propertyName || nil == protocol) {
         return NO;
     }
@@ -966,7 +966,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 - (void)bk_weaklyAssociateValue:(__autoreleasing id)value withKey:(const void *)key
 {
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     
     _BKWeakAssociatedObject *assoc = objc_getAssociatedObject(self, key);
     if (nil == assoc && nil != value) {
@@ -1015,7 +1015,7 @@ static void tcPerformBlockAfterDelay(dispatch_block_t block, NSTimeInterval dela
 
 + (void)bk_weaklyAssociateValue:(__autoreleasing id)value withKey:(const void *)key
 {
-    NSParameterAssert(key);
+    NSCParameterAssert(key);
     
     _BKWeakAssociatedObject *assoc = objc_getAssociatedObject(self, key);
     if (nil == assoc && nil != value) {

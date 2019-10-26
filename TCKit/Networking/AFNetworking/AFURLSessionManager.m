@@ -430,12 +430,12 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 }
 
 - (NSURLSessionTaskState)state {
-    NSAssert(NO, @"State method should never be called in the actual dummy class");
+    NSCAssert(NO, @"State method should never be called in the actual dummy class");
     return NSURLSessionTaskStateCanceling;
 }
 
 - (void)af_resume {
-    NSAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
+    NSCAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
     NSURLSessionTaskState state = [self state];
     [self af_resume];
     
@@ -445,7 +445,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 }
 
 - (void)af_suspend {
-    NSAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
+    NSCAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");
     NSURLSessionTaskState state = [self state];
     [self af_suspend];
     
@@ -569,7 +569,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 #pragma mark -
 
 - (AFURLSessionManagerTaskDelegate *)delegateForTask:(NSURLSessionTask *)task {
-    NSParameterAssert(task);
+    NSCParameterAssert(task);
 
     AFURLSessionManagerTaskDelegate *delegate = nil;
     [self.lock lock];
@@ -582,8 +582,8 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 - (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
             forTask:(NSURLSessionTask *)task
 {
-    NSParameterAssert(task);
-    NSParameterAssert(delegate);
+    NSCParameterAssert(task);
+    NSCParameterAssert(delegate);
 
     [self.lock lock];
     self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
@@ -645,7 +645,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 }
 
 - (void)removeDelegateForTask:(NSURLSessionTask *)task {
-    NSParameterAssert(task);
+    NSCParameterAssert(task);
 
     [self.lock lock];
     [self removeNotificationObserverForTask:task];
@@ -706,7 +706,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 #pragma mark -
 
 - (void)setResponseSerializer:(id <AFURLResponseSerialization>)responseSerializer {
-    NSParameterAssert(responseSerializer);
+    NSCParameterAssert(responseSerializer);
 
     _responseSerializer = responseSerializer;
 }

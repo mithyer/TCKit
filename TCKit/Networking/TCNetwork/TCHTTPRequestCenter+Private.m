@@ -58,7 +58,7 @@
 
 - (id<TCHTTPRequest>)batchRequestWithRequests:(NSArray<id<TCHTTPRequest>> *)requests
 {
-    NSParameterAssert(requests);
+    NSCParameterAssert(requests);
     if (requests.count < 1) {
         return nil;
     }
@@ -71,9 +71,9 @@
 
 - (id<TCHTTPRequest>)requestForDownload:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy cachePolicy:(TCHTTPCachePolicy *)cachePolicy
 {
-    NSParameterAssert(url);
-    NSParameterAssert(streamPolicy);
-    NSParameterAssert(streamPolicy.downloadDestinationPath);
+    NSCParameterAssert(url);
+    NSCParameterAssert(streamPolicy);
+    NSCParameterAssert(streamPolicy.downloadDestinationPath);
     
     if (nil == url || nil == streamPolicy || nil == streamPolicy.downloadDestinationPath) {
         return nil;
@@ -87,9 +87,9 @@
 
 - (id<TCHTTPRequest>)requestForUploadTo:(NSString *)url streamPolicy:(TCHTTPStreamPolicy *)streamPolicy
 {
-    NSParameterAssert(url);
-    NSParameterAssert(streamPolicy);
-//    NSParameterAssert(streamPolicy.constructingBodyBlock);
+    NSCParameterAssert(url);
+    NSCParameterAssert(streamPolicy);
+//    NSCParameterAssert(streamPolicy.constructingBodyBlock);
     
     if (nil == url || nil == streamPolicy/* || nil == streamPolicy.constructingBodyBlock*/) {
         return nil;

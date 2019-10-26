@@ -46,7 +46,7 @@ NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationD
         });
         
         if (!class_addMethod(self, sel, handler, "v40@0:8@16@24@?32")) {
-            NSAssert(false, @"add %@ failed", NSStringFromSelector(sel));
+            NSCAssert(false, @"add %@ failed", NSStringFromSelector(sel));
         }
     }
     
