@@ -64,7 +64,11 @@
     if (@available(iOS 13, *)) {
         return [self getOffset:offsetInFile error:error];
     } else {
-        return self.offsetInFile;
+        if (NULL == offsetInFile) {
+            return NO;
+        }
+        *offsetInFile = self.offsetInFile;
+        return YES;
     }
 }
 
