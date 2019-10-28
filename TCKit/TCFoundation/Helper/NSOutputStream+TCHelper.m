@@ -27,3 +27,96 @@
 }
 
 @end
+
+
+@implementation NSFileHandle (TCHelper)
+
+- (nullable NSData *)tc_readDataToEndOfFileAndReturnError:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self readDataToEndOfFileAndReturnError:error];
+    } else {
+        return [self readDataToEndOfFile];
+    }
+}
+
+- (nullable NSData *)tc_readDataUpToLength:(NSUInteger)length error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self readDataUpToLength:length error:error];
+    } else {
+        return [self readDataOfLength:length];
+    }
+}
+
+- (BOOL)tc_writeData:(NSData *)data error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self writeData:data error:error];
+    } else {
+        [self writeData:data];
+        return YES;
+    }
+}
+
+- (BOOL)tc_getOffset:(out unsigned long long *)offsetInFile error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self getOffset:offsetInFile error:error];
+    } else {
+        return self.offsetInFile;
+    }
+}
+
+- (BOOL)tc_seekToEndReturningOffset:(out unsigned long long *_Nullable)offsetInFile error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self seekToEndReturningOffset:offsetInFile error:error];
+    } else {
+        [self seekToEndOfFile];
+        return YES;
+    }
+}
+
+- (BOOL)tc_seekToOffset:(unsigned long long)offset error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self seekToOffset:offset error:error];
+    } else {
+        [self seekToFileOffset:offset];
+        return YES;
+    }
+}
+
+- (BOOL)tc_truncateAtOffset:(unsigned long long)offset error:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self truncateAtOffset:offset error:error];
+    } else {
+        [self truncateFileAtOffset:offset];
+        return YES;
+    }
+}
+
+- (BOOL)tc_synchronizeAndReturnError:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self synchronizeAndReturnError:error];
+    } else {
+        [self synchronizeFile];
+        return YES;
+        
+    }
+}
+
+- (BOOL)tc_closeAndReturnError:(out NSError **)error
+{
+    if (@available(iOS 13, *)) {
+        return [self closeAndReturnError:error];
+    } else {
+        [self closeFile];
+        return YES;
+    }
+}
+
+@end

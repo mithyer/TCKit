@@ -22,35 +22,38 @@ NSString *const kTCUIApplicationDelegateChangedNotification = @"TCUIApplicationD
 
 + (void)load
 {
-    SEL sel = @selector(openURL:options:completionHandler:);
-    if (NULL == sel) {
-        sel = NSSelectorFromString(@"openURL:options:completionHandler:");
-    }
-    Method m1 = class_getInstanceMethod(self, sel);
-    
-    if (NULL != sel && NULL == m1) {
-        IMP handler = imp_implementationWithBlock(^(UIApplication *app, NSURL *url, NSDictionary<NSString *, id> *options, void (^ __nullable completion)(BOOL success)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-            BOOL ret = [app openURL:url];
-#pragma clang diagnostic pop
-            if (nil != completion) {
-                if (NSThread.isMainThread) {
-                    completion(ret);
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(ret);
-                    });
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+            SEL sel = @selector(openURL:options:completionHandler:);
+            if (NULL == sel) {
+                sel = NSSelectorFromString(@"openURL:options:completionHandler:");
+            }
+            Method m1 = class_getInstanceMethod(self, sel);
+            
+            if (NULL != sel && NULL == m1) {
+                IMP handler = imp_implementationWithBlock(^(UIApplication *app, NSURL *url, NSDictionary<NSString *, id> *options, void (^ __nullable completion)(BOOL success)) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated"
+                    BOOL ret = [app openURL:url];
+        #pragma clang diagnostic pop
+                    if (nil != completion) {
+                        if (NSThread.isMainThread) {
+                            completion(ret);
+                        } else {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                completion(ret);
+                            });
+                        }
+                    }
+                });
+                
+                if (!class_addMethod(self, sel, handler, "v40@0:8@16@24@?32")) {
+                    NSCAssert(false, @"add %@ failed", NSStringFromSelector(sel));
                 }
             }
-        });
-        
-        if (!class_addMethod(self, sel, handler, "v40@0:8@16@24@?32")) {
-            NSCAssert(false, @"add %@ failed", NSStringFromSelector(sel));
-        }
-    }
-    
-    [self tc_swizzle:@selector(setDelegate:)];
+            
+            [self tc_swizzle:@selector(setDelegate:)];
+    });
 }
 
 #pragma clang diagnostic pop
