@@ -44,7 +44,8 @@ extern NSString *_Nullable TCPercentEscapedStringFromFileName(NSString *string);
 
 @interface NSFileManager (TCHelper)
 
-- (BOOL)linkCopyItemAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError **)error;
+- (BOOL)linkCopyItemAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError *_Nullable *_Nullable)error;
+- (BOOL)moveItemMustAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError *_Nullable *_Nullable)error;
 
 @end
 

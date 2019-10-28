@@ -331,22 +331,45 @@ done:
 
 - (BOOL)linkCopyItemAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError **)error
 {
-    BOOL suc = [NSFileManager.defaultManager linkItemAtURL:srcURL toURL:dstURL error:error];
+    BOOL suc = [self linkItemAtURL:srcURL toURL:dstURL error:error];
     if (!suc) {
         // !!!: may create an empty directory
-        [NSFileManager.defaultManager removeItemAtURL:dstURL error:NULL];
-        suc = [NSFileManager.defaultManager copyItemAtURL:srcURL toURL:dstURL error:error];
+        [self removeItemAtURL:dstURL error:NULL];
+        suc = [self copyItemAtURL:srcURL toURL:dstURL error:error];
         if (suc) {
             if (NULL != error) {
                 *error = nil;
             }
-            NSDictionary<NSFileAttributeKey, id> *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:srcURL.path error:NULL];
+            NSDictionary<NSFileAttributeKey, id> *attributes = [self attributesOfItemAtPath:srcURL.path error:NULL];
             if (attributes.count > 0) {
-                [NSFileManager.defaultManager setAttributes:attributes ofItemAtPath:dstURL.path error:NULL];
+                [self setAttributes:attributes ofItemAtPath:dstURL.path error:NULL];
             }
         }
     }
     return suc;
 }
+
+- (BOOL)moveItemMustAtURL:(NSURL *)srcURL toURL:(NSURL *)dstURL error:(NSError **)error
+{
+    if ([self moveItemAtURL:srcURL toURL:dstURL error:error]) {
+        return YES;
+    }
+    
+    BOOL suc = [self linkCopyItemAtURL:srcURL toURL:dstURL error:NULL];
+    if (suc) {
+        if ([self removeItemAtURL:srcURL error:NULL]) {
+            if (NULL != error) {
+                *error = nil;
+            }
+        } else {
+            suc = NO;
+            [self removeItemAtURL:dstURL error:NULL];
+        }
+    }
+    
+    return suc;
+}
+
+
 
 @end
