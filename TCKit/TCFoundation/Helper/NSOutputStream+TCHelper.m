@@ -77,7 +77,10 @@
     if (@available(iOS 13, *)) {
         return [self seekToEndReturningOffset:offsetInFile error:error];
     } else {
-        [self seekToEndOfFile];
+        unsigned long long offet = self.seekToEndOfFile;
+        if (NULL != offsetInFile) {
+            *offsetInFile = offet;
+        }
         return YES;
     }
 }
