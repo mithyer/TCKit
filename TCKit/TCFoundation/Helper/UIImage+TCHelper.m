@@ -2,7 +2,7 @@
 //  UIImage+TCHelper.m
 //  TCKit
 //
-//  Created by cdk on 15/5/13.
+//  Created by dake on 15/5/13.
 //  Copyright (c) 2015年 dake. All rights reserved.
 //
 
