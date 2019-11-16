@@ -58,7 +58,7 @@
     BOOL isPresenting = NO;
     do {
         UIViewController *presented = controller.presentedViewController;
-        isPresenting = presented != nil;
+        isPresenting = presented != nil && !presented.beingDismissed && !presented.isMovingFromParentViewController;
         if (isPresenting) {
             controller = presented;
         }
@@ -72,6 +72,9 @@
     } else if ([controller isKindOfClass:UINavigationController.class]) {
         UINavigationController *navi = (typeof(navi))controller;
         UIViewController *ctrler = navi.visibleViewController;
+        if (ctrler.isBeingDismissed || ctrler.isMovingFromParentViewController) {
+            ctrler = navi.topViewController;
+        }
         controller = [self topViewController:ctrler];
         
     } else if ([controller isKindOfClass:UIPageViewController.class]) {
