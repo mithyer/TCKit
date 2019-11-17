@@ -10,7 +10,13 @@
 
 #import <UIKit/UIKit.h>
 
+
+
 NS_ASSUME_NONNULL_BEGIN
+
+extern NSString *const kTCCellIdentifier;
+extern NSString *const kTCHeaderIdentifier;
+extern NSString *const kTCFooterIdentifier;
 
 @interface UIView (TCHelper)
 

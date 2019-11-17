@@ -6,12 +6,17 @@
 //  Copyright (c) 2015年 TCKit. All rights reserved.
 //
 
+
 #if !defined(TARGET_IS_EXTENSION) || defined(TARGET_IS_UI_EXTENSION)
 
 #import "UIView+TCHelper.h"
 #import <objc/runtime.h>
 #import "NSObject+TCUtilities.h"
 
+
+NSString *const kTCCellIdentifier = @"cell";
+NSString *const kTCHeaderIdentifier = @"header";
+NSString *const kTCFooterIdentifier = @"footer";
 
 static char const kAlignmentRectInsetsKey;
 
