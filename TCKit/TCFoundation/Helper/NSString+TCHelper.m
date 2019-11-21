@@ -22,6 +22,26 @@
 
 @implementation NSString (TCHelper)
 
+- (NSString *)domainOrIPMust
+{
+    NSString *url = self;
+    NSString *host = nil;
+    NSURL *tmp = [NSURL URLWithString:url];
+    if (nil == tmp) {
+        host = url;
+    } else if (tmp.scheme.length > 0 && tmp.host.length > 0) {
+        host = tmp.host;
+    } else {
+        NSURL *tmp2 = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
+        host = tmp2.host;
+        if (host.length < 1) {
+            host = url;
+        }
+    }
+    
+    return host;
+}
+
 - (NSString *)reversedString
 {
     NSMutableString *reversedString = [NSMutableString stringWithCapacity:self.length];

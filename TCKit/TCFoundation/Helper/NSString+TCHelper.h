@@ -21,6 +21,9 @@ extern bool tc_is_ip_addr(char const *host, bool *_Nullable ipv6);
 - (NSString *)stringByDeletingFixedPathExtension:(NSString *_Nullable *_Nullable)ext;
 - (nullable NSString *)stringByAppendingPathExtensionMust:(NSString *)str;
 
+- (NSString *)domainOrIPMust;
+
+
 #pragma mark - pattern
 
 - (NSString *)firstCharacter;
